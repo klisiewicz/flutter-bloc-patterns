@@ -1,0 +1,20 @@
+name: flutter_bloc_patterns
+description: A set of most common BLoC use cases.
+version: 0.1.0
+author:
+homepage:
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  equatable: ^0.2.6
+  flutter_bloc: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito: ^4.1.0
+flutter:

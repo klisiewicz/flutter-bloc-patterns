@@ -1,0 +1,1 @@
+library flutter_bloc_patterns;
