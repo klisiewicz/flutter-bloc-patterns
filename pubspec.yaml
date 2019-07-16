@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  equatable: ^0.2.6
-  flutter_bloc: ^0.19.0
+  equatable: ^0.3.0
+  flutter_bloc: ^0.19.1
 
 dev_dependencies:
   flutter_test:

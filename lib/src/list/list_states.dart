@@ -17,7 +17,7 @@ class ListLoadedEmpty extends ListState {
 }
 
 class ListLoaded<E> extends ListState {
-  final Iterable<E> items;
+  final List<E> items;
 
   ListLoaded(this.items)
       : assert(items != null && items.isNotEmpty, 'List items cannot be empty'),

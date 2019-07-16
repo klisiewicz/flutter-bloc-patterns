@@ -4,7 +4,7 @@ import 'package:flutter_bloc_patterns/src/list/list_states.dart';
 typedef LoadingCallback = Widget Function(BuildContext context);
 typedef ResultCallback<T> = Widget Function(
   BuildContext context,
-  Iterable<T> items,
+  List<T> items,
 );
 typedef NoResultCallback = Widget Function(BuildContext context);
 typedef ErrorCallback = Widget Function(
