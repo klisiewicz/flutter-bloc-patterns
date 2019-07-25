@@ -7,6 +7,5 @@ abstract class ListEvent extends Equatable {
 }
 
 class LoadList extends ListEvent {
-  @override
   String toString() => 'LoadList';
 }

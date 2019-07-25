@@ -1,9 +1,10 @@
-import 'package:flutter_bloc_patterns/src/list/list_bloc.dart';
-import 'package:flutter_bloc_patterns/src/list/list_states.dart';
-import 'package:flutter_bloc_patterns/src/list/repository.dart';
+import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
+import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
+import 'package:flutter_bloc_patterns/src/list/base/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import '../filter/filter_repository_mock.dart';
 import 'repository_mock.dart';
 
 void main() {
@@ -36,7 +37,7 @@ void main() {
         when(repository.getAll()).thenAnswer((_) async => _someData);
 
     void givenFailingRepository() =>
-        when(repository.getAll()).thenThrow(_someException);
+        when(repository.getAll()).thenThrow(exception);
 
     void whenLoadingItems() => listBloc.loadData();
 
@@ -60,11 +61,10 @@ void main() {
       whenLoadingItems();
       thenExpectStates([
         ListLoading(),
-        ListNotLoaded(_someException),
+        ListNotLoaded(exception),
       ]);
     });
   });
 }
 
 final _someData = [1, 2, 3];
-final _someException = Exception('I\'ve failed my lord...');

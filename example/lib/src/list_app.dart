@@ -5,7 +5,7 @@ import 'package:example/src/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_patterns/list.dart';
+import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:http/http.dart' as http;
 
 class ListSampleApp extends StatelessWidget {

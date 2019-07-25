@@ -1,9 +1,9 @@
 import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_patterns/src/list/list_events.dart';
-import 'package:flutter_bloc_patterns/src/list/list_states.dart';
-import 'package:flutter_bloc_patterns/src/list/repository.dart';
+import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
+import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
+import 'package:flutter_bloc_patterns/src/list/base/repository.dart';
 
 class ListBloc<T> extends Bloc<ListEvent, ListState> {
   final Repository<T> _repository;
