@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_patterns/src/list/list_states.dart';
+import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
 
 typedef LoadingCallback = Widget Function(BuildContext context);
 typedef ResultCallback<T> = Widget Function(

@@ -27,6 +27,7 @@
 .packages
 .pub-cache/
 .pub/
+.lib/generated
 build/
 
 # Android related
