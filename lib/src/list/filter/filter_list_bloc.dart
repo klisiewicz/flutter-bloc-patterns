@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
+import 'package:flutter_bloc_patterns/src/list/filter/filter_list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -21,7 +21,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
 
   void loadData({F filter}) {
     _filter = filter;
-    dispatch(LoadList());
+    dispatch(LoadList(filter));
   }
 
   @override
@@ -44,6 +44,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
 
   Stream<ListState> _mapLoadList() async* {
     try {
+      yield ListLoading();
       final List<T> items = await _getDataFromRepository();
       yield items.isNotEmpty
           ? ListLoaded(UnmodifiableListView(items))
