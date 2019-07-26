@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
-import 'package:flutter_bloc_patterns/src/list/filter/filter_list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
