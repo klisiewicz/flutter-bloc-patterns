@@ -18,58 +18,52 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
 
   F get filter => _filter;
 
-  void loadItems({F filter}) {
-    _filter = filter;
-    dispatch(LoadList(filter));
-  }
+  void loadItems({F filter}) => dispatch(LoadList(filter));
 
-  void refreshItems({F filter}) {
-    _filter = filter;
-    dispatch(RefreshList(filter));
-  }
+  void refreshItems({F filter}) => dispatch(RefreshList(filter));
 
   @override
   Stream<ListState> mapEventToState(ListEvent event) async* {
     if (event is LoadList) {
-      yield* _mapLoadList();
-    } else if (_isRefreshPossible(event)) {
-      yield* _mapRefreshList();
+      yield* _mapLoadList(event.filter);
+    } else if (event is RefreshList && _isRefreshPossible(event)) {
+      yield* _mapRefreshList(event.filter);
     }
   }
 
   bool _isRefreshPossible(ListEvent event) =>
-      event is RefreshList &&
-          currentState is! ListLoading &&
-          currentState is! ListRefreshing;
+      currentState is! ListLoading && currentState is! ListRefreshing;
 
-  Stream<ListState> _mapLoadList() async* {
+  Stream<ListState> _mapLoadList(F filter) async* {
     yield ListLoading();
-    yield* _getItemsFromRepository();
+    yield* _getItemsFromRepository(filter);
   }
 
-  Stream<ListState> _mapRefreshList() async* {
+  Stream<ListState> _mapRefreshList(F filter) async* {
     final listItems = _getCurrentStateItems();
     yield ListRefreshing(listItems);
-    yield* _getItemsFromRepository();
+    yield* _getItemsFromRepository(filter);
   }
 
   List<T> _getCurrentStateItems() =>
       (currentState is ListLoaded) ? (currentState as ListLoaded).items : [];
 
-  Stream<ListState> _getItemsFromRepository() async* {
+  Stream<ListState> _getItemsFromRepository(F filter) async* {
     try {
-      final List<T> items = await _getDataFromRepository();
+      final List<T> items = await _getDataFromRepository(filter);
       yield items.isNotEmpty
           ? ListLoaded(UnmodifiableListView(items))
           : ListLoadedEmpty();
     } catch (e) {
       yield ListNotLoaded(e);
+    } finally {
+      _filter = filter;
     }
   }
 
-  Future<List> _getDataFromRepository() {
-    if (_filter != null)
-      return _repository.getBy(_filter);
+  Future<List> _getDataFromRepository(F filter) {
+    if (filter != null)
+      return _repository.getBy(filter);
     else
       return _repository.getAll();
   }

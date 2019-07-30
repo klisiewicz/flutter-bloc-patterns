@@ -16,8 +16,8 @@ class ListLoadedEmpty extends ListState {
   String toString() => 'ListLoadedEmpty';
 }
 
-class ListLoaded<E> extends ListState {
-  final List<E> items;
+class ListLoaded<T> extends ListState {
+  final List<T> items;
 
   ListLoaded(this.items)
       : assert(items != null && items.isNotEmpty, 'List items cannot be empty'),
@@ -27,8 +27,8 @@ class ListLoaded<E> extends ListState {
   String toString() => 'ListLoaded: $items';
 }
 
-class ListRefreshing<E> extends ListState {
-  final List<E> items;
+class ListRefreshing<T> extends ListState {
+  final List<T> items;
 
   ListRefreshing([this.items = const []])
       : assert(items != null),

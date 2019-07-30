@@ -2,13 +2,13 @@ import 'package:flutter_bloc_patterns/src/list/base/repository.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_repository.dart';
 
-class ListBloc<T> extends FilterListBloc<T, void> {
+class ListBloc<T> extends FilterListBloc<T, Null> {
   ListBloc(Repository<T> repository)
       : assert(repository != null),
         super(_FilterRepositoryAdapter(repository));
 }
 
-class _FilterRepositoryAdapter<T> extends FilterRepository<T, void> {
+class _FilterRepositoryAdapter<T> extends FilterRepository<T, Null> {
   final Repository<T> repository;
 
   _FilterRepositoryAdapter(this.repository);

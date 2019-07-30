@@ -64,6 +64,25 @@ void main() {
       ]);
     });
   });
+
+  group('refreshing items', () {
+    void whenLoadingItems() => listBloc.loadItems();
+    void whenRefreshingItems() => listBloc.refreshItems();
+
+    test('should refresh items when loading is finished', () {
+      givenRepositoryWithItems();
+
+      whenLoadingItems();
+      whenRefreshingItems();
+
+      thenExpectStates([
+        ListLoading(),
+        ListLoaded(_someData),
+        ListRefreshing(_someData),
+        ListLoaded(_someData),
+      ]);
+    });
+  });
 }
 
 final _someData = [1, 2, 3];
