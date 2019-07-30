@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_repository.dart';
-import 'package:rxdart/rxdart.dart';
 
 class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
   final FilterRepository<T, F> _repository;
@@ -19,32 +18,46 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
 
   F get filter => _filter;
 
-  void loadData({F filter}) {
+  void loadItems({F filter}) {
     _filter = filter;
     dispatch(LoadList(filter));
   }
 
-  @override
-  Stream<ListState> transform(
-    Stream<ListEvent> events,
-    Stream<ListState> next(ListEvent event),
-  ) {
-    return super.transform(_distinct(events), next);
+  void refreshItems({F filter}) {
+    _filter = filter;
+    dispatch(RefreshList(filter));
   }
-
-  Observable<ListEvent> _distinct(Stream<ListEvent> events) =>
-      (events as Observable<ListEvent>).distinct();
 
   @override
   Stream<ListState> mapEventToState(ListEvent event) async* {
     if (event is LoadList) {
       yield* _mapLoadList();
+    } else if (_isRefreshPossible(event)) {
+      yield* _mapRefreshList();
     }
   }
 
+  bool _isRefreshPossible(ListEvent event) =>
+      event is RefreshList &&
+          currentState is! ListLoading &&
+          currentState is! ListRefreshing;
+
   Stream<ListState> _mapLoadList() async* {
+    yield ListLoading();
+    yield* _getItemsFromRepository();
+  }
+
+  Stream<ListState> _mapRefreshList() async* {
+    final listItems = _getCurrentStateItems();
+    yield ListRefreshing(listItems);
+    yield* _getItemsFromRepository();
+  }
+
+  List<T> _getCurrentStateItems() =>
+      (currentState is ListLoaded) ? (currentState as ListLoaded).items : [];
+
+  Stream<ListState> _getItemsFromRepository() async* {
     try {
-      yield ListLoading();
       final List<T> items = await _getDataFromRepository();
       yield items.isNotEmpty
           ? ListLoaded(UnmodifiableListView(items))

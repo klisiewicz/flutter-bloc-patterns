@@ -9,6 +9,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 
+void main() => runApp(ListSampleApp());
+
 class ListSampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,8 @@ class _PostsPageState extends State<_PostsPage> {
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadData();
+    listBloc = BlocProvider.of<ListBloc<Post>>(context)
+      ..loadItems();
   }
 
   @override
@@ -47,7 +50,11 @@ class _PostsPageState extends State<_PostsPage> {
         bloc: listBloc,
         builder: ListViewBuilder<Post>(
           onLoading: (context) => LoadingIndicator(),
-          onResult: (context, posts) => PostsList(posts: posts),
+          onResult: (context, posts) =>
+              PostsList(
+                posts: posts,
+                onRefresh: () => listBloc.refreshItems(),
+              ),
           onNoResult: (context) => PostsListEmpty(),
           onError: (context, error) => ErrorMessage(error: error),
         ).build,

@@ -27,6 +27,17 @@ class ListLoaded<E> extends ListState {
   String toString() => 'ListLoaded: $items';
 }
 
+class ListRefreshing<E> extends ListState {
+  final List<E> items;
+
+  ListRefreshing([this.items = const []])
+      : assert(items != null),
+        super([items]);
+
+  @override
+  String toString() => 'ListRefreshing: $items';
+}
+
 class ListNotLoaded extends ListState {
   final Exception exception;
 

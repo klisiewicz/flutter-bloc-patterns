@@ -13,3 +13,11 @@ class LoadList<F> extends ListEvent {
 
   String toString() => 'LoadList: $filter';
 }
+
+class RefreshList<F> extends ListEvent {
+  final F filter;
+
+  RefreshList([this.filter]) : super([]);
+
+  String toString() => 'RefreshList: $filter';
+}

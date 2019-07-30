@@ -16,12 +16,20 @@ void main() {
     listBloc = ListBloc(repository);
   });
 
-  void thenExpectStates(Iterable<ListState> states) {
-    expectLater(
-      listBloc.state,
-      emitsInOrder(states),
-    );
-  }
+  void givenEmptyRepository() =>
+      when(repository.getAll()).thenAnswer((_) async => []);
+
+  void givenRepositoryWithItems() =>
+      when(repository.getAll()).thenAnswer((_) async => _someData);
+
+  void givenFailingRepository() =>
+      when(repository.getAll()).thenThrow(exception);
+
+  Future<void> thenExpectStates(Iterable<ListState> states) async =>
+      expect(
+        listBloc.state,
+        emitsInOrder(states),
+      );
 
   test('should be initialized in loading state', () {
     thenExpectStates([
@@ -30,16 +38,7 @@ void main() {
   });
 
   group('loading items', () {
-    void givenEmptyRepository() =>
-        when(repository.getAll()).thenAnswer((_) async => []);
-
-    void givenRepositoryWithItems() =>
-        when(repository.getAll()).thenAnswer((_) async => _someData);
-
-    void givenFailingRepository() =>
-        when(repository.getAll()).thenThrow(exception);
-
-    void whenLoadingItems() => listBloc.loadData();
+    void whenLoadingItems() => listBloc.loadItems();
 
     test('should emit loaded empty list when there is no data', () {
       givenEmptyRepository();

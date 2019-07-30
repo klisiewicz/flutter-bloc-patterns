@@ -8,15 +8,14 @@ void main() {
   FilterListBloc<int, int> filterListBloc;
 
   void whenLoadingItems({int filter}) {
-    filterListBloc.loadData(filter: filter);
+    filterListBloc.loadItems(filter: filter);
   }
 
-  void thenExpectStates(Iterable<ListState> states) {
+  Future<void> thenExpectStates(Iterable<ListState> states) =>
     expectLater(
       filterListBloc.state,
       emitsInOrder(states),
     );
-  }
 
   group('empty repository', () {
     setUp(() {
