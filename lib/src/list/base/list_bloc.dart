@@ -1,37 +1,21 @@
-import 'dart:collection';
-
-import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
-import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
 import 'package:flutter_bloc_patterns/src/list/base/repository.dart';
+import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
+import 'package:flutter_bloc_patterns/src/list/filter/filter_repository.dart';
 
-class ListBloc<T> extends Bloc<ListEvent, ListState> {
-  final Repository<T> _repository;
+class ListBloc<T> extends FilterListBloc<T, Null> {
+  ListBloc(Repository<T> repository)
+      : assert(repository != null),
+        super(_FilterRepositoryAdapter(repository));
+}
 
-  ListBloc(Repository repository)
-      : this._repository = repository,
-        assert(repository != null);
+class _FilterRepositoryAdapter<T> extends FilterRepository<T, Null> {
+  final Repository<T> repository;
+
+  _FilterRepositoryAdapter(this.repository);
 
   @override
-  ListState get initialState => ListLoading();
-
-  void loadData() => dispatch(LoadList());
+  Future<List<T>> getAll() => repository.getAll();
 
   @override
-  Stream<ListState> mapEventToState(ListEvent event) async* {
-    if (event is LoadList) {
-      yield* _mapLoadList();
-    }
-  }
-
-  Stream<ListState> _mapLoadList() async* {
-    try {
-      final Iterable<T> items = await _repository.getAll();
-      yield items.isNotEmpty
-          ? ListLoaded(UnmodifiableListView(items))
-          : ListLoadedEmpty();
-    } catch (e) {
-      yield ListNotLoaded(e);
-    }
-  }
+  Future<List<T>> getBy(void filter) => repository.getAll();
 }

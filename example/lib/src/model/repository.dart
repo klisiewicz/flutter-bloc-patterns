@@ -33,6 +33,8 @@ Future<List<Post>> _getPostsFromUrl(String url) async {
   if (response.statusCode != HttpStatus.ok)
     throw Exception('Failed to load post');
 
-  final List<dynamic> posts = json.decode(response.body);
-  return posts.map((post) => Post.fromJson(post)).toList();
+  final List<dynamic> postsJson = json.decode(response.body);
+  final posts = postsJson.map((post) => Post.fromJson(post)).toList();
+  // Shuffle the list to achieve refresh impression
+  return posts..shuffle();
 }

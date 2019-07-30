@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/filter_list.dart';
 
+void main() => runApp(FilterListSampleApp());
+
 const _myUserId = '3';
 
 class FilterListSampleApp extends StatelessWidget {
@@ -41,7 +43,8 @@ class _PostsPageState extends State<_PostsPage> {
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<FilterListBloc<Post, User>>(context)..loadData();
+    listBloc = BlocProvider.of<FilterListBloc<Post, User>>(context)
+      ..loadItems();
   }
 
   @override
@@ -60,7 +63,11 @@ class _PostsPageState extends State<_PostsPage> {
       bloc: listBloc,
       builder: ListViewBuilder<Post>(
         onLoading: (context) => LoadingIndicator(),
-        onResult: (context, posts) => PostsList(posts: posts),
+        onResult: (context, posts) =>
+            PostsList(
+              posts: posts,
+              onRefresh: () => listBloc.refreshItems(),
+            ),
         onNoResult: (context) => PostsListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
       ).build,
@@ -80,14 +87,18 @@ class _PostsPageState extends State<_PostsPage> {
           title: Text('Mine'),
         ),
       ],
-      onTap: (index) {
-        final user = (index == _Posts.mine.index) ? User(_myUserId) : null;
-        listBloc.loadData(filter: user);
-        setState(() {
-          selectedPosts = _Posts.values[index];
-        });
-      },
+      onTap: _updateSelectedPosts,
     );
+  }
+
+  void _updateSelectedPosts(int index) {
+    final user = (index == _Posts.mine.index) ? User(_myUserId) : null;
+    if (user != listBloc.filter) {
+      listBloc.loadItems(filter: user);
+      setState(() {
+        selectedPosts = _Posts.values[index];
+      });
+    }
   }
 }
 
