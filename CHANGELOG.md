@@ -1,3 +1,4 @@
-## [0.0.1] - TODO: Add release date.
+## [0.1.0] - 01.08.2019.
 
-* TODO: Describe initial release.
+* `ListBloc` - a basic list BLoC with no filtering nor pagination,
+* `FilterListBloc` - a list BLoC with filtering, but without pagination.
