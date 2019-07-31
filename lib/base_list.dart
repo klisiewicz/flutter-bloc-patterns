@@ -1,34 +1,31 @@
-/// A basic list BLoC with no filtering or pagination.
+/// A basic list BLoC with no filtering nor pagination.
 /// # Usage:
-/// 1. Wrap a widget using [BlocProvider]
-/// /// ```dart
+/// 1. Create ListBloc using [BlocProvider] or any other `DI` framework:
+/// ```dart
 /// BlocProvider(
-//    builder: (context) => ListBloc<Data>(DataRepository()),
-//    child: DataPage(),
-//  )
-///// ```
+///    builder: (context) => ListBloc<Data>(DataRepository()),
+///    child: DataPage(),
+///  );
+/// ```
 /// 2. Load the data:
 /// ```dart
 /// listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadItems();
 /// ```
-/// 3. Use [ListViewBuilder] to build your view state:
+/// 3. Use [ListViewBuilder] to build the view state:
 /// ```dart
 ///@override
-//  Widget build(BuildContext context) {
-//    return BlocBuilder(
-//      bloc: listBloc,
-//      builder: ListViewBuilder<Data>(
-//        onLoading: (context) => _buildIndicator(),
-//        onResult: (context, data) => _buildListItems(data),
-//        onNoResult: (context) => _buildEmptyListItems(),
-//        onError: (context, error) => _buildErrorMessage(error: error),
-//      ).build,
-//    );
+///  Widget build(BuildContext context) {
+///    return BlocBuilder(
+///      bloc: listBloc,
+///      builder: ListViewBuilder<Data>(
+///        onLoading: (context) => _buildIndicator(),
+///        onResult: (context, data) => _buildListItems(data),
+///        onNoResult: (context) => _buildEmptyListItems(),
+///        onError: (context, error) => _buildErrorMessage(error: error),
+///      ).build,
+///    );
 /// ```
 /// 4. Provide widgets corresponding loading, result, no result and error states.
-///
-/// See also:
-/// [FilterListSampleApp] for more details.
 ///
 library flutter_list_bloc;
 import 'package:flutter_bloc/flutter_bloc.dart';
