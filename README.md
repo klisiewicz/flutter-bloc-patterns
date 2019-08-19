@@ -23,18 +23,18 @@ This method is responsible for providing all the data to the `ListBloc`.
 
 ##### Usage
 1. Create `ListBloc` using `BlocProvider` or any other `DI` framework:
-    ```
+    ```dart
     BlocProvider(
         builder: (context) => ListBloc<Data>(DataRepository()),
         child: _PostsPage(),
     );
     ```
 2. Trigger loading the data:
-    ```
+    ```dart
     listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadItems();
     ```
 3. Use `ListViewBuilder` to build the view state:
-    ```
+    ```dart
     @override
     Widget build(BuildContext context) {
         return BlocBuilder(
