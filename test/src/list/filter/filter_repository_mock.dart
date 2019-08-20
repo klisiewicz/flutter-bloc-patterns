@@ -1,16 +1,16 @@
-import 'package:flutter_bloc_patterns/src/list/filter/filter_repository.dart';
+import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
 
 class InMemoryFilterRepository<T, F> extends FilterRepository<T, F> {
-  final List<T> items;
+  final List<T> elements;
 
-  InMemoryFilterRepository([this.items = const []]);
+  InMemoryFilterRepository([this.elements = const []]);
 
   @override
-  Future<List<T>> getAll() async => items;
+  Future<List<T>> getAll() async => elements;
 
   @override
   Future<List<T>> getBy(F filter) async =>
-      items.where((item) => item == filter).toList();
+      elements.where((item) => item == filter).toList();
 }
 
 final exception = Exception('I\'ve failed my lord...');

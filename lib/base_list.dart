@@ -9,7 +9,7 @@
 /// ```
 /// 2. Load the data:
 /// ```dart
-/// listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadItems();
+/// listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadElements();
 /// ```
 /// 3. Use [ListViewBuilder] to build the view state:
 /// ```dart
@@ -19,8 +19,8 @@
 ///      bloc: listBloc,
 ///      builder: ListViewBuilder<Data>(
 ///        onLoading: (context) => _buildIndicator(),
-///        onResult: (context, data) => _buildListItems(data),
-///        onNoResult: (context) => _buildEmptyListItems(),
+///        onResult: (context, data) => _buildList(data),
+///        onNoResult: (context) => _buildEmptyList(),
 ///        onError: (context, error) => _buildErrorMessage(error: error),
 ///      ).build,
 ///    );
@@ -30,7 +30,8 @@
 library flutter_list_bloc;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_view_builder.dart';
+
 export 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
+export 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 export 'package:flutter_bloc_patterns/src/list/base/list_view_builder.dart';
 export 'package:flutter_bloc_patterns/src/list/base/list_view_refresh.dart';
-export 'package:flutter_bloc_patterns/src/list/base/repository.dart';

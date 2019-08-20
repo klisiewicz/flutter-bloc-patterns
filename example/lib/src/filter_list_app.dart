@@ -3,7 +3,7 @@ import 'package:example/src/common/loading_indicator.dart';
 import 'package:example/src/common/posts_list.dart';
 import 'package:example/src/common/posts_list_empty.dart';
 import 'package:example/src/model/post.dart';
-import 'package:example/src/model/repository.dart';
+import 'package:example/src/model/post_repository.dart';
 import 'package:example/src/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +44,7 @@ class _PostsPageState extends State<_PostsPage> {
   void initState() {
     super.initState();
     listBloc = BlocProvider.of<FilterListBloc<Post, User>>(context)
-      ..loadItems();
+      ..loadElements();
   }
 
   @override
@@ -66,7 +66,8 @@ class _PostsPageState extends State<_PostsPage> {
         onResult: (context, posts) =>
             PostsList(
               posts: posts,
-              onRefresh: () => listBloc.refreshItems(),
+              onRefresh: () =>
+                  listBloc.refreshElements(filter: listBloc.filter),
             ),
         onNoResult: (context) => PostsListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
@@ -94,7 +95,7 @@ class _PostsPageState extends State<_PostsPage> {
   void _updateSelectedPosts(int index) {
     final user = (index == _Posts.mine.index) ? User(_myUserId) : null;
     if (user != listBloc.filter) {
-      listBloc.loadItems(filter: user);
+      listBloc.loadElements(filter: user);
       setState(() {
         selectedPosts = _Posts.values[index];
       });

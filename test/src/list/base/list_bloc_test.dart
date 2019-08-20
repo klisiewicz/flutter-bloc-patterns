@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
+import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
-import 'package:flutter_bloc_patterns/src/list/base/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -19,7 +19,7 @@ void main() {
   void givenEmptyRepository() =>
       when(repository.getAll()).thenAnswer((_) async => []);
 
-  void givenRepositoryWithItems() =>
+  void givenRepositoryWithElements() =>
       when(repository.getAll()).thenAnswer((_) async => _someData);
 
   void givenFailingRepository() =>
@@ -37,18 +37,18 @@ void main() {
     ]);
   });
 
-  group('loading items', () {
-    void whenLoadingItems() => listBloc.loadItems();
+  group('loading elements', () {
+    void whenLoadingElements() => listBloc.loadElements();
 
     test('should emit loaded empty list when there is no data', () {
       givenEmptyRepository();
-      whenLoadingItems();
+      whenLoadingElements();
       thenExpectStates([ListLoading(), ListLoadedEmpty()]);
     });
 
     test('should emit list loaded state when loading data is successful', () {
-      givenRepositoryWithItems();
-      whenLoadingItems();
+      givenRepositoryWithElements();
+      whenLoadingElements();
       thenExpectStates([
         ListLoading(),
         ListLoaded(_someData),
@@ -57,7 +57,7 @@ void main() {
 
     test('should emit list not loaded when loading data fails', () {
       givenFailingRepository();
-      whenLoadingItems();
+      whenLoadingElements();
       thenExpectStates([
         ListLoading(),
         ListNotLoaded(exception),
@@ -65,15 +65,15 @@ void main() {
     });
   });
 
-  group('refreshing items', () {
-    void whenLoadingItems() => listBloc.loadItems();
-    void whenRefreshingItems() => listBloc.refreshItems();
+  group('refreshing elements', () {
+    void whenLoadingElements() => listBloc.loadElements();
+    void whenRefreshingElements() => listBloc.refreshElements();
 
-    test('should refresh items when loading is finished', () {
-      givenRepositoryWithItems();
+    test('should refresh elements when loading is finished', () {
+      givenRepositoryWithElements();
 
-      whenLoadingItems();
-      whenRefreshingItems();
+      whenLoadingElements();
+      whenRefreshingElements();
 
       thenExpectStates([
         ListLoading(),
