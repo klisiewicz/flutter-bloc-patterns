@@ -3,7 +3,7 @@ import 'package:example/src/common/loading_indicator.dart';
 import 'package:example/src/common/posts_list.dart';
 import 'package:example/src/common/posts_list_empty.dart';
 import 'package:example/src/model/post.dart';
-import 'package:example/src/model/repository.dart';
+import 'package:example/src/model/post_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +39,7 @@ class _PostsPageState extends State<_PostsPage> {
   void initState() {
     super.initState();
     listBloc = BlocProvider.of<ListBloc<Post>>(context)
-      ..loadItems();
+      ..loadElements();
   }
 
   @override
@@ -53,7 +53,7 @@ class _PostsPageState extends State<_PostsPage> {
           onResult: (context, posts) =>
               PostsList(
                 posts: posts,
-                onRefresh: () => listBloc.refreshItems(),
+                onRefresh: () => listBloc.refreshElements(),
               ),
           onNoResult: (context) => PostsListEmpty(),
           onError: (context, error) => ErrorMessage(error: error),

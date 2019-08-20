@@ -4,19 +4,19 @@ import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
 /// Callback function for the loading state.
 typedef LoadingCallback = Widget Function(BuildContext context);
 
-/// Callback function for the refresh state. It may contain a list of items
+/// Callback function for the refresh state. It may contain a list of elements
 /// when a successful data fetch has already been completed otherwise the list
 /// will be empty.
 typedef RefreshCallback<T> = Widget Function(
   BuildContext context,
-  List<T> items,
+    List<T> elements,
 );
 
 /// Callback function for a success. The data was fetched and none empty
 /// list was returned.
 typedef ResultCallback<T> = Widget Function(
   BuildContext context,
-  List<T> items,
+    List<T> elements,
 );
 
 /// Callback function for no result. The data was fetched
@@ -59,12 +59,12 @@ class ListViewBuilder<T> {
       return onLoading?.call(context) ?? Container();
     else if (state is ListRefreshing)
       return onRefreshing != null
-          ? onRefreshing.call(context, state.items)
-          : onResult?.call(context, state.items) ?? Container();
+          ? onRefreshing.call(context, state.elements)
+          : onResult?.call(context, state.elements) ?? Container();
     else if (state is ListNotLoaded)
       return onError?.call(context, state.exception) ?? Container();
     else if (state is ListLoaded<T>)
-      return onResult?.call(context, state.items) ?? Container();
+      return onResult?.call(context, state.elements) ?? Container();
     else
       return onNoResult?.call(context) ?? Container();
   }

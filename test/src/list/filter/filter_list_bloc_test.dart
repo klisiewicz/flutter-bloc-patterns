@@ -7,11 +7,11 @@ import 'filter_repository_mock.dart';
 void main() {
   FilterListBloc<int, int> filterListBloc;
 
-  void whenLoadingItems({int filter}) =>
-      filterListBloc.loadItems(filter: filter);
+  void whenLoadingElements({int filter}) =>
+      filterListBloc.loadElements(filter: filter);
 
-  void whenRefreshingItems({int filter}) =>
-      filterListBloc.refreshItems(filter: filter);
+  void whenRefreshingElements({int filter}) =>
+      filterListBloc.refreshElements(filter: filter);
 
   Future<void> thenExpectStates(Iterable<ListState> states) =>
       expectLater(
@@ -27,7 +27,7 @@ void main() {
     });
 
     test('should emit list loaded empty state when no filter is set', () {
-      whenLoadingItems();
+      whenLoadingElements();
       thenExpectStates([
         ListLoading(),
         ListLoadedEmpty(),
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('should emit list loaded empty state when filter is set', () {
-      whenLoadingItems(filter: _notMatchingFilter);
+      whenLoadingElements(filter: _notMatchingFilter);
       thenExpectStates([
         ListLoading(),
         ListLoadedEmpty(),
@@ -43,32 +43,34 @@ void main() {
     });
   });
 
-  group('repository with items', () {
+  group('repository with elements', () {
     setUp(() {
       filterListBloc = FilterListBloc(
         InMemoryFilterRepository(_someData),
       );
     });
 
-    test('should emit list loaded state with all items when no filter is set',
+    test(
+        'should emit list loaded state with all elements when no filter is set',
         () {
-      whenLoadingItems();
+          whenLoadingElements();
       thenExpectStates([
         ListLoading(),
         ListLoaded<int>(_someData),
       ]);
     });
 
-    test('should emit list loaded state with items matching the filter', () {
-      whenLoadingItems(filter: _matchingFilter);
+    test('should emit list loaded state with elements matching the filter', () {
+      whenLoadingElements(filter: _matchingFilter);
       thenExpectStates([
         ListLoading(),
-        ListLoaded<int>(_matchingItems),
+        ListLoaded<int>(_matchingElements),
       ]);
     });
 
-    test('should emit loaded empty list when no item matches the filter', () {
-      whenLoadingItems(filter: _notMatchingFilter);
+    test(
+        'should emit loaded empty list when no elements matches the filter', () {
+      whenLoadingElements(filter: _notMatchingFilter);
       thenExpectStates([
         ListLoading(),
         ListLoadedEmpty(),
@@ -76,25 +78,25 @@ void main() {
     });
 
     test('should emit list loaded when refreshing with matching filter', () {
-      whenLoadingItems(filter: _notMatchingFilter);
-      whenRefreshingItems(filter: _matchingFilter);
+      whenLoadingElements(filter: _notMatchingFilter);
+      whenRefreshingElements(filter: _matchingFilter);
 
       thenExpectStates([
         ListLoading(),
         ListLoadedEmpty(),
         ListRefreshing<int>(),
-        ListLoaded<int>(_matchingItems),
+        ListLoaded<int>(_matchingElements),
       ]);
     });
 
-    test('should include loaded items when refreshing', () {
-      whenLoadingItems(filter: _matchingFilter);
-      whenRefreshingItems(filter: _notMatchingFilter);
+    test('should include loaded elements when refreshing', () {
+      whenLoadingElements(filter: _matchingFilter);
+      whenRefreshingElements(filter: _notMatchingFilter);
 
       thenExpectStates([
         ListLoading(),
-        ListLoaded<int>(_matchingItems),
-        ListRefreshing<int>(_matchingItems),
+        ListLoaded<int>(_matchingElements),
+        ListRefreshing<int>(_matchingElements),
         ListLoadedEmpty(),
       ]);
     });
@@ -108,7 +110,7 @@ void main() {
     });
 
     test('should emit list not loaded when no filter is set', () {
-      whenLoadingItems();
+      whenLoadingElements();
       thenExpectStates([
         ListLoading(),
         ListNotLoaded(exception),
@@ -116,7 +118,7 @@ void main() {
     });
 
     test('should emit list not loaded when filter is set', () {
-      whenLoadingItems(filter: _notMatchingFilter);
+      whenLoadingElements(filter: _notMatchingFilter);
       thenExpectStates([
         ListLoading(),
         ListNotLoaded(exception),
@@ -127,5 +129,5 @@ void main() {
 
 final _notMatchingFilter = 0;
 final _matchingFilter = _someData[0];
-final _matchingItems = [_someData[0]];
+final _matchingElements = [_someData[0]];
 final _someData = [1, 2, 3];

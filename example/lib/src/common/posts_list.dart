@@ -20,7 +20,6 @@ class PostsList extends StatelessWidget {
         itemBuilder: (context, index) =>
             ListTile(
               title: Text(posts[index].title),
-              subtitle: Text(posts[index].body),
             ),
         separatorBuilder: (context, index) => Divider(height: 1),
       ),

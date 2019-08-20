@@ -13,37 +13,42 @@ class ListLoading extends ListState {
   String toString() => 'ListLoading';
 }
 
-/// State indicating that the list was loaded successfully, but without any item.
+/// State indicating that the list was loaded successfully, but without any element.
 class ListLoadedEmpty extends ListState {
   @override
   String toString() => 'ListLoadedEmpty';
 }
 
 /// State indicating that the list is list was loaded successfully with
-/// not empty list of items.
+/// not empty list of elements.
+/// [T] - list element type.
 class ListLoaded<T> extends ListState {
-  final List<T> items;
+  final List<T> elements;
 
-  ListLoaded(this.items)
-      : assert(items != null && items.isNotEmpty, 'List items cannot be empty'),
-        super([items]);
+  ListLoaded(this.elements)
+      : assert(
+  elements != null && elements.isNotEmpty,
+  'Elements cannot be empty',
+  ),
+        super([elements]);
 
   @override
-  String toString() => 'ListLoaded: $items';
+  String toString() => 'ListLoaded: $elements';
 }
 
 /// State indicating that the list is refreshing. It can occur only when the
 /// initial fetch was successful so it contains the items that has already
 /// been loaded.
+/// [T] - list element type.
 class ListRefreshing<T> extends ListState {
-  final List<T> items;
+  final List<T> elements;
 
-  ListRefreshing([this.items = const []])
-      : assert(items != null),
-        super([items]);
+  ListRefreshing([this.elements = const []])
+      : assert(elements != null),
+        super([elements]);
 
   @override
-  String toString() => 'ListRefreshing: $items';
+  String toString() => 'ListRefreshing: $elements';
 }
 
 /// State indicating that loading or refreshing has failed. It contains an
