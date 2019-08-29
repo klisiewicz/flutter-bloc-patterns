@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 /// A refresh callback.
-typedef RefreshListCallback = void Function();
+typedef ListRefreshCallback = void Function();
 
 /// A widget that wraps a [ListView] with a [RefreshIndicator] designed to
 /// be used with BLoC pattern.
@@ -13,7 +13,7 @@ typedef RefreshListCallback = void Function();
 /// executed. The indicator remains visible until the widget is rebuilt.
 class ListViewRefresh extends StatefulWidget {
   final ListView child;
-  final RefreshListCallback onRefresh;
+  final ListRefreshCallback onRefresh;
   final double displacement;
   final Color color;
   final Color backgroundColor;
@@ -24,14 +24,16 @@ class ListViewRefresh extends StatefulWidget {
   const ListViewRefresh({
     Key key,
     @required this.child,
-    @required this.onRefresh,
+    this.onRefresh,
     this.backgroundColor,
     this.color,
-    this.displacement,
-    this.notificationPredicate,
+    this.displacement = 40.0,
+    this.notificationPredicate = defaultScrollNotificationPredicate,
     this.semanticsLabel,
     this.semanticsValue,
   })  : assert(child != null),
+        assert(displacement != null),
+        assert(notificationPredicate != null),
         super(key: key);
 
   @override

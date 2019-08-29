@@ -16,23 +16,21 @@ class ListSampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'List Sample App',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
+      theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        builder: (BuildContext context) => ListBloc<Post>(PostRepository()),
-        child: _PostsPage(),
+        builder: (_) => ListBloc<Post>(PostRepository()),
+        child: PostsPage(),
       ),
     );
   }
 }
 
-class _PostsPage extends StatefulWidget {
+class PostsPage extends StatefulWidget {
   @override
   _PostsPageState createState() => _PostsPageState();
 }
 
-class _PostsPageState extends State<_PostsPage> {
+class _PostsPageState extends State<PostsPage> {
   ListBloc<Post> listBloc;
 
   @override

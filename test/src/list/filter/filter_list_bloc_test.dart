@@ -68,8 +68,8 @@ void main() {
       ]);
     });
 
-    test(
-        'should emit loaded empty list when no elements matches the filter', () {
+    test('should emit loaded empty list when no elements matches the filter',
+            () {
       whenLoadingElements(filter: _notMatchingFilter);
       thenExpectStates([
         ListLoading(),

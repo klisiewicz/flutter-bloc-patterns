@@ -22,9 +22,7 @@ class FilterListSampleApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: BlocProvider(
-        builder: (BuildContext context) => FilterListBloc<Post, User>(
-          FilterPostRepository(),
-        ),
+        builder: (_) => FilterListBloc<Post, User>(FilterPostRepository()),
         child: _PostsPage(),
       ),
     );
