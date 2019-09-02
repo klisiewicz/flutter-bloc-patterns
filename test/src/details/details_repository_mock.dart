@@ -10,7 +10,7 @@ class InMemoryDetailsRepository<T, I> extends DetailsRepository<T, I> {
 }
 
 class FailingDetailsRepository<T, I> extends DetailsRepository<T, I> {
-  final Exception exception;
+  final dynamic exception;
 
   FailingDetailsRepository(this.exception);
 

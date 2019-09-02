@@ -9,7 +9,7 @@ abstract class DetailsEvent extends Equatable {
 
 /// Event indicating that details needs to be loaded.
 ///
-/// [I] - the id type.
+/// [I] - the element's [id] type.
 class LoadDetails<I> extends DetailsEvent {
   final I id;
 

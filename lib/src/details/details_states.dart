@@ -8,7 +8,7 @@ abstract class DetailsState extends Equatable {
 }
 
 /// State indicating that details are being loaded.
-class DetailsLoading<I> extends DetailsState {
+class DetailsLoading extends DetailsState {
   @override
   String toString() => 'DetailsLoading';
 }
@@ -43,4 +43,18 @@ class DetailsNotLoaded extends DetailsState {
 
   @override
   String toString() => 'DetailsNotLoaded: $exception';
+}
+
+/// State indicating that loading details with an [Error]. This state is not
+/// designed to be handled by UI components and usually should cause application
+/// to crash.
+class DetailsError extends DetailsState {
+  final Error error;
+
+  DetailsError(this.error)
+      : assert(error != null),
+        super([error]);
+
+  @override
+  String toString() => 'DetailsError: $error';
 }

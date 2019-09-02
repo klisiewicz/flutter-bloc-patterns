@@ -9,7 +9,6 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.0+2
-  flutter_bloc: ^0.20.0
   flutter_bloc_patterns:
     path: ../
   cupertino_icons: ^0.1.2

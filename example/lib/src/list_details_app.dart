@@ -98,7 +98,7 @@ class _PostDetailPageState extends State<_PostDetailPage> {
           onLoading: (context) => LoadingIndicator(),
           onResult: (context, post) => _PostDetailsContent(post),
           onNoResult: _showSnackbarAndPopPage,
-          onError: (context, error) => ErrorMessage(error: error),
+          onFailure: (context, error) => ErrorMessage(error: error),
         ).build,
       ),
     );
