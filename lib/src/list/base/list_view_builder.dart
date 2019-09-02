@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
 
-/// Callback function for the loading state.
+/// Callback function for the list loading state.
 typedef LoadingCallback = Widget Function(BuildContext context);
 
 /// Callback function for the refresh state. It may contain a list of elements
@@ -31,41 +31,45 @@ typedef ErrorCallback = Widget Function(
 );
 
 /// A builder for creating a [Widget] based on [ListState].
-///
-/// [onLoading] is called when when list state is [ListLoading]
-/// [onRefreshing] is called when when list state is [ListRefreshing]. When
-/// callback is not provided [onResult] callback will be executed.
-/// [onResult] is called when when list state is [ListLoaded].
-/// [onNoResult] is called when when list state is [ListLoadedEmpty].
-/// [onError] is called when when list state is [ListNotLoaded].
 class ListViewBuilder<T> {
-  final LoadingCallback onLoading;
-  final RefreshCallback<T> onRefreshing;
-  final ResultCallback<T> onResult;
-  final NoResultCallback onNoResult;
-  final ErrorCallback onError;
+  final LoadingCallback _onLoading;
+  final RefreshCallback<T> _onRefreshing;
+  final ResultCallback<T> _onResult;
+  final NoResultCallback _onNoResult;
+  final ErrorCallback _onError;
 
-  ListViewBuilder({
-    this.onLoading,
-    this.onRefreshing,
-    this.onResult,
-    this.onNoResult,
-    this.onError,
-  });
+  /// [onLoading] is called when when list state is [ListLoading]
+  /// [onRefreshing] is called when when list state is [ListRefreshing]. When
+  /// callback is not provided [onResult] callback will be executed.
+  /// [onResult] is called when when list state is [ListLoaded].
+  /// [onNoResult] is called when when list state is [ListLoadedEmpty].
+  /// [onError] is called when when list state is [ListNotLoaded].
+  const ListViewBuilder({
+    LoadingCallback onLoading,
+    RefreshCallback<T> onRefreshing,
+    ResultCallback<T> onResult,
+    NoResultCallback onNoResult,
+    ErrorCallback onError,
+  })
+      : this._onLoading = onLoading,
+        this._onRefreshing = onRefreshing,
+        this._onResult = onResult,
+        this._onNoResult = onNoResult,
+        this._onError = onError;
 
   /// Creates a widget based on provided callbacks and state.
   Widget build(BuildContext context, ListState state) {
     if (state is ListLoading)
-      return onLoading?.call(context) ?? Container();
+      return _onLoading?.call(context) ?? Container();
     else if (state is ListRefreshing)
-      return onRefreshing != null
-          ? onRefreshing.call(context, state.elements)
-          : onResult?.call(context, state.elements) ?? Container();
+      return _onRefreshing != null
+          ? _onRefreshing.call(context, state.elements)
+          : _onResult?.call(context, state.elements) ?? Container();
     else if (state is ListNotLoaded)
-      return onError?.call(context, state.exception) ?? Container();
+      return _onError?.call(context, state.exception) ?? Container();
     else if (state is ListLoaded<T>)
-      return onResult?.call(context, state.elements) ?? Container();
+      return _onResult?.call(context, state.elements) ?? Container();
     else
-      return onNoResult?.call(context) ?? Container();
+      return _onNoResult?.call(context) ?? Container();
   }
 }
