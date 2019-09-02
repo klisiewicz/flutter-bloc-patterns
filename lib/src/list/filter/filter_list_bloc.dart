@@ -79,17 +79,20 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
       yield elements.isNotEmpty
           ? ListLoaded(UnmodifiableListView(elements))
           : ListLoadedEmpty();
-    } catch (e) {
+    } on Exception catch (e) {
       yield ListNotLoaded(e);
+    } on Error catch (e) {
+      yield ListError(e);
     } finally {
       _filter = filter;
     }
   }
 
   Future<List> _getElementsFromRepository(F filter) {
-    if (filter != null)
+    if (filter != null) {
       return _repository.getBy(filter);
-    else
+    } else {
       return _repository.getAll();
+    }
   }
 }

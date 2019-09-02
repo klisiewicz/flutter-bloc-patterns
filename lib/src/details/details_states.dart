@@ -45,9 +45,9 @@ class DetailsNotLoaded extends DetailsState {
   String toString() => 'DetailsNotLoaded: $exception';
 }
 
-/// State indicating that loading details with an [Error]. This state is not
-/// designed to be handled by UI components and usually should cause application
-/// to crash.
+/// State indicating that loading details failed with an [Error]. This state is
+/// not designed to be handled by UI components and usually should cause
+/// application to crash.
 class DetailsError extends DetailsState {
   final Error error;
 

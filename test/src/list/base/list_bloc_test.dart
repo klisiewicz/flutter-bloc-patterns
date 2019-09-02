@@ -4,7 +4,6 @@ import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../filter/filter_repository_mock.dart';
 import 'repository_mock.dart';
 
 void main() {
@@ -23,7 +22,7 @@ void main() {
       when(repository.getAll()).thenAnswer((_) async => _someData);
 
   void givenFailingRepository() =>
-      when(repository.getAll()).thenThrow(exception);
+      when(repository.getAll()).thenThrow(_exception);
 
   Future<void> thenExpectStates(Iterable<ListState> states) async =>
       expect(
@@ -60,7 +59,7 @@ void main() {
       whenLoadingElements();
       thenExpectStates([
         ListLoading(),
-        ListNotLoaded(exception),
+        ListNotLoaded(_exception),
       ]);
     });
   });
@@ -85,4 +84,5 @@ void main() {
   });
 }
 
+final _exception = Exception('I\'ve failed my lord...');
 final _someData = [1, 2, 3];

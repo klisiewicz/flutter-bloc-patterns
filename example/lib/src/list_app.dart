@@ -54,7 +54,7 @@ class _PostsPageState extends State<PostsPage> {
                 onRefresh: () => listBloc.refreshElements(),
               ),
           onNoResult: (context) => PostsListEmpty(),
-          onError: (context, error) => ErrorMessage(error: error),
+          onFailure: (context, error) => ErrorMessage(error: error),
         ).build,
       ),
     );

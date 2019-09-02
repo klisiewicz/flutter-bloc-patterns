@@ -19,10 +19,11 @@ This method is responsible for providing all the data to the `ListBloc`.
     * `onRefreshing` - informs the presentation layer that the list is refreshing, so it can display a refresh indicator or/and the current state of list elements,
     * `onResult` - informs the presentation layer that the loading is completed and a non empty list of elements was retrieved,
     * `onNoResult` - informs the presentation layer that the loading is completed, but no elements were retrieved,
-    * `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an exception that has occurred.
+    * `onFailure` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an exception that has occurred.
 
 ##### Usage
 1. Create `ListBloc` using `BlocProvider` or any other `DI` framework:
+
     ```dart
     BlocProvider(
         builder: (context) => ListBloc<Data>(DataRepository()),
@@ -30,10 +31,12 @@ This method is responsible for providing all the data to the `ListBloc`.
     );
     ```
 2. Trigger loading the data:
+
     ```dart
     listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadElements();
     ```
 3. Use `ListViewBuilder` to build the view state:
+
     ```dart
     @override
     Widget build(BuildContext context) {
@@ -43,7 +46,7 @@ This method is responsible for providing all the data to the `ListBloc`.
               onLoading: (context) => _buildIndicator(),
               onResult: (context, elements) _buildList(elements),
               onNoResult: (context) => _buildEmptyList(),
-              onError: (context, error) => _buildErrorMessage(error),
+              onFailure: (context, error) => _buildErrorMessage(error),
             ).build,
         );
       }

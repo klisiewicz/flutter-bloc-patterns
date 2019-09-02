@@ -13,12 +13,14 @@ class InMemoryFilterRepository<T, F> extends FilterRepository<T, F> {
       elements.where((item) => item == filter).toList();
 }
 
-final exception = Exception('I\'ve failed my lord...');
-
 class FailingFilterRepository<T, F> extends FilterRepository<T, F> {
-  @override
-  Future<List<T>> getAll() async => throw exception;
+  final dynamic error;
+
+  FailingFilterRepository(this.error);
 
   @override
-  Future<List<T>> getBy(F filter) async => throw exception;
+  Future<List<T>> getAll() async => throw error;
+
+  @override
+  Future<List<T>> getBy(F filter) async => throw error;
 }
