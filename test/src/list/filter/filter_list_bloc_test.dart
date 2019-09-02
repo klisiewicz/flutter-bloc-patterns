@@ -102,11 +102,11 @@ void main() {
     });
   });
 
-  group('failing repository', () {
+  group('failing repository with exception', () {
+    final exception = Exception('Oh no, I failed!');
+
     setUp(() {
-      filterListBloc = FilterListBloc(
-        FailingFilterRepository(),
-      );
+      filterListBloc = FilterListBloc(FailingFilterRepository(exception));
     });
 
     test('should emit list not loaded when no filter is set', () {
@@ -122,6 +122,22 @@ void main() {
       thenExpectStates([
         ListLoading(),
         ListNotLoaded(exception),
+      ]);
+    });
+  });
+
+  group('failing repository with error', () {
+    final error = Error();
+
+    setUp(() {
+      filterListBloc = FilterListBloc(FailingFilterRepository(error));
+    });
+
+    test('should emit list error when error occurs', () {
+      whenLoadingElements();
+      thenExpectStates([
+        ListLoading(),
+        ListError(error),
       ]);
     });
   });

@@ -63,3 +63,17 @@ class ListNotLoaded extends ListState {
   @override
   String toString() => 'ListNotLoaded: $exception';
 }
+
+/// State indicating that loading list failed with an [Error]. This state is not
+/// designed to be handled by UI components and usually should cause application
+/// to crash.
+class ListError extends ListState {
+  final Error error;
+
+  ListError(this.error)
+      : assert(error != null),
+        super([error]);
+
+  @override
+  String toString() => 'ListError: $error';
+}

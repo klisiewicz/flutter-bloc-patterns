@@ -21,7 +21,7 @@
 ///        onLoading: (context) => _buildIndicator(),
 ///        onResult: (context, data) => _buildList(data),
 ///        onNoResult: (context) => _buildEmptyList(),
-///        onError: (context, error) => _buildErrorMessage(error),
+///        onFailure: (context, error) => _buildErrorMessage(error),
 ///      ).build,
 ///    );
 /// ```
