@@ -2,15 +2,15 @@ import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_patterns/base_list.dart';
+import 'package:flutter_bloc_patterns/src/common/state.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
-import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
-import 'package:flutter_bloc_patterns/src/list/base/list_view_builder.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
 
 /// A list BLoC with allowing filtering capabilities but without pagination.
 /// Thus it should be used with a reasonable small amount of data.
 ///
-/// Designed to collaborate with [BlocBuilder] and [ListViewBuilder] for
+/// Designed to collaborate with [BlocBuilder] and [ViewStateBuilder] for
 /// displaying data.
 ///
 /// Call [loadElements] to perform initial data fetch.
@@ -18,7 +18,7 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 ///
 /// [T] - the type of list elements.
 /// [F] - the type of filter.
-class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
+class FilterListBloc<T, F> extends Bloc<ListEvent, State> {
   final FilterRepository<T, F> _repository;
   F _filter;
 
@@ -27,7 +27,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
         this._repository = repository;
 
   @override
-  ListState get initialState => ListLoading();
+  State get initialState => Loading();
 
   F get filter => _filter;
 
@@ -48,7 +48,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
   void refreshElements({F filter}) => dispatch(RefreshList(filter));
 
   @override
-  Stream<ListState> mapEventToState(ListEvent event) async* {
+  Stream<State> mapEventToState(ListEvent event) async* {
     if (event is LoadList) {
       yield* _mapLoadList(event.filter);
     } else if (event is RefreshList && _isRefreshPossible(event)) {
@@ -57,32 +57,30 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ListState> {
   }
 
   bool _isRefreshPossible(ListEvent event) =>
-      currentState is ListLoaded || currentState is ListLoadedEmpty;
+      currentState is Success || currentState is Empty;
 
-  Stream<ListState> _mapLoadList(F filter) async* {
-    yield ListLoading();
+  Stream<State> _mapLoadList(F filter) async* {
+    yield Loading();
     yield* _getListState(filter);
   }
 
-  Stream<ListState> _mapRefreshList(F filter) async* {
+  Stream<State> _mapRefreshList(F filter) async* {
     final elements = _getCurrentStateElements();
-    yield ListRefreshing(elements);
+    yield Refreshing(elements);
     yield* _getListState(filter);
   }
 
   List<T> _getCurrentStateElements() =>
-      (currentState is ListLoaded) ? (currentState as ListLoaded).elements : [];
+      (currentState is Success) ? (currentState as Success).data : [];
 
-  Stream<ListState> _getListState(F filter) async* {
+  Stream<State> _getListState(F filter) async* {
     try {
       final List<T> elements = await _getElementsFromRepository(filter);
       yield elements.isNotEmpty
-          ? ListLoaded(UnmodifiableListView(elements))
-          : ListLoadedEmpty();
-    } on Exception catch (e) {
-      yield ListNotLoaded(e);
-    } on Error catch (e) {
-      yield ListError(e);
+          ? Success<List<T>>(UnmodifiableListView(elements))
+          : Empty();
+    } catch (e) {
+      yield Failure(e);
     } finally {
       _filter = filter;
     }

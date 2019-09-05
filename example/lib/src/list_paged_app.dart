@@ -1,13 +1,13 @@
 import 'package:example/src/common/error_message.dart';
 import 'package:example/src/common/loading_indicator.dart';
-import 'package:example/src/common/posts_list.dart';
 import 'package:example/src/common/posts_list_empty.dart';
+import 'package:example/src/common/posts_list_paged.dart';
 import 'package:example/src/model/post.dart';
 import 'package:example/src/model/post_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
+import 'package:flutter_bloc_patterns/paged_list.dart';
 
 void main() => runApp(ListSampleApp());
 
@@ -15,29 +15,29 @@ class ListSampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'List Sample App',
+      title: 'Paged List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        builder: (_) => ListBloc<Post>(PostRepository()),
-        child: PostsPage(),
+        builder: (_) => PagedListBloc<Post>(PagedPostRepository()),
+        child: _PostsPage(),
       ),
     );
   }
 }
 
-class PostsPage extends StatefulWidget {
+class _PostsPage extends StatefulWidget {
   @override
   _PostsPageState createState() => _PostsPageState();
 }
 
-class _PostsPageState extends State<PostsPage> {
-  ListBloc<Post> listBloc;
+class _PostsPageState extends State<_PostsPage> {
+  PagedListBloc _listBloc;
 
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<ListBloc<Post>>(context)
-      ..loadElements();
+    _listBloc = BlocProvider.of<PagedListBloc<Post>>(context)
+      ..loadFirstPage(pageSize: 10);
   }
 
   @override
@@ -45,13 +45,10 @@ class _PostsPageState extends State<PostsPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Posts')),
       body: BlocBuilder(
-        bloc: listBloc,
-        builder: ViewStateBuilder<List<Post>>(
+        bloc: _listBloc,
+        builder: ViewStateBuilder(
           onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, posts) =>
-              PostsList(posts: posts, onRefresh: _refreshPosts),
-          onRefreshing: (context, posts) =>
-              PostsList(posts: posts, onRefresh: _refreshPosts),
+          onSuccess: (context, state) => PostsListPaged(state),
           onEmpty: (context) => PostsListEmpty(),
           onError: (context, error) => ErrorMessage(error: error),
         ).build,
@@ -59,5 +56,9 @@ class _PostsPageState extends State<PostsPage> {
     );
   }
 
-  void _refreshPosts() => listBloc.refreshElements();
+  @override
+  void dispose() {
+    _listBloc.dispose();
+    super.dispose();
+  }
 }

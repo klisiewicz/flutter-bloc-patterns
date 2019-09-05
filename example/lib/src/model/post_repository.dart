@@ -7,6 +7,7 @@ import 'package:example/src/model/user.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/details.dart';
 import 'package:flutter_bloc_patterns/filter_list.dart';
+import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:http/http.dart' as http;
 
 const baseUrl = 'https://jsonplaceholder.typicode.com/posts';
@@ -27,6 +28,13 @@ class FilterPostRepository implements FilterRepository<Post, User> {
     else
       return _getPostsFromUrl('$baseUrl?userId=${user.id}');
   }
+}
+
+class PagedPostRepository implements PagedRepository<Post> {
+  @override
+  Future<List<Post>> getAll(Page pageable) =>
+      _getPostsFromUrl(
+          '$baseUrl?_start=${pageable.offset}&_limit=${pageable.size}');
 }
 
 class PostDetailsRepository implements DetailsRepository<PostDetails, int> {

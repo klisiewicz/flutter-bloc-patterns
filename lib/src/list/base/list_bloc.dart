@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
-import 'package:flutter_bloc_patterns/src/list/base/list_view_builder.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
 
 /// A basic list BLoC with no filtering or pagination. Thus it should be used
 /// with a reasonable small amount of data.
 ///
-/// Designed to collaborate with [BlocBuilder] and [ListViewBuilder] for
+/// Designed to collaborate with [BlocBuilder] and [ViewStateBuilder] for
 /// displaying data.
 ///
 /// Call [loadElements] to perform initial data fetch.

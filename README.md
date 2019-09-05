@@ -17,9 +17,9 @@ This method is responsible for providing all the data to the `ListBloc`.
 `ListViewBuilder` is responsible for building the UI based on the loading list result. It comes with a set of handy callbacks, which corresponds to the list state:
     * `onLoading` - informs the presentation layer that the list is loading, so it can display a loading indicator,
     * `onRefreshing` - informs the presentation layer that the list is refreshing, so it can display a refresh indicator or/and the current state of list elements,
-    * `onResult` - informs the presentation layer that the loading is completed and a non empty list of elements was retrieved,
-    * `onNoResult` - informs the presentation layer that the loading is completed, but no elements were retrieved,
-    * `onFailure` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an exception that has occurred.
+    * `onSuccess` - informs the presentation layer that the loading is completed and a non empty list of elements was retrieved,
+    * `onEmpty` - informs the presentation layer that the loading is completed, but no elements were retrieved,
+    * `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
 
 ##### Usage
 1. Create `ListBloc` using `BlocProvider` or any other `DI` framework:
@@ -44,14 +44,14 @@ This method is responsible for providing all the data to the `ListBloc`.
             bloc: listBloc,
             builder: ListViewBuilder<Data>(
               onLoading: (context) => _buildIndicator(),
-              onResult: (context, elements) _buildList(elements),
-              onNoResult: (context) => _buildEmptyList(),
-              onFailure: (context, error) => _buildErrorMessage(error),
+              onSuccess: (context, elements) _buildList(elements),
+              onEmpty: (context) => _buildEmptyList(),
+              onError: (context, error) => _buildErrorMessage(error),
             ).build,
         );
       }
     ```
-4. Provide widgets corresponding to _loading_, _result_, _no result_ and _error states_.
+4. Provide widgets corresponding to _loading_, _success_, _empty_ and _error_ states.
 
 ##### See also
 [List BLoC Sample App](example/lib/src/list_app.dart)
@@ -68,7 +68,7 @@ An extension to the `ListBloc` that allows filtering.
 Usage is mostly the same as `ListBloc` except of that `loadElements(F filter)` and `refreshElements(F filter)` accept an optional filter parameter.
 
 ##### See also
-[Filter List BLoC Sample App](example/lib/src/filter_list_app.dart)
+[Filter List BLoC Sample App](example/lib/src/list_filter_app.dart)
 
 ## Dart version
 

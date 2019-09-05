@@ -20,15 +20,32 @@ class PostsList extends StatelessWidget {
       child: ListView.separated(
         itemCount: posts.length,
         itemBuilder: (context, index) =>
-            ListTile(
-              title: Text(posts[index].title),
-              onTap: () {
-                onPostSelected?.call(posts[index]);
-              },
+            PostListItem(
+              posts[index],
+              onPostSelected: onPostSelected,
             ),
         separatorBuilder: (context, index) => Divider(height: 1),
       ),
       onRefresh: onRefresh,
     );
   }
+}
+
+class PostListItem extends StatelessWidget {
+  final Post post;
+  final ValueSetter<Post> onPostSelected;
+
+  const PostListItem(this.post, {
+    this.onPostSelected,
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) =>
+      ListTile(
+        title: Text(post.title),
+        onTap: () {
+          onPostSelected?.call(post);
+        },
+      );
 }

@@ -1,6 +1,6 @@
+import 'package:flutter_bloc_patterns/src/common/state.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
-import 'package:flutter_bloc_patterns/src/list/base/list_states.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -24,7 +24,7 @@ void main() {
   void givenFailingRepository() =>
       when(repository.getAll()).thenThrow(_exception);
 
-  Future<void> thenExpectStates(Iterable<ListState> states) async =>
+  Future<void> thenExpectStates(Iterable<State> states) async =>
       expect(
         listBloc.state,
         emitsInOrder(states),
@@ -32,7 +32,7 @@ void main() {
 
   test('should be initialized in loading state', () {
     thenExpectStates([
-      ListLoading(),
+      Loading(),
     ]);
   });
 
@@ -42,15 +42,15 @@ void main() {
     test('should emit loaded empty list when there is no data', () {
       givenEmptyRepository();
       whenLoadingElements();
-      thenExpectStates([ListLoading(), ListLoadedEmpty()]);
+      thenExpectStates([Loading(), Empty()]);
     });
 
     test('should emit list loaded state when loading data is successful', () {
       givenRepositoryWithElements();
       whenLoadingElements();
       thenExpectStates([
-        ListLoading(),
-        ListLoaded(_someData),
+        Loading(),
+        Success(_someData),
       ]);
     });
 
@@ -58,8 +58,8 @@ void main() {
       givenFailingRepository();
       whenLoadingElements();
       thenExpectStates([
-        ListLoading(),
-        ListNotLoaded(_exception),
+        Loading(),
+        Failure(_exception),
       ]);
     });
   });
@@ -75,10 +75,10 @@ void main() {
       whenRefreshingElements();
 
       thenExpectStates([
-        ListLoading(),
-        ListLoaded(_someData),
-        ListRefreshing(_someData),
-        ListLoaded(_someData),
+        Loading(),
+        Success(_someData),
+        Refreshing(_someData),
+        Success(_someData),
       ]);
     });
   });

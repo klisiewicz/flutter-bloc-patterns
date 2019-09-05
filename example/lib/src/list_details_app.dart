@@ -24,12 +24,12 @@ class ListDetailsSampleApp extends StatelessWidget {
   }
 }
 
-class PostsPage extends StatefulWidget {
+class _PostsPage extends StatefulWidget {
   @override
   _PostsPageState createState() => _PostsPageState();
 }
 
-class _PostsPageState extends State<PostsPage> {
+class _PostsPageState extends State<_PostsPage> {
   ListBloc<Post> listBloc;
 
   @override
@@ -44,15 +44,16 @@ class _PostsPageState extends State<PostsPage> {
       appBar: AppBar(title: Text('Posts')),
       body: BlocBuilder(
         bloc: listBloc,
-        builder: ListViewBuilder<Post>(
+        builder: ViewStateBuilder<List<Post>>(
           onLoading: (context) => LoadingIndicator(),
-          onResult: (context, posts) => PostsList(
+          onSuccess: (context, posts) =>
+              PostsList(
             posts: posts,
             onPostSelected: _navigateToPostDetails,
             onRefresh: listBloc.refreshElements,
           ),
-          onNoResult: (context) => PostsListEmpty(),
-          onFailure: (context, error) => ErrorMessage(error: error),
+          onEmpty: (context) => PostsListEmpty(),
+          onError: (context, error) => ErrorMessage(error: error),
         ).build,
       ),
     );
@@ -94,11 +95,11 @@ class _PostDetailPageState extends State<_PostDetailPage> {
       appBar: AppBar(title: Text('Post')),
       body: BlocBuilder(
         bloc: detailsBloc,
-        builder: DetailsViewBuilder<PostDetails>(
+        builder: ViewStateBuilder<PostDetails>(
           onLoading: (context) => LoadingIndicator(),
-          onResult: (context, post) => _PostDetailsContent(post),
-          onNoResult: _showSnackbarAndPopPage,
-          onFailure: (context, error) => ErrorMessage(error: error),
+          onSuccess: (context, post) => _PostDetailsContent(post),
+          onEmpty: _showSnackbarAndPopPage,
+          onError: (context, error) => ErrorMessage(error: error),
         ).build,
       ),
     );
@@ -167,7 +168,7 @@ class _Router {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             builder: (_) => ListBloc<Post>(PostRepository()),
-            child: PostsPage(),
+            child: _PostsPage(),
           ),
         );
       case _Route.post:

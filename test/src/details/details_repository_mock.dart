@@ -10,10 +10,10 @@ class InMemoryDetailsRepository<T, I> extends DetailsRepository<T, I> {
 }
 
 class FailingDetailsRepository<T, I> extends DetailsRepository<T, I> {
-  final dynamic exception;
+  final dynamic error;
 
-  FailingDetailsRepository(this.exception);
+  FailingDetailsRepository(this.error);
 
   @override
-  Future<T> getById(I id) async => throw exception;
+  Future<T> getById(I id) async => throw error;
 }
