@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+/// Pagination information.
 @immutable
 class Page extends Equatable {
   final int number;

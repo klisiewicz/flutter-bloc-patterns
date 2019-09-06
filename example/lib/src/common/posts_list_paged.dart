@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/paged_list.dart';
 
 class PostsListPaged extends StatefulWidget {
-  final PagedListState state;
+  final PagedList state;
 
   const PostsListPaged(this.state, {Key key}) : super(key: key);
 
@@ -46,7 +46,7 @@ class _PostsListPagedState extends State<PostsListPaged> {
     return false;
   }
 
-  int getElementsCount(PagedListState<Post> state) =>
+  int getElementsCount(PagedList<Post> state) =>
       state.hasReachedMax ? state.elements.length : state.elements.length + 1;
 
   @override

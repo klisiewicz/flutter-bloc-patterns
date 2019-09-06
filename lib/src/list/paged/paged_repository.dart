@@ -11,6 +11,7 @@ abstract class PagedRepository<T> {
   Future<List<T>> getAll(Page page);
 }
 
+// Exception thrown when page with given number doesn't exist.
 class PageNotFoundException implements Exception {
   final pageNumber;
 

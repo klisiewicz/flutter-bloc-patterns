@@ -30,7 +30,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/src/common/view_state_builder.dart';
 
+export 'package:flutter_bloc_patterns/src/common/refresh_view.dart';
 export 'package:flutter_bloc_patterns/src/common/view_state_builder.dart';
 export 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
 export 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
-export 'package:flutter_bloc_patterns/src/list/base/list_view_refresh.dart';

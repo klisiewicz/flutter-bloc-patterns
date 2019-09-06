@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/common/state.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/paged_list_state.dart';
+import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'paged_repository_mock.dart';
@@ -53,7 +53,7 @@ void main() {
       whenLoadingFirstPage();
       thenExpectStates([
         Loading(),
-        Success(PagedListState(firstPage, hasReachedMax: false)),
+        Success(PagedList(firstPage, hasReachedMax: false)),
       ]);
     });
 
@@ -65,8 +65,8 @@ void main() {
 
       thenExpectStates([
         Loading(),
-        Success(PagedListState(firstPage, hasReachedMax: false)),
-        Success(PagedListState(firstPage + secondPage, hasReachedMax: false)),
+        Success(PagedList(firstPage, hasReachedMax: false)),
+        Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
       ]);
     });
 
@@ -79,9 +79,9 @@ void main() {
 
       thenExpectStates([
         Loading(),
-        Success(PagedListState(firstPage, hasReachedMax: false)),
-        Success(PagedListState(firstPage + secondPage, hasReachedMax: false)),
-        Success(PagedListState(
+        Success(PagedList(firstPage, hasReachedMax: false)),
+        Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
+        Success(PagedList(
           firstPage + secondPage + thirdPage,
           hasReachedMax: false,
         )),
@@ -98,13 +98,13 @@ void main() {
 
       thenExpectStates([
         Loading(),
-        Success(PagedListState(firstPage, hasReachedMax: false)),
-        Success(PagedListState(firstPage + secondPage, hasReachedMax: false)),
-        Success(PagedListState(
+        Success(PagedList(firstPage, hasReachedMax: false)),
+        Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
+        Success(PagedList(
           firstPage + secondPage + thirdPage,
           hasReachedMax: false,
         )),
-        Success(PagedListState(
+        Success(PagedList(
           firstPage + secondPage + thirdPage,
           hasReachedMax: true,
         )),
