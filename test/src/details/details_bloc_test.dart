@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/details.dart';
+import 'package:flutter_bloc_patterns/src/common/state.dart';
 import 'package:flutter_bloc_patterns/src/details/details_bloc.dart';
-import 'package:flutter_bloc_patterns/src/details/details_states.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'details_repository_mock.dart';
@@ -8,10 +8,11 @@ import 'details_repository_mock.dart';
 void main() {
   DetailsBloc<String, int> detailsBloc;
 
-  Future<void> thenExpectStates(Iterable<DetailsState> states) async => expect(
-    detailsBloc.state,
-    emitsInOrder(states),
-  );
+  Future<void> thenExpectStates(Iterable<State> states) async =>
+      expect(
+        detailsBloc.state,
+        emitsInOrder(states),
+      );
 
   group('repository with elements', () {
     const _existingId = 1;
@@ -32,19 +33,19 @@ void main() {
         detailsBloc.loadElement(_noneExistingId);
 
     test('should be initialized in loading details state', () {
-      thenExpectStates([DetailsLoading()]);
+      thenExpectStates([Loading()]);
     });
 
     test('should emit details not found when theres no element with given id',
             () {
           whenLoadingNoneExistingElement();
-          thenExpectStates([DetailsLoading(), DetailsNotFound()]);
+          thenExpectStates([Loading(), Empty()]);
         });
 
     test('should emit details loaded when there is an element with given id',
             () {
           whenLoadingExistingElement();
-          thenExpectStates([DetailsLoading(), DetailsLoaded(_someData)]);
+          thenExpectStates([Loading(), Success(_someData)]);
         });
   });
 
@@ -61,8 +62,8 @@ void main() {
       givenFailingRepository(_exception);
       whenLoadingElement();
       thenExpectStates([
-        DetailsLoading(),
-        DetailsNotLoaded(_exception),
+        Loading(),
+        Failure(_exception),
       ]);
     });
 
@@ -72,8 +73,8 @@ void main() {
           givenFailingRepository(ElementNotFoundException(0));
           whenLoadingElement();
           thenExpectStates([
-            DetailsLoading(),
-            DetailsNotFound(),
+            Loading(),
+            Empty(),
           ]);
         });
 
@@ -81,8 +82,8 @@ void main() {
       givenFailingRepository(_error);
       whenLoadingElement();
       thenExpectStates([
-        DetailsLoading(),
-        DetailsError(_error),
+        Loading(),
+        Failure(_error),
       ]);
     });
   });

@@ -59,19 +59,19 @@ class _PostsPageState extends State<_PostsPage> {
   Widget _buildBody() {
     return BlocBuilder(
       bloc: listBloc,
-      builder: ListViewBuilder<Post>(
+      builder: ViewStateBuilder<List<Post>>(
         onLoading: (context) => LoadingIndicator(),
-        onResult: (context, posts) =>
-            PostsList(
-              posts: posts,
-              onRefresh: () =>
-                  listBloc.refreshElements(filter: listBloc.filter),
-            ),
-        onNoResult: (context) => PostsListEmpty(),
-        onFailure: (context, error) => ErrorMessage(error: error),
+        onSuccess: (context, posts) =>
+            PostsList(posts: posts, onRefresh: _refreshPosts),
+        onRefreshing: (context, posts) =>
+            PostsList(posts: posts, onRefresh: _refreshPosts),
+        onEmpty: (context) => PostsListEmpty(),
+        onError: (context, error) => ErrorMessage(error: error),
       ).build,
     );
   }
+
+  void _refreshPosts() => listBloc.refreshElements(filter: listBloc.filter);
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(

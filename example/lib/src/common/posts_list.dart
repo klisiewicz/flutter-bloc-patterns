@@ -4,7 +4,7 @@ import 'package:flutter_bloc_patterns/base_list.dart';
 
 class PostsList extends StatelessWidget {
   final List<Post> posts;
-  final ListRefreshCallback onRefresh;
+  final VoidCallback onRefresh;
   final ValueSetter<Post> onPostSelected;
 
   const PostsList({
@@ -16,19 +16,36 @@ class PostsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListViewRefresh(
+    return RefreshView(
       child: ListView.separated(
         itemCount: posts.length,
         itemBuilder: (context, index) =>
-            ListTile(
-              title: Text(posts[index].title),
-              onTap: () {
-                onPostSelected?.call(posts[index]);
-              },
+            PostListItem(
+              posts[index],
+              onPostSelected: onPostSelected,
             ),
         separatorBuilder: (context, index) => Divider(height: 1),
       ),
       onRefresh: onRefresh,
     );
   }
+}
+
+class PostListItem extends StatelessWidget {
+  final Post post;
+  final ValueSetter<Post> onPostSelected;
+
+  const PostListItem(this.post, {
+    this.onPostSelected,
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) =>
+      ListTile(
+        title: Text(post.title),
+        onTap: () {
+          onPostSelected?.call(post);
+        },
+      );
 }

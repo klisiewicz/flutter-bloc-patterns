@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class ErrorMessage extends StatelessWidget {
-  final Exception error;
+  final dynamic error;
 
   const ErrorMessage({
     Key key,
