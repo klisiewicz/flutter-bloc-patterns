@@ -9,9 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/paged_list.dart';
 
-void main() => runApp(ListSampleApp());
+void main() => runApp(PagedListSampleApp());
 
-class ListSampleApp extends StatelessWidget {
+class PagedListSampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
