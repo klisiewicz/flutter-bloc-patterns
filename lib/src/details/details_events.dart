@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 /// Base class for details events.
 @immutable
 abstract class DetailsEvent extends Equatable {
-  DetailsEvent([List props = const []]) : super(props);
+  const DetailsEvent();
 }
 
 /// Event indicating that details needs to be loaded.
@@ -13,7 +13,10 @@ abstract class DetailsEvent extends Equatable {
 class LoadDetails<I> extends DetailsEvent {
   final I id;
 
-  LoadDetails([this.id]) : super([id]);
+  LoadDetails([this.id]);
+
+  @override
+  List<Object> get props => [id];
 
   String toString() => 'LoadDetails: $id';
 }

@@ -12,6 +12,7 @@ dependencies:
   flutter_bloc_patterns:
     path: ../
   cupertino_icons: ^0.1.2
+  infinite_widgets: ^1.0.1
 
 dev_dependencies:
   flutter_test:

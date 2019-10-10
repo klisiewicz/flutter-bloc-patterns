@@ -18,8 +18,12 @@ class PagedList<T> extends Equatable {
       : assert(
           elements != null && elements.isNotEmpty,
           'Elements cannot be empty',
-        ),
-        super([elements, hasReachedMax]);
+  );
+
+  bool get hasMoreElements => !hasReachedMax;
+
+  @override
+  List<Object> get props => [elements, hasReachedMax];
 
   @override
   String toString() => '$elements, hasReachedMax: $hasReachedMax';

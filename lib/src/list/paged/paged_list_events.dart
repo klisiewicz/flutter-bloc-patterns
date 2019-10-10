@@ -5,16 +5,17 @@ import 'package:meta/meta.dart';
 /// Base class for paged list events.
 @immutable
 abstract class PagedListEvent extends Equatable {
-  PagedListEvent([List props = const []]) : super(props);
+  const PagedListEvent();
 }
 
 /// Event indicating that a page needs to be loaded.
 class LoadPage extends PagedListEvent {
   final Page page;
 
-  LoadPage(this.page)
-      : assert(page != null),
-        super([page]);
+  const LoadPage(this.page) : assert(page != null);
+
+  @override
+  List<Object> get props => [page];
 
   @override
   String toString() => 'LoadPage: $page';

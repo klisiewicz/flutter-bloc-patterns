@@ -37,7 +37,7 @@ class _PostsPageState extends State<_PostsPage> {
   void initState() {
     super.initState();
     _listBloc = BlocProvider.of<PagedListBloc<Post>>(context)
-      ..loadFirstPage(pageSize: 10);
+      ..loadFirstPage(pageSize: 20);
   }
 
   @override
@@ -48,7 +48,11 @@ class _PostsPageState extends State<_PostsPage> {
         bloc: _listBloc,
         builder: ViewStateBuilder(
           onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, state) => PostsListPaged(state),
+          onSuccess: (context, state) =>
+              PostsListPaged(
+                state,
+                onLoadNextPage: _listBloc.loadNextPage,
+              ),
           onEmpty: (context) => PostsListEmpty(),
           onError: (context, error) => ErrorMessage(error: error),
         ).build,

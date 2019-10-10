@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 /// Base class for all list events.
 @immutable
 abstract class ListEvent extends Equatable {
-  ListEvent([List props = const []]) : super(props);
+  const ListEvent();
 }
 
 /// Event for indicating that initial list load needs to be performed.
@@ -13,7 +13,10 @@ abstract class ListEvent extends Equatable {
 class LoadList<F> extends ListEvent {
   final F filter;
 
-  LoadList([this.filter]) : super([filter]);
+  const LoadList([this.filter]);
+
+  @override
+  List<Object> get props => [filter];
 
   String toString() => 'LoadList: $filter';
 }
@@ -24,7 +27,10 @@ class LoadList<F> extends ListEvent {
 class RefreshList<F> extends ListEvent {
   final F filter;
 
-  RefreshList([this.filter]) : super([]);
+  const RefreshList([this.filter]);
+
+  @override
+  List<Object> get props => [filter];
 
   String toString() => 'RefreshList: $filter';
 }

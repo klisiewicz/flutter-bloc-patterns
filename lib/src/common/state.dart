@@ -4,7 +4,10 @@ import 'package:flutter/foundation.dart';
 /// Base class for states.
 @immutable
 abstract class State extends Equatable {
-  State([List props = const []]) : super(props);
+  const State();
+
+  @override
+  List<Object> get props => [];
 }
 
 /// State indicating that data is being loaded.
@@ -19,7 +22,10 @@ class Loading extends State {
 class Refreshing<T> extends State {
   final T data;
 
-  Refreshing(this.data) : super([data]);
+  const Refreshing(this.data);
+
+  @override
+  List<Object> get props => [data];
 
   @override
   String toString() => 'Refreshing: $data';
@@ -36,9 +42,10 @@ class Empty extends State {
 class Success<T> extends State {
   final T data;
 
-  Success(this.data)
-      : assert(data != null),
-        super([data]);
+  Success(this.data) : assert(data != null);
+
+  @override
+  List<Object> get props => [data];
 
   @override
   String toString() => 'Success: $data';
@@ -49,9 +56,10 @@ class Success<T> extends State {
 class Failure extends State {
   final dynamic error;
 
-  Failure(this.error)
-      : assert(error != null),
-        super([error]);
+  Failure(this.error) : assert(error != null);
+
+  @override
+  List<Object> get props => [error];
 
   @override
   String toString() => 'Failure: $error';

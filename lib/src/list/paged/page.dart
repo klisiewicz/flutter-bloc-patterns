@@ -10,12 +10,11 @@ class Page extends Equatable {
   /// Creates a [Page] object.
   /// [number] - zero based page index.
   /// [size] - the size of the page to be returned.
-  Page({
+  const Page({
     this.number = 0,
     this.size,
   })  : assert(number >= 0, 'Page index must not be less than zero'),
-        assert(size >= 1, 'Page size must not be less than one'),
-        super([number, size]);
+        assert(size >= 1, 'Page size must not be less than one');
 
   /// Creates first page.
   /// [size] - the size of the page to be returned.
@@ -31,6 +30,9 @@ class Page extends Equatable {
   /// one already is the first one.
   Page previous() =>
       (number == 0) ? this : Page(number: number - 1, size: size);
+
+  @override
+  List<Object> get props => [number, size];
 
   @override
   String toString() => 'Page (number: $number, size: $size)';
