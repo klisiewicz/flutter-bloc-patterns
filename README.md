@@ -14,7 +14,7 @@ BLoC, aka **B**usiness **Lo**gic **C**omponent, is a state management system for
 A `Repository` to handles data operations. It knows where to get the data from and what API calls to make when data is updated. A `Repository` can utilize a single data source as well as it can be a mediator between different data sources, such as database, web services and caches.
 
 ##### ViewStateBuilder
-`ViewStateBuilder` is responsible for building the UI based on the view state. It comes with a set of handy callbacks, which corresponds to each possible state:
+`ViewStateBuilder` is responsible for building the UI based on the view state. It's a wrapper over the `BlocBuilder` widget so it accepts a `bloc` object and a set of handy callbacks, which corresponds to each possible state:
 
 * `onLoading` - informs the presentation layer that the list is loading, so it can display a loading indicator,
 * `onRefreshing` - informs the presentation layer that the list is refreshing, so it can display a refresh indicator or/and the current state of list elements,
@@ -48,19 +48,17 @@ BlocProvider(
 listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadElements();
 ```
 
-3. Use `BlocBuilder` along with the `ViewStateBuilder` to build the view state:
+3. Use the `ViewStateBuilder` to build the view state:
 
 ```dart
 @override
 Widget build(BuildContext context) {
-    return BlocBuilder(
+    return ViewStateBuilder(
         bloc: listBloc,
-        builder: ViewStateBuilder<Data>(
-          onLoading: (context) => _buildIndicator(),
-          onSuccess: (context, elements) _buildList(elements),
-          onEmpty: (context) => _buildEmptyList(),
-          onError: (context, error) => _buildErrorMessage(error),
-        ).build,
+        onLoading: (context) => _buildIndicator(),
+        onSuccess: (context, elements) _buildList(elements),
+        onEmpty: (context) => _buildEmptyList(),
+        onError: (context, error) => _buildErrorMessage(error),
     );
 }
 ```
@@ -95,17 +93,34 @@ BlocProvider(
 filteredListBloc = BlocProvider.of<FilteredListBloc<Data>>(context)..loadElements(filter: initialFilter);
 ```
 
+3. Use the `ViewStateBuilder` to build the view state:
+
+```dart
+@override
+Widget build(BuildContext context) {
+    return ViewStateBuilder(
+        bloc: listBloc,
+        onLoading: (context) => _buildIndicator(),
+        onSuccess: (context, elements) _buildList(elements),
+        onEmpty: (context) => _buildEmptyList(),
+        onError: (context, error) => _buildErrorMessage(error),
+    );
+}
+```
+
+4. Provide widgets corresponding to _loading_, _success_, _empty_ and _error_ states.
+
 ##### See also
 [Filter List BLoC Sample App](example/lib/src/list_filter_app.dart)
 
 ### PagedListBloc
-A list BLoC with pagination but without filtering.
+A list BLoC with pagination but without filtering. It works best with [Infinite Widgets](https://github.com/jaumard/infinite_widgets) but a custom presentation layer can provided as well.
 
 #### Page
 Contains information about the current page, this is `number` and `size`.
 
 #### PagedList
-List of elements with information whether there could be even more elements.
+List of elements with information if there are more elements or not.
 
 #### PagedRepository
 `PagedRepository` comes with only one method:
@@ -120,7 +135,33 @@ List of elements with information whether there could be even more elements.
 ```dart
 listBloc = BlocProvider.of<PagedListBloc<Data>>(context)..loadFirstPage(pageSize: 10);
 ```
-3. Use `ViewStateBuilder` to build the view state.
+3. Use the `ViewStateBuilder` to build the view state:
+
+```dart
+@override
+Widget build(BuildContext context) {
+    return ViewStateBuilder(
+        bloc: listBloc,
+        onLoading: (context) => _buildIndicator(),
+        onSuccess: (context, page) _buildInfiniteList(page),
+        onEmpty: (context) => _buildEmptyList(),
+        onError: (context, error) => _buildErrorMessage(error),
+    );
+}
+```
+
+4. Provide widgets corresponding to _loading_, _success_, _empty_ and _error_ states.
+For building the presentation layer you can use `InfiniteListView` or `InfiniteGridView` which are part of [Infinite Widgets](https://github.com/jaumard/infinite_widgets) library. Thanks to this you can easilly apply the `Page` properties straight into the `InfiniteListView` with no additional work required.
+
+```dart
+InfiniteListView(
+    itemBuilder: (context, index) => _buildListItem(page.elements[index]),
+    itemCount: page.elements.length,
+    hasNext: page.hasMoreElements,
+    nextData: onLoadNextPage,
+    loadingWidget: _buildPageLoadingIndicator(),
+);
+```
 
 ##### See also
 [Paged List BLoC Sample App](example/lib/src/list_paged_app.dart)
