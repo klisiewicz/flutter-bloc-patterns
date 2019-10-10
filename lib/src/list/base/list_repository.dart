@@ -3,7 +3,6 @@
 ///
 /// [T] - the type of returned elements.
 abstract class Repository<T> {
-
   /// Retrieves all items.
   Future<List<T>> getAll();
 }

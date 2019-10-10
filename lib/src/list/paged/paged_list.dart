@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 
 /// List of elements with information whether there could be even more elements.
 ///

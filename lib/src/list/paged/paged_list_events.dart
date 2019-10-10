@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
-import 'package:meta/meta.dart';
 
 /// Base class for paged list events.
 @immutable
