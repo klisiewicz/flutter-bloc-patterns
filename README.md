@@ -158,7 +158,7 @@ InfiniteListView(
     itemBuilder: (context, index) => _buildListItem(page.elements[index]),
     itemCount: page.elements.length,
     hasNext: page.hasMoreElements,
-    nextData: onLoadNextPage,
+    nextData: listBloc.loadNextPage,
     loadingWidget: _buildPageLoadingIndicator(),
 );
 ```
