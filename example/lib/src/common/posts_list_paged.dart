@@ -6,23 +6,22 @@ import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:infinite_widgets/infinite_widgets.dart';
 
 class PostsListPaged extends StatelessWidget {
-  final PagedList<Post> state;
+  final PagedList<Post> page;
   final VoidCallback onLoadNextPage;
 
-  const PostsListPaged(this.state, {
+  const PostsListPaged(this.page, {
     Key key,
     @required this.onLoadNextPage,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InfiniteListView.separated(
-      itemBuilder: (context, index) => PostListItem(state.elements[index]),
-      itemCount: state.elements.length,
-      hasNext: state.hasMoreElements,
+    return InfiniteListView(
+      itemBuilder: (context, index) => PostListItem(page.elements[index]),
+      itemCount: page.elements.length,
+      hasNext: page.hasMoreElements,
       nextData: onLoadNextPage,
       loadingWidget: LoadingPageIndicator(),
-      separatorBuilder: (context, index) => Divider(height: 1),
     );
   }
 }

@@ -48,9 +48,9 @@ class _PostsPageState extends State<_PostsPage> {
         bloc: _listBloc,
         builder: ViewStateBuilder(
           onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, state) =>
+          onSuccess: (context, page) =>
               PostsListPaged(
-                state,
+                page,
                 onLoadNextPage: _listBloc.loadNextPage,
               ),
           onEmpty: (context) => PostsListEmpty(),
