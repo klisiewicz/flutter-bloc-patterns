@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/details.dart';
-import 'package:flutter_bloc_patterns/src/common/state.dart';
+import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/details/details_events.dart';
 import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
 
@@ -14,7 +14,7 @@ import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
 ///
 /// [T] - the type of the element.
 /// [I] - the type of id.
-class DetailsBloc<T, I> extends Bloc<DetailsEvent, State> {
+class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
   final DetailsRepository<T, I> _detailsRepository;
 
   DetailsBloc(DetailsRepository<T, I> detailsRepository)
@@ -22,19 +22,19 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, State> {
         this._detailsRepository = detailsRepository;
 
   @override
-  State get initialState => Loading();
+  ViewState get initialState => Loading();
 
   /// Loads an element with given [id].
   void loadElement(I id) => dispatch(LoadDetails(id));
 
   @override
-  Stream<State> mapEventToState(DetailsEvent event) async* {
+  Stream<ViewState> mapEventToState(DetailsEvent event) async* {
     if (event is LoadDetails) {
       yield* _mapLoadDetails(event.id);
     }
   }
 
-  Stream<State> _mapLoadDetails(I id) async* {
+  Stream<ViewState> _mapLoadDetails(I id) async* {
     try {
       final element = await _detailsRepository.getById(id);
       yield element != null ? Success<T>(element) : Empty();

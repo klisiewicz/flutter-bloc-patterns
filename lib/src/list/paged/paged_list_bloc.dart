@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
-import 'package:flutter_bloc_patterns/src/common/state.dart';
+import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_events.dart';
@@ -18,7 +18,7 @@ import 'package:flutter_bloc_patterns/src/list/paged/paged_repository.dart';
 /// Call [loadNextPage] to fetch next page of data.
 ///
 /// [T] - the type of list elements.
-class PagedListBloc<T> extends Bloc<PagedListEvent, State> {
+class PagedListBloc<T> extends Bloc<PagedListEvent, ViewState> {
   static const _defaultPageSize = 10;
   final PagedRepository<T> _pagedRepository;
 
@@ -27,7 +27,7 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, State> {
         this._pagedRepository = pagedRepository;
 
   @override
-  State get initialState => Loading();
+  ViewState get initialState => Loading();
 
   List<T> get _currentElements =>
       (currentState is Success) ? (currentState as Success).data.elements : [];
@@ -49,13 +49,13 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, State> {
   }
 
   @override
-  Stream<State> mapEventToState(PagedListEvent event) async* {
+  Stream<ViewState> mapEventToState(PagedListEvent event) async* {
     if (event is LoadPage) {
       yield* _mapLoadPage(event.page);
     }
   }
 
-  Stream<State> _mapLoadPage(Page page) async* {
+  Stream<ViewState> _mapLoadPage(Page page) async* {
     try {
       final List<T> pageElements = await _pagedRepository.getAll(page);
       if (pageElements.isEmpty) {
@@ -70,7 +70,7 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, State> {
     }
   }
 
-  Stream<State> _emitEmptyPageLoaded(Page page) async* {
+  Stream<ViewState> _emitEmptyPageLoaded(Page page) async* {
     yield (_isFirst(page))
         ? Empty()
         : Success(PagedList<T>(
@@ -81,7 +81,7 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, State> {
 
   bool _isFirst(Page page) => page.number == 0;
 
-  Stream<State> _emitNextPageLoaded(List<T> pageElements) async* {
+  Stream<ViewState> _emitNextPageLoaded(List<T> pageElements) async* {
     final List<T> allElements = _currentElements + pageElements;
     yield Success(PagedList<T>(UnmodifiableListView(allElements)));
   }

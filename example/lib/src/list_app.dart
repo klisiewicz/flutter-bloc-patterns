@@ -44,17 +44,15 @@ class _PostsPageState extends State<PostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Posts')),
-      body: BlocBuilder(
+      body: ViewStateBuilder(
         bloc: listBloc,
-        builder: ViewStateBuilder<List<Post>>(
-          onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, posts) =>
-              PostsList(posts: posts, onRefresh: _refreshPosts),
-          onRefreshing: (context, posts) =>
-              PostsList(posts: posts, onRefresh: _refreshPosts),
-          onEmpty: (context) => PostsListEmpty(),
-          onError: (context, error) => ErrorMessage(error: error),
-        ).build,
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, posts) =>
+            PostsList(posts: posts, onRefresh: _refreshPosts),
+        onRefreshing: (context, posts) =>
+            PostsList(posts: posts, onRefresh: _refreshPosts),
+        onEmpty: (context) => PostsListEmpty(),
+        onError: (context, error) => ErrorMessage(error: error),
       ),
     );
   }

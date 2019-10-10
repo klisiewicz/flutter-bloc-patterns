@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_patterns/paged_list.dart';
-import 'package:flutter_bloc_patterns/src/common/state.dart';
+import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -20,7 +20,8 @@ void main() {
 
   void whenLoadingNextPage() => pagedListBloc.loadNextPage();
 
-  Future<void> thenExpectStates(Iterable<State> states) => expectLater(
+  Future<void> thenExpectStates(Iterable<ViewState> states) =>
+      expectLater(
         pagedListBloc.state,
         emitsInOrder(states),
       );

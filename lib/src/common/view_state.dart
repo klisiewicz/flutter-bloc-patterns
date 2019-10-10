@@ -3,15 +3,15 @@ import 'package:flutter/foundation.dart';
 
 /// Base class for states.
 @immutable
-abstract class State extends Equatable {
-  const State();
+abstract class ViewState extends Equatable {
+  const ViewState();
 
   @override
   List<Object> get props => [];
 }
 
 /// State indicating that data is being loaded.
-class Loading extends State {
+class Loading extends ViewState {
   @override
   String toString() => 'Loading';
 }
@@ -19,7 +19,7 @@ class Loading extends State {
 /// State indicating that data is being refreshed. It can occur only after
 /// initial loading ends with [Success] or [Empty] result. It may contain
 /// the data that has already been loaded.
-class Refreshing<T> extends State {
+class Refreshing<T> extends ViewState {
   final T data;
 
   const Refreshing(this.data);
@@ -32,14 +32,14 @@ class Refreshing<T> extends State {
 }
 
 /// State indicating that data was loaded successfully, but was null or empty.
-class Empty extends State {
+class Empty extends ViewState {
   @override
   String toString() => 'Empty';
 }
 
 /// State indicating that data was loaded successfully and is not null nor empty.
 /// [T] - list element type.
-class Success<T> extends State {
+class Success<T> extends ViewState {
   final T data;
 
   Success(this.data) : assert(data != null);
@@ -53,7 +53,7 @@ class Success<T> extends State {
 
 /// State indicating that loading or refreshing has failed. It contains an
 /// exact [error] that has occurred.
-class Failure extends State {
+class Failure extends ViewState {
   final dynamic error;
 
   Failure(this.error) : assert(error != null);

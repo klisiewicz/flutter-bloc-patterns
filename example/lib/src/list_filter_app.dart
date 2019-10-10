@@ -7,6 +7,7 @@ import 'package:example/src/model/post_repository.dart';
 import 'package:example/src/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/filter_list.dart';
 
 void main() => runApp(FilterListSampleApp());
@@ -57,17 +58,15 @@ class _PostsPageState extends State<_PostsPage> {
   AppBar _buildAppBar() => AppBar(title: Text('Posts'));
 
   Widget _buildBody() {
-    return BlocBuilder(
+    return ViewStateBuilder(
       bloc: listBloc,
-      builder: ViewStateBuilder<List<Post>>(
-        onLoading: (context) => LoadingIndicator(),
-        onSuccess: (context, posts) =>
-            PostsList(posts: posts, onRefresh: _refreshPosts),
-        onRefreshing: (context, posts) =>
-            PostsList(posts: posts, onRefresh: _refreshPosts),
-        onEmpty: (context) => PostsListEmpty(),
-        onError: (context, error) => ErrorMessage(error: error),
-      ).build,
+      onLoading: (context) => LoadingIndicator(),
+      onSuccess: (context, posts) =>
+          PostsList(posts: posts, onRefresh: _refreshPosts),
+      onRefreshing: (context, posts) =>
+          PostsList(posts: posts, onRefresh: _refreshPosts),
+      onEmpty: (context) => PostsListEmpty(),
+      onError: (context, error) => ErrorMessage(error: error),
     );
   }
 

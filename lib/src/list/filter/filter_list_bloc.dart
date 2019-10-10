@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
-import 'package:flutter_bloc_patterns/src/common/state.dart';
+import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
 
@@ -18,7 +18,7 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 ///
 /// [T] - the type of list elements.
 /// [F] - the type of filter.
-class FilterListBloc<T, F> extends Bloc<ListEvent, State> {
+class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   final FilterRepository<T, F> _repository;
   F _filter;
 
@@ -27,7 +27,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, State> {
         this._repository = repository;
 
   @override
-  State get initialState => Loading();
+  ViewState get initialState => Loading();
 
   F get filter => _filter;
 
@@ -48,7 +48,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, State> {
   void refreshElements({F filter}) => dispatch(RefreshList(filter));
 
   @override
-  Stream<State> mapEventToState(ListEvent event) async* {
+  Stream<ViewState> mapEventToState(ListEvent event) async* {
     if (event is LoadList) {
       yield* _mapLoadList(event.filter);
     } else if (event is RefreshList && _isRefreshPossible(event)) {
@@ -59,12 +59,12 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, State> {
   bool _isRefreshPossible(ListEvent event) =>
       currentState is Success || currentState is Empty;
 
-  Stream<State> _mapLoadList(F filter) async* {
+  Stream<ViewState> _mapLoadList(F filter) async* {
     yield Loading();
     yield* _getListState(filter);
   }
 
-  Stream<State> _mapRefreshList(F filter) async* {
+  Stream<ViewState> _mapRefreshList(F filter) async* {
     final elements = _getCurrentStateElements();
     yield Refreshing(elements);
     yield* _getListState(filter);
@@ -73,7 +73,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, State> {
   List<T> _getCurrentStateElements() =>
       (currentState is Success) ? (currentState as Success).data : [];
 
-  Stream<State> _getListState(F filter) async* {
+  Stream<ViewState> _getListState(F filter) async* {
     try {
       final List<T> elements = await _getElementsFromRepository(filter);
       yield elements.isNotEmpty

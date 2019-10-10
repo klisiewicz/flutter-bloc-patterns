@@ -42,19 +42,16 @@ class _PostsPageState extends State<_PostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Posts')),
-      body: BlocBuilder(
+      body: ViewStateBuilder(
         bloc: listBloc,
-        builder: ViewStateBuilder<List<Post>>(
-          onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, posts) =>
-              PostsList(
-            posts: posts,
-            onPostSelected: _navigateToPostDetails,
-            onRefresh: listBloc.refreshElements,
-          ),
-          onEmpty: (context) => PostsListEmpty(),
-          onError: (context, error) => ErrorMessage(error: error),
-        ).build,
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, posts) =>
+            PostsList(
+              posts: posts,
+              onPostSelected: _navigateToPostDetails,
+              onRefresh: listBloc.refreshElements,
+            ),
+        onEmpty: (context) => PostsListEmpty(),
       ),
     );
   }
@@ -93,14 +90,12 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Post')),
-      body: BlocBuilder(
+      body: ViewStateBuilder(
         bloc: detailsBloc,
-        builder: ViewStateBuilder<PostDetails>(
-          onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, post) => _PostDetailsContent(post),
-          onEmpty: _showSnackbarAndPopPage,
-          onError: (context, error) => ErrorMessage(error: error),
-        ).build,
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, post) => _PostDetailsContent(post),
+        onEmpty: _showSnackbarAndPopPage,
+        onError: (context, error) => ErrorMessage(error: error),
       ),
     );
   }

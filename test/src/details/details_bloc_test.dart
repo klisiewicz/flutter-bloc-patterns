@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_patterns/details.dart';
-import 'package:flutter_bloc_patterns/src/common/state.dart';
+import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/details/details_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,7 +8,7 @@ import 'details_repository_mock.dart';
 void main() {
   DetailsBloc<String, int> detailsBloc;
 
-  Future<void> thenExpectStates(Iterable<State> states) async =>
+  Future<void> thenExpectStates(Iterable<ViewState> states) async =>
       expect(
         detailsBloc.state,
         emitsInOrder(states),

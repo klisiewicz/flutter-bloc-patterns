@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_patterns/src/common/state.dart';
+import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,7 +18,7 @@ void main() {
   void whenRefreshingElements({int filter}) =>
       filterListBloc.refreshElements(filter: filter);
 
-  Future<void> thenExpectStates(Iterable<State> states) =>
+  Future<void> thenExpectStates(Iterable<ViewState> states) =>
       expectLater(
         filterListBloc.state,
         emitsInOrder(states),
