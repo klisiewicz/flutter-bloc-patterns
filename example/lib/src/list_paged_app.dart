@@ -48,11 +48,10 @@ class _PostsPageState extends State<_PostsPage> {
         bloc: _listBloc,
         builder: ViewStateBuilder(
           onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, page) =>
-              PostsListPaged(
-                page,
-                onLoadNextPage: _listBloc.loadNextPage,
-              ),
+          onSuccess: (context, page) => PostsListPaged(
+            page,
+            onLoadNextPage: _listBloc.loadNextPage,
+          ),
           onEmpty: (context) => PostsListEmpty(),
           onError: (context, error) => ErrorMessage(error: error),
         ).build,
@@ -62,7 +61,7 @@ class _PostsPageState extends State<_PostsPage> {
 
   @override
   void dispose() {
-    _listBloc.dispose();
+    _listBloc.close();
     super.dispose();
   }
 }

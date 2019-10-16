@@ -9,7 +9,7 @@ void main() {
   DetailsBloc<String, int> detailsBloc;
 
   Future<void> thenExpectStates(Iterable<ViewState> states) async => expect(
-        detailsBloc.state,
+        detailsBloc,
         emitsInOrder(states),
       );
 
@@ -54,6 +54,10 @@ void main() {
         Success(_someData),
       ]);
     });
+
+    tearDown(() {
+      detailsBloc.close();
+    });
   });
 
   group('failing repository', () {
@@ -95,6 +99,10 @@ void main() {
         Loading(),
         Failure(_error),
       ]);
+    });
+
+    tearDown(() {
+      detailsBloc.close();
     });
   });
 }

@@ -34,7 +34,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   /// It's most suitable for initial data fetch or for retry action when
   /// the first fetch fails. It can also be used when [filter] changes when a
   /// full reload is required.
-  void loadElements({F filter}) => dispatch(LoadList(filter));
+  void loadElements({F filter}) => add(LoadList(filter));
 
   /// Refreshes elements using the given [filter].
   ///
@@ -43,7 +43,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   ///
   /// It can be used when [filter] changes and there's no need for displaying a
   /// loading indicator.
-  void refreshElements({F filter}) => dispatch(RefreshList(filter));
+  void refreshElements({F filter}) => add(RefreshList(filter));
 
   @override
   Stream<ViewState> mapEventToState(ListEvent event) async* {
@@ -55,7 +55,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   }
 
   bool _isRefreshPossible(ListEvent event) =>
-      currentState is Success || currentState is Empty;
+      state is Success || state is Empty;
 
   Stream<ViewState> _mapLoadList(F filter) async* {
     yield Loading();
@@ -69,7 +69,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   }
 
   List<T> _getCurrentStateElements() =>
-      (currentState is Success) ? (currentState as Success).data : [];
+      (state is Success) ? (state as Success).data : [];
 
   Stream<ViewState> _getListState(F filter) async* {
     try {
