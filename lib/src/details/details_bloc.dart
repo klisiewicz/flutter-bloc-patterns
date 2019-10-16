@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/details.dart';
 import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/details/details_events.dart';
@@ -7,8 +6,7 @@ import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
 
 /// A BLoC that allows to fetch a single element with given identifier.
 ///
-/// Designed to collaborate with [BlocBuilder] and [ViewStateBuilder] for
-/// displaying data.
+/// Designed to collaborate with [ViewStateBuilder] for displaying data.
 ///
 /// Call [loadElement] to fetch an element with given identifier.
 ///

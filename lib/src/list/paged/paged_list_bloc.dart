@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
@@ -11,8 +10,7 @@ import 'package:flutter_bloc_patterns/src/list/paged/paged_repository.dart';
 
 /// A list BLoC with pagination but without filtering.
 ///
-/// Designed to collaborate with [BlocBuilder] and [ViewStateBuilder] for
-/// displaying data.
+/// Designed to collaborate with [ViewStateBuilder] for displaying data.
 ///
 /// Call [loadFirstPage] to fetch first page of data
 /// Call [loadNextPage] to fetch next page of data.

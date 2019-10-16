@@ -12,4 +12,4 @@
 * `ListBloc` - a basic list BLoC with no filtering nor pagination,
 * `FilterListBloc` - a list BLoC with filtering, but without pagination,
 * `PagedListBloc` - a list BLoC with pagination but without filtering,
-* `DetailsBloc` - a single element BLoC.
+* `DetailsBloc` - a BLoC that allows to fetch a single element with given identifier.
