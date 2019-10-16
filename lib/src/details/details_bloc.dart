@@ -23,7 +23,7 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
   ViewState get initialState => Initial();
 
   /// Loads an element with given [id].
-  void loadElement([I id]) => add(LoadDetails(id));
+  void loadElement([I id]) => dispatch(LoadDetails(id));
 
   @override
   Stream<ViewState> mapEventToState(DetailsEvent event) async* {

@@ -2,7 +2,6 @@
 
 * `Initial` state introduced along with `onReady` callback for the `ViewStateBuilder`,
 * `Repository` renamed to `ListRepository`,
-* Migrating to `bloc` version 0.16.1, and `flutter_bloc` version 0.22.0.
 
 ## [0.1.1]
 

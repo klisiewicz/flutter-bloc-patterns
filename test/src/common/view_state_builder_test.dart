@@ -40,7 +40,7 @@ void main() {
 
   testWidgets('should diplay onReady widget when block is in inital state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Initial());
+    when(bloc.currentState).thenReturn(Initial());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -49,7 +49,7 @@ void main() {
 
   testWidgets('should diplay onLoading widget when block is in loading state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Loading());
+    when(bloc.currentState).thenReturn(Loading());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -59,7 +59,7 @@ void main() {
   testWidgets(
       'should diplay onRefreshing widget when block is in refreshing state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Refreshing(someData));
+    when(bloc.currentState).thenReturn(Refreshing(someData));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -68,7 +68,7 @@ void main() {
 
   testWidgets('should diplay onEmpty widget when block is in empty state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Empty());
+    when(bloc.currentState).thenReturn(Empty());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -77,7 +77,7 @@ void main() {
 
   testWidgets('should diplay onSuccess widget when block is in success state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Success(someData));
+    when(bloc.currentState).thenReturn(Success(someData));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -86,7 +86,7 @@ void main() {
 
   testWidgets('should diplay onError widget when block is in failure state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Failure(someError));
+    when(bloc.currentState).thenReturn(Failure(someError));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 

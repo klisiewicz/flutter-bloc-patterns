@@ -28,7 +28,7 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, ViewState> {
   ViewState get initialState => Initial();
 
   List<T> get _currentElements =>
-      (state is Success) ? (state as Success).data.elements : [];
+      (currentState is Success) ? (currentState as Success).data.elements : [];
 
   Page _page;
 
@@ -36,14 +36,14 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, ViewState> {
   /// is used.
   void loadFirstPage({int pageSize = _defaultPageSize}) {
     _page = Page.first(size: pageSize);
-    add(LoadPage(_page));
+    dispatch(LoadPage(_page));
   }
 
   /// Loads next page. When no page has been loaded before the first one is
   /// loaded with the default page size [_defaultPageSize].
   void loadNextPage() {
     _page = _page?.next() ?? Page.first(size: _defaultPageSize);
-    add(LoadPage(_page));
+    dispatch(LoadPage(_page));
   }
 
   @override
