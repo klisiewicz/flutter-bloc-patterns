@@ -162,7 +162,7 @@ class _Router {
       case _Route.home:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            builder: (_) => ListBloc<Post>(PostRepository()),
+            builder: (_) => ListBloc<Post>(PostListRepository()),
             child: _PostsPage(),
           ),
         );

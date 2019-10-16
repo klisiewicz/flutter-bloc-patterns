@@ -17,6 +17,5 @@ class ElementNotFoundException<I> implements Exception {
   ElementNotFoundException(this.id);
 
   @override
-  String toString() =>
-      'ElementNotFoundException: Unable to find element with id $id.';
+  String toString() => '$runtimeType: Unable to find element with id $id.';
 }

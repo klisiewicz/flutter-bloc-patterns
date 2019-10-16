@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 
 const baseUrl = 'https://jsonplaceholder.typicode.com/posts';
 
-class PostRepository implements Repository<Post> {
+class PostListRepository implements ListRepository<Post> {
   @override
   Future<List<Post>> getAll() => _getPostsFromUrl(baseUrl);
 }

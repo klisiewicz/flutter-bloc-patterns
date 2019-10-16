@@ -4,14 +4,14 @@ import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'repository_mock.dart';
+import 'list_repository_mock.dart';
 
 void main() {
   ListBloc<int> listBloc;
-  Repository<int> repository;
+  ListRepository<int> repository;
 
   setUp(() {
-    repository = RepositoryMock<int>();
+    repository = ListRepositoryMock<int>();
     listBloc = ListBloc(repository);
   });
 
@@ -24,15 +24,14 @@ void main() {
   void givenFailingRepository() =>
       when(repository.getAll()).thenThrow(_exception);
 
-  Future<void> thenExpectStates(Iterable<ViewState> states) async =>
-      expect(
+  Future<void> thenExpectStates(Iterable<ViewState> states) async => expect(
         listBloc.state,
         emitsInOrder(states),
       );
 
-  test('should be initialized in loading state', () {
+  test('should be initialized in initial state', () {
     thenExpectStates([
-      Loading(),
+      Initial(),
     ]);
   });
 
@@ -42,13 +41,18 @@ void main() {
     test('should emit loaded empty list when there is no data', () {
       givenEmptyRepository();
       whenLoadingElements();
-      thenExpectStates([Loading(), Empty()]);
+      thenExpectStates([
+        Initial(),
+        Loading(),
+        Empty(),
+      ]);
     });
 
     test('should emit list loaded state when loading data is successful', () {
       givenRepositoryWithElements();
       whenLoadingElements();
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(_someData),
       ]);
@@ -58,6 +62,7 @@ void main() {
       givenFailingRepository();
       whenLoadingElements();
       thenExpectStates([
+        Initial(),
         Loading(),
         Failure(_exception),
       ]);
@@ -75,6 +80,7 @@ void main() {
       whenRefreshingElements();
 
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(_someData),
         Refreshing(_someData),

@@ -23,6 +23,9 @@ class Page extends Equatable {
   /// Returns the offset to be taken according to page and page size.
   int get offset => size * number;
 
+  /// Returns true when this is the first page.
+  bool get isFirst => number == 0;
+
   /// Returns next [Page].
   Page next() => Page(number: number + 1, size: size);
 

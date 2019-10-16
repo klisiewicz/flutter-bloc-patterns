@@ -20,8 +20,7 @@ void main() {
 
   void whenLoadingNextPage() => pagedListBloc.loadNextPage();
 
-  Future<void> thenExpectStates(Iterable<ViewState> states) =>
-      expectLater(
+  Future<void> thenExpectStates(Iterable<ViewState> states) => expectLater(
         pagedListBloc.state,
         emitsInOrder(states),
       );
@@ -35,7 +34,9 @@ void main() {
     test('should emit list loaded empty when first page contains no elements',
         () {
       whenLoadingFirstPage();
+
       thenExpectStates([
+        Initial(),
         Loading(),
         Empty(),
       ]);
@@ -52,7 +53,9 @@ void main() {
         'should emit list loaded with first page elements when loading first page',
         () {
       whenLoadingFirstPage();
+
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(PagedList(firstPage, hasReachedMax: false)),
       ]);
@@ -65,6 +68,7 @@ void main() {
       whenLoadingNextPage();
 
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(PagedList(firstPage, hasReachedMax: false)),
         Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
@@ -79,6 +83,7 @@ void main() {
       whenLoadingNextPage();
 
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(PagedList(firstPage, hasReachedMax: false)),
         Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
@@ -98,6 +103,7 @@ void main() {
       whenLoadingNextPage();
 
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(PagedList(firstPage, hasReachedMax: false)),
         Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
@@ -123,7 +129,9 @@ void main() {
 
       test('should emit list not loaded when exception occurs', () {
         whenLoadingFirstPage();
+
         thenExpectStates([
+          Initial(),
           Loading(),
           Failure(exception),
         ]);
@@ -139,7 +147,9 @@ void main() {
 
       test('should emit list not loaded when error occurs', () {
         whenLoadingFirstPage();
+
         thenExpectStates([
+          Initial(),
           Loading(),
           Failure(error),
         ]);
@@ -156,6 +166,7 @@ void main() {
       test('should emit list loaded empty when first page was not found', () {
         whenLoadingFirstPage();
         thenExpectStates([
+          Initial(),
           Loading(),
           Empty(),
         ]);
