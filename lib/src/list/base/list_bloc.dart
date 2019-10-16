@@ -13,19 +13,19 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 ///
 /// [T] - type of list items.
 class ListBloc<T> extends FilterListBloc<T, Null> {
-  ListBloc(Repository<T> repository)
-      : assert(repository != null),
-        super(_FilterRepositoryAdapter(repository));
+  ListBloc(ListRepository<T> listRepository)
+      : assert(listRepository != null),
+        super(_FilterRepositoryAdapter(listRepository));
 }
 
 class _FilterRepositoryAdapter<T> extends FilterRepository<T, Null> {
-  final Repository<T> repository;
+  final ListRepository<T> listRepository;
 
-  _FilterRepositoryAdapter(this.repository);
-
-  @override
-  Future<List<T>> getAll() => repository.getAll();
+  _FilterRepositoryAdapter(this.listRepository);
 
   @override
-  Future<List<T>> getBy(Null filter) => repository.getAll();
+  Future<List<T>> getAll() => listRepository.getAll();
+
+  @override
+  Future<List<T>> getBy(Null filter) => listRepository.getAll();
 }

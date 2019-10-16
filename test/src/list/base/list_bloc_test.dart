@@ -4,14 +4,14 @@ import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'repository_mock.dart';
+import 'list_repository_mock.dart';
 
 void main() {
   ListBloc<int> listBloc;
-  Repository<int> repository;
+  ListRepository<int> repository;
 
   setUp(() {
-    repository = RepositoryMock<int>();
+    repository = ListRepositoryMock<int>();
     listBloc = ListBloc(repository);
   });
 

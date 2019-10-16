@@ -18,7 +18,7 @@ class ListSampleApp extends StatelessWidget {
       title: 'List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        builder: (_) => ListBloc<Post>(PostRepository()),
+        builder: (_) => ListBloc<Post>(PostListRepository()),
         child: PostsPage(),
       ),
     );

@@ -63,7 +63,7 @@ class _PostsPageState extends State<_PostsPage> {
   @override
   void dispose() {
     super.dispose();
-    listBloc.dispose();
+    listBloc.close();
   }
 }
 
@@ -120,7 +120,7 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   @override
   void dispose() {
     super.dispose();
-    detailsBloc.dispose();
+    detailsBloc.close();
   }
 }
 
@@ -162,7 +162,7 @@ class _Router {
       case _Route.home:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            builder: (_) => ListBloc<Post>(PostRepository()),
+            builder: (_) => ListBloc<Post>(PostListRepository()),
             child: _PostsPage(),
           ),
         );

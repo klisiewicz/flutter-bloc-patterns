@@ -62,7 +62,7 @@ class _PostsPageState extends State<_PostsPage> {
 
   @override
   void dispose() {
-    _listBloc.dispose();
+    _listBloc.close();
     super.dispose();
   }
 }
