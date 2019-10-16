@@ -45,12 +45,11 @@ class _PostsPageState extends State<_PostsPage> {
       body: ViewStateBuilder(
         bloc: listBloc,
         onLoading: (context) => LoadingIndicator(),
-        onSuccess: (context, posts) =>
-            PostsList(
-              posts: posts,
-              onPostSelected: _navigateToPostDetails,
-              onRefresh: listBloc.refreshElements,
-            ),
+        onSuccess: (context, posts) => PostsList(
+          posts: posts,
+          onPostSelected: _navigateToPostDetails,
+          onRefresh: listBloc.refreshElements,
+        ),
         onEmpty: (context) => PostsListEmpty(),
       ),
     );
@@ -62,8 +61,8 @@ class _PostsPageState extends State<_PostsPage> {
 
   @override
   void dispose() {
+    listBloc.close();
     super.dispose();
-    listBloc.dispose();
   }
 }
 
@@ -119,8 +118,8 @@ class _PostDetailPageState extends State<_PostDetailPage> {
 
   @override
   void dispose() {
+    detailsBloc.close();
     super.dispose();
-    detailsBloc.dispose();
   }
 }
 

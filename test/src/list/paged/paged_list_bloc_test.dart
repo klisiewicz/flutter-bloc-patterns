@@ -21,7 +21,7 @@ void main() {
   void whenLoadingNextPage() => pagedListBloc.loadNextPage();
 
   Future<void> thenExpectStates(Iterable<ViewState> states) => expectLater(
-        pagedListBloc.state,
+        pagedListBloc,
         emitsInOrder(states),
       );
 
@@ -40,6 +40,10 @@ void main() {
         Loading(),
         Empty(),
       ]);
+    });
+
+    tearDown(() {
+      pagedListBloc.close();
     });
   });
 
@@ -117,6 +121,10 @@ void main() {
         )),
       ]);
     });
+
+    tearDown(() {
+      pagedListBloc.close();
+    });
   });
 
   group('failing repository', () {
@@ -136,6 +144,10 @@ void main() {
           Failure(exception),
         ]);
       });
+
+      tearDown(() {
+        pagedListBloc.close();
+      });
     });
 
     group('repository failing with error', () {
@@ -154,6 +166,10 @@ void main() {
           Failure(error),
         ]);
       });
+
+      tearDown(() {
+        pagedListBloc.close();
+      });
     });
 
     group('repository failing with error', () {
@@ -170,6 +186,10 @@ void main() {
           Loading(),
           Empty(),
         ]);
+      });
+
+      tearDown(() {
+        pagedListBloc.close();
       });
     });
   });

@@ -25,7 +25,7 @@ void main() {
       when(repository.getAll()).thenThrow(_exception);
 
   Future<void> thenExpectStates(Iterable<ViewState> states) async => expect(
-        listBloc.state,
+        listBloc,
         emitsInOrder(states),
       );
 
@@ -87,6 +87,10 @@ void main() {
         Success(_someData),
       ]);
     });
+  });
+
+  tearDown(() {
+    listBloc.close();
   });
 }
 

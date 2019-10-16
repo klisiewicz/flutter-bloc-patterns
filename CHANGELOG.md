@@ -1,3 +1,7 @@
+## [0.2.1]
+
+* Migrating to `bloc` 0.16.1 and `flutter_bloc` 0.22.0
+
 ## [0.2.0]
 
 * `Initial` state introduced along with `onReady` callback for the `ViewStateBuilder`,

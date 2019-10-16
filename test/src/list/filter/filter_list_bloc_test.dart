@@ -19,7 +19,7 @@ void main() {
       filterListBloc.refreshElements(filter: filter);
 
   Future<void> thenExpectStates(Iterable<ViewState> states) => expectLater(
-        filterListBloc.state,
+        filterListBloc,
         emitsInOrder(states),
       );
 
@@ -44,6 +44,10 @@ void main() {
         Loading(),
         Empty(),
       ]);
+    });
+
+    tearDown(() {
+      filterListBloc.close();
     });
   });
 
@@ -109,6 +113,10 @@ void main() {
         Empty(),
       ]);
     });
+
+    tearDown(() {
+      filterListBloc.close();
+    });
   });
 
   group('failing repository with exception', () {
@@ -137,6 +145,10 @@ void main() {
         Failure(exception),
       ]);
     });
+
+    tearDown(() {
+      filterListBloc.close();
+    });
   });
 
   group('failing repository with error', () {
@@ -153,6 +165,10 @@ void main() {
         Loading(),
         Failure(error),
       ]);
+    });
+
+    tearDown(() {
+      filterListBloc.close();
     });
   });
 }

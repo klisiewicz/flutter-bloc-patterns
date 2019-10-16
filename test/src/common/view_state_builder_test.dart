@@ -22,6 +22,7 @@ void main() {
 
   setUpAll(() {
     bloc = BlocMock();
+    when(bloc.skip(any)).thenAnswer((_) => Stream.empty());
   });
 
   Widget makeTestableViewStateBuilder() {
@@ -40,7 +41,7 @@ void main() {
 
   testWidgets('should diplay onReady widget when block is in inital state',
       (WidgetTester tester) async {
-    when(bloc.currentState).thenReturn(Initial());
+        when(bloc.state).thenReturn(Initial());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -49,7 +50,7 @@ void main() {
 
   testWidgets('should diplay onLoading widget when block is in loading state',
       (WidgetTester tester) async {
-    when(bloc.currentState).thenReturn(Loading());
+    when(bloc.state).thenReturn(Loading());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -59,7 +60,7 @@ void main() {
   testWidgets(
       'should diplay onRefreshing widget when block is in refreshing state',
       (WidgetTester tester) async {
-    when(bloc.currentState).thenReturn(Refreshing(someData));
+    when(bloc.state).thenReturn(Refreshing(someData));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -68,7 +69,7 @@ void main() {
 
   testWidgets('should diplay onEmpty widget when block is in empty state',
       (WidgetTester tester) async {
-    when(bloc.currentState).thenReturn(Empty());
+    when(bloc.state).thenReturn(Empty());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -77,7 +78,7 @@ void main() {
 
   testWidgets('should diplay onSuccess widget when block is in success state',
       (WidgetTester tester) async {
-    when(bloc.currentState).thenReturn(Success(someData));
+    when(bloc.state).thenReturn(Success(someData));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -86,10 +87,15 @@ void main() {
 
   testWidgets('should diplay onError widget when block is in failure state',
       (WidgetTester tester) async {
-    when(bloc.currentState).thenReturn(Failure(someError));
+    when(bloc.initialState).thenReturn(Failure(someError));
+    when(bloc.state).thenReturn(Failure(someError));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
     expect(find.byKey(errorKey), findsOneWidget);
+  });
+
+  tearDownAll(() {
+    bloc.close();
   });
 }
