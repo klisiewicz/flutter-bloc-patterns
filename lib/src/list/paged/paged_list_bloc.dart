@@ -27,10 +27,10 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, ViewState> {
         this._pagedRepository = pagedRepository;
 
   @override
-  ViewState get initialState => Loading();
+  ViewState get initialState => Initial();
 
   List<T> get _currentElements =>
-      (currentState is Success) ? (currentState as Success).data.elements : [];
+      (state is Success) ? (state as Success).data.elements : [];
 
   Page _page;
 
@@ -38,14 +38,14 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, ViewState> {
   /// is used.
   void loadFirstPage({int pageSize = _defaultPageSize}) {
     _page = Page.first(size: pageSize);
-    dispatch(LoadPage(_page));
+    add(LoadPage(_page));
   }
 
   /// Loads next page. When no page has been loaded before the first one is
   /// loaded with the default page size [_defaultPageSize].
   void loadNextPage() {
     _page = _page?.next() ?? Page.first(size: _defaultPageSize);
-    dispatch(LoadPage(_page));
+    add(LoadPage(_page));
   }
 
   @override
@@ -57,6 +57,7 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, ViewState> {
 
   Stream<ViewState> _mapLoadPage(Page page) async* {
     try {
+      yield* _emitLoadingWhenFirstPage(page);
       final List<T> pageElements = await _pagedRepository.getAll(page);
       if (pageElements.isEmpty) {
         yield* _emitEmptyPageLoaded(page);
@@ -70,13 +71,21 @@ class PagedListBloc<T> extends Bloc<PagedListEvent, ViewState> {
     }
   }
 
+  Stream<ViewState> _emitLoadingWhenFirstPage(Page page) async* {
+    if (page.isFirst) {
+      yield Loading();
+    }
+  }
+
   Stream<ViewState> _emitEmptyPageLoaded(Page page) async* {
     yield (_isFirst(page))
         ? Empty()
-        : Success(PagedList<T>(
-      UnmodifiableListView(_currentElements),
-      hasReachedMax: true,
-    ));
+        : Success(
+            PagedList<T>(
+              UnmodifiableListView(_currentElements),
+              hasReachedMax: true,
+            ),
+          );
   }
 
   bool _isFirst(Page page) => page.number == 0;

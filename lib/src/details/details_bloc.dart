@@ -22,10 +22,10 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
         this._detailsRepository = detailsRepository;
 
   @override
-  ViewState get initialState => Loading();
+  ViewState get initialState => Initial();
 
   /// Loads an element with given [id].
-  void loadElement(I id) => dispatch(LoadDetails(id));
+  void loadElement([I id]) => add(LoadDetails(id));
 
   @override
   Stream<ViewState> mapEventToState(DetailsEvent event) async* {
@@ -36,6 +36,7 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
 
   Stream<ViewState> _mapLoadDetails(I id) async* {
     try {
+      yield Loading();
       final element = await _detailsRepository.getById(id);
       yield element != null ? Success<T>(element) : Empty();
     } on ElementNotFoundException {

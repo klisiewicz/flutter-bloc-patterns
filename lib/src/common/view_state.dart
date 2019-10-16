@@ -10,6 +10,12 @@ abstract class ViewState extends Equatable {
   List<Object> get props => [];
 }
 
+/// The initial view state.
+class Initial extends ViewState {
+  @override
+  String toString() => 'Initial';
+}
+
 /// State indicating that data is being loaded.
 class Loading extends ViewState {
   @override

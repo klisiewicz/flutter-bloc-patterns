@@ -18,8 +18,7 @@ void main() {
   void whenRefreshingElements({int filter}) =>
       filterListBloc.refreshElements(filter: filter);
 
-  Future<void> thenExpectStates(Iterable<ViewState> states) =>
-      expectLater(
+  Future<void> thenExpectStates(Iterable<ViewState> states) => expectLater(
         filterListBloc.state,
         emitsInOrder(states),
       );
@@ -32,6 +31,7 @@ void main() {
     test('should emit list loaded empty state when no filter is set', () {
       whenLoadingElements();
       thenExpectStates([
+        Initial(),
         Loading(),
         Empty(),
       ]);
@@ -40,6 +40,7 @@ void main() {
     test('should emit list loaded empty state when filter is set', () {
       whenLoadingElements(filter: _notMatchingFilter);
       thenExpectStates([
+        Initial(),
         Loading(),
         Empty(),
       ]);
@@ -55,36 +56,40 @@ void main() {
 
     test(
         'should emit list loaded state with all elements when no filter is set',
-            () {
-          whenLoadingElements();
-          thenExpectStates([
-            Loading(),
-            Success(_someData),
-          ]);
-        });
+        () {
+      whenLoadingElements();
+      thenExpectStates([
+        Initial(),
+        Loading(),
+        Success(_someData),
+      ]);
+    });
 
     test('should emit list loaded state with elements matching the filter', () {
       whenLoadingElements(filter: _matchingFilter);
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(_matchingElements),
       ]);
     });
 
     test('should emit loaded empty list when no elements matches the filter',
-            () {
-          whenLoadingElements(filter: _notMatchingFilter);
-          thenExpectStates([
-            Loading(),
-            Empty(),
-          ]);
-        });
+        () {
+      whenLoadingElements(filter: _notMatchingFilter);
+      thenExpectStates([
+        Initial(),
+        Loading(),
+        Empty(),
+      ]);
+    });
 
     test('should emit list loaded when refreshing with matching filter', () {
       whenLoadingElements(filter: _notMatchingFilter);
       whenRefreshingElements(filter: _matchingFilter);
 
       thenExpectStates([
+        Initial(),
         Loading(),
         Empty(),
         Refreshing<List<int>>([]),
@@ -97,6 +102,7 @@ void main() {
       whenRefreshingElements(filter: _notMatchingFilter);
 
       thenExpectStates([
+        Initial(),
         Loading(),
         Success(_matchingElements),
         Refreshing(_matchingElements),
@@ -114,7 +120,9 @@ void main() {
 
     test('should emit list not loaded when no filter is set', () {
       whenLoadingElements();
+
       thenExpectStates([
+        Initial(),
         Loading(),
         Failure(exception),
       ]);
@@ -122,7 +130,9 @@ void main() {
 
     test('should emit list not loaded when filter is set', () {
       whenLoadingElements(filter: _notMatchingFilter);
+
       thenExpectStates([
+        Initial(),
         Loading(),
         Failure(exception),
       ]);
@@ -139,6 +149,7 @@ void main() {
     test('should emit list error when error occurs', () {
       whenLoadingElements();
       thenExpectStates([
+        Initial(),
         Loading(),
         Failure(error),
       ]);

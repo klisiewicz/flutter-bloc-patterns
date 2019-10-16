@@ -8,8 +8,7 @@ import 'details_repository_mock.dart';
 void main() {
   DetailsBloc<String, int> detailsBloc;
 
-  Future<void> thenExpectStates(Iterable<ViewState> states) async =>
-      expect(
+  Future<void> thenExpectStates(Iterable<ViewState> states) async => expect(
         detailsBloc.state,
         emitsInOrder(states),
       );
@@ -32,21 +31,29 @@ void main() {
     void whenLoadingNoneExistingElement() =>
         detailsBloc.loadElement(_noneExistingId);
 
-    test('should be initialized in loading details state', () {
-      thenExpectStates([Loading()]);
+    test('should be initialized in initial state', () {
+      thenExpectStates([Initial()]);
     });
 
     test('should emit details not found when theres no element with given id',
-            () {
-          whenLoadingNoneExistingElement();
-          thenExpectStates([Loading(), Empty()]);
-        });
+        () {
+      whenLoadingNoneExistingElement();
+      thenExpectStates([
+        Initial(),
+        Loading(),
+        Empty(),
+      ]);
+    });
 
     test('should emit details loaded when there is an element with given id',
-            () {
-          whenLoadingExistingElement();
-          thenExpectStates([Loading(), Success(_someData)]);
-        });
+        () {
+      whenLoadingExistingElement();
+      thenExpectStates([
+        Initial(),
+        Loading(),
+        Success(_someData),
+      ]);
+    });
   });
 
   group('failing repository', () {
@@ -62,6 +69,7 @@ void main() {
       givenFailingRepository(_exception);
       whenLoadingElement();
       thenExpectStates([
+        Initial(),
         Loading(),
         Failure(_exception),
       ]);
@@ -69,19 +77,21 @@ void main() {
 
     test(
         'should emit details not found when element not found exception is thrown',
-            () {
-          givenFailingRepository(ElementNotFoundException(0));
-          whenLoadingElement();
-          thenExpectStates([
-            Loading(),
-            Empty(),
-          ]);
-        });
+        () {
+      givenFailingRepository(ElementNotFoundException(0));
+      whenLoadingElement();
+      thenExpectStates([
+        Initial(),
+        Loading(),
+        Empty(),
+      ]);
+    });
 
     test('should emit details error when an error is thrown', () {
       givenFailingRepository(_error);
       whenLoadingElement();
       thenExpectStates([
+        Initial(),
         Loading(),
         Failure(_error),
       ]);
