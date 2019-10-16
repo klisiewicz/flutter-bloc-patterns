@@ -16,8 +16,9 @@ A `Repository` to handles data operations. It knows where to get the data from a
 ##### ViewStateBuilder
 `ViewStateBuilder` is responsible for building the UI based on the view state. It's a wrapper over the `BlocBuilder` widget so it accepts a `bloc` object and a set of handy callbacks, which corresponds to each possible state:
 
-* `onLoading` - informs the presentation layer that the list is loading, so it can display a loading indicator,
-* `onRefreshing` - informs the presentation layer that the list is refreshing, so it can display a refresh indicator or/and the current state of list elements,
+* `onReady` - informs the presentation layer that view is in it's initial state, and no action has taken place yet,
+* `onLoading` - informs the presentation layer that the data is being loaded, so it can display a loading indicator,
+* `onRefreshing` - informs the presentation layer that the data is being refreshed, so it can display a refresh indicator or/and the current state of list elements,
 * `onSuccess` - informs the presentation layer that the loading is completed and a `nonnull` and not empty data was retrieved,
 * `onEmpty` - informs the presentation layer that the loading is completed, but `null` or empty data was retrieved,
 * `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
@@ -27,10 +28,13 @@ A `Repository` to handles data operations. It knows where to get the data from a
 ### ListBloc
 The most basic use case. Allows to fetch, refresh and display a list of elements without filtering and pagination. Thus, `ListBloc` should be used only with a reasonable amount of data. `ListBloc` provides the methods for loading and refreshing data: `loadElements()` and `refreshElements()`. The former is most suitable for initial data fetch or for retry action when the first fetch fails. The latter is designed for being called after the initial fetch succeeds. It can be performed when the list has already been loaded. To display the current view state `ListBloc` cooperates with `BlocBuilder` as well as `ViewStateBuilder`.
 
-##### Repository
-A `Repository` implementation should provide only one method:
-`Future<List<T>> getAll();`
-This method is responsible for providing all the data to the `ListBloc`.
+##### ListRepository
+
+A `ListRepository` implementation should provide only one method:
+
+`Future<List<T>> getAll();` - this method is responsible for providing all the data to the `ListBloc`.
+
+Where `T` is the element type returned by this repository.
 
 ##### Usage
 1. Create `ListBloc` using `BlocProvider` or any other `DI` framework:
@@ -48,7 +52,7 @@ BlocProvider(
 listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadElements();
 ```
 
-3. Use the `ViewStateBuilder` to build the view state:
+3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
 
 ```dart
 @override
@@ -57,13 +61,10 @@ Widget build(BuildContext context) {
         bloc: listBloc,
         onLoading: (context) => _buildIndicator(),
         onSuccess: (context, elements) _buildList(elements),
-        onEmpty: (context) => _buildEmptyList(),
         onError: (context, error) => _buildErrorMessage(error),
     );
 }
 ```
-
-4. Provide widgets corresponding to _loading_, _success_, _empty_ and _error_ states.
 
 ##### See also
 [List BLoC Sample App](example/lib/src/list_app.dart)
@@ -72,28 +73,33 @@ Widget build(BuildContext context) {
 An extension to the `ListBloc` that allows filtering.
 
 ##### FilterRepository
+
 `FilterRepository` provides two methods:
 
 `Future<List<T>> getAll();` - this method is called when a `null` filter is provided and should return all elements,
 `Future<List<T>> getBy(F filter);` - this method is called with `nonnull` filter and should return only elements that match it.
+
+Where:
+* `T` is the element type returned by this repository,
+* `F` is the filter type, which can be primitive as well as complex object.
 
 #### Usage
 1. Create `FilteredListBloc` using `BlocProvider` or any other `DI` framework:
 
 ```dart
 BlocProvider(
-    builder: (context) => FilteredListBloc<Data>(FilterDataRepository()),
+    builder: (context) => FilteredListBloc<Data>(DataFilterRepository()),
     child: DataPage(),
 );
 ```
     
-2. Trigger loading data with the initial filter value. The `filter` parameter is optional and when it's not provided all elements from the `repository` will be fetched.
+2. Trigger loading data with the initial filter value. Typically it can be done in the `StatefulWidget`'s `initState` method. The `filter` parameter is optional and when it's not provided all elements from the `repository` will be fetched.
 
 ```dart
 filteredListBloc = BlocProvider.of<FilteredListBloc<Data>>(context)..loadElements(filter: initialFilter);
 ```
 
-3. Use the `ViewStateBuilder` to build the view state:
+3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
 
 ```dart
 @override
@@ -102,13 +108,10 @@ Widget build(BuildContext context) {
         bloc: listBloc,
         onLoading: (context) => _buildIndicator(),
         onSuccess: (context, elements) _buildList(elements),
-        onEmpty: (context) => _buildEmptyList(),
         onError: (context, error) => _buildErrorMessage(error),
     );
 }
 ```
-
-4. Provide widgets corresponding to _loading_, _success_, _empty_ and _error_ states.
 
 ##### See also
 [Filter List BLoC Sample App](example/lib/src/list_filter_app.dart)
@@ -127,15 +130,24 @@ List of elements with information if there are more elements or not.
 
 `Future<List<T>> getAll(Page page);` - this method retrieves elements meeting the pagination restriction provided by the `page` object. When elements are exceeded it should return an empty list or throw `PageNotFoundException`. `PagedListBloc` will hande both cases in the same way.
 
+Where `T` is the element type returned by this repository.
+
 #### Usage
 1. Create `PagedListBloc` using `BlocProvider` or any other `DI` framework:
+```dart
+BlocProvider(
+    builder: (context) => PagedListBloc<Data>(DataPagedRepository()),
+    child: DataPage(),
+);
+```
 
-2. Trigger loading first page. This is the place, where you can set the page size. Once set it cannot be changed.
+2. Trigger loading first page. Typically it can be done in the `StatefulWidget`'s `initState` method. This is the place, where you can set the page size. Once it is set, it cannot be changed.
 
 ```dart
 listBloc = BlocProvider.of<PagedListBloc<Data>>(context)..loadFirstPage(pageSize: 10);
 ```
-3. Use the `ViewStateBuilder` to build the view state:
+
+3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
 
 ```dart
 @override
@@ -144,14 +156,12 @@ Widget build(BuildContext context) {
         bloc: listBloc,
         onLoading: (context) => _buildIndicator(),
         onSuccess: (context, page) _buildInfiniteList(page),
-        onEmpty: (context) => _buildEmptyList(),
         onError: (context, error) => _buildErrorMessage(error),
     );
 }
 ```
 
-4. Provide widgets corresponding to _loading_, _success_, _empty_ and _error_ states.
-For building the presentation layer you can use `InfiniteListView` or `InfiniteGridView` which are part of [Infinite Widgets](https://github.com/jaumard/infinite_widgets) library. Thanks to this you can easilly apply the `Page` properties straight into the `InfiniteListView` with no additional work required.
+4. For building the presentation layer you can use `InfiniteListView` or `InfiniteGridView` which are part of [Infinite Widgets](https://github.com/jaumard/infinite_widgets) library. Thanks to this you can easilly apply the `Page` properties straight into the `InfiniteListView` with no additional work required.
 
 ```dart
 InfiniteListView(
@@ -165,6 +175,52 @@ InfiniteListView(
 
 ##### See also
 [Paged List BLoC Sample App](example/lib/src/list_paged_app.dart)
+
+### DetailsBloc
+A BLoC that allows to fetch a single element with given identifier.
+
+#### DetailsRepository
+`DetailsRepository` comes with only one method:
+
+`Future<T> getById(I id);` - this method retrieves an element with given id. When there's no element matching the id the `null` should be returned or `ElementNotFoundException` should be thrown. In both cases the `DetailsBloc` will emit `Empty` state.
+
+Where:
+* `T` is the element type returned by this repository,
+* `I` is the id type, it can be primitive as well as a complex object.
+
+#### Usage:
+
+1. Create `DetailsBloc` using `BlocProvider` or any other `DI` framework:
+
+```dart
+BlocProvider(
+    builder: (context) => DetailsBloc<Data, int>(DataDetailsRepository()),
+    child: DataDetailsPage(settings.arguments as int),
+);
+```
+
+2. Trigger loading the element. Typically it can be done in the `StatefulWidget`'s `initState` method.
+
+```dart
+listBloc = BlocProvider.of<DetailsBloc<Data, int>>(context).loadElement(widget.id);
+```
+
+3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
+
+```dart
+@override
+Widget build(BuildContext context) {
+    return ViewStateBuilder(
+        bloc: detailsBloc,
+        onLoading: (context) => _buildIndicator(),
+        onSuccess: (context, element) _buildElement(element),
+        onError: (context, error) => _buildErrorMessage(error),
+    );
+}
+```
+
+##### See also
+[List/Details BLoC Sample App](example/lib/src/list_details_app.dart)
 
 ## Dart version
 
