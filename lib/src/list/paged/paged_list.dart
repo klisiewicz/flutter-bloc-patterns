@@ -18,7 +18,7 @@ class PagedList<T> extends Equatable {
       : assert(
           elements != null && elements.isNotEmpty,
           'Elements cannot be empty',
-  );
+        );
 
   bool get hasMoreElements => !hasReachedMax;
 
