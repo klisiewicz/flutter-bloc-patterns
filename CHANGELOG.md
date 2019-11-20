@@ -1,3 +1,10 @@
+## [0.3.0]
+
+* `PagedFilterListBloc` - a list BLoC with pagination and filtering,
+* `PagedRepository` renamed to `PagedListRepository`.
+* `FilterRepository` renamed to `FilterListRepository`.
+* Migrating to `bloc` 2.0.0 and `flutter_bloc` 2.0.1
+
 ## [0.2.2]
 
 * Migrating to `bloc` 1.0.0 and `flutter_bloc` 1.0.0

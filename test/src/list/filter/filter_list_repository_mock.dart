@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
 
-class InMemoryFilterRepository<T, F> extends FilterRepository<T, F> {
+class InMemoryFilterRepository<T, F> extends FilterListRepository<T, F> {
   final List<T> elements;
 
   InMemoryFilterRepository([this.elements = const []]);
@@ -13,7 +13,7 @@ class InMemoryFilterRepository<T, F> extends FilterRepository<T, F> {
       elements.where((item) => item == filter).toList();
 }
 
-class FailingFilterRepository<T, F> extends FilterRepository<T, F> {
+class FailingFilterRepository<T, F> extends FilterListRepository<T, F> {
   final dynamic error;
 
   FailingFilterRepository(this.error);

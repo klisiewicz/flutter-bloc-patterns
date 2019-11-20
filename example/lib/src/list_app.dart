@@ -1,9 +1,9 @@
 import 'package:example/src/common/error_message.dart';
 import 'package:example/src/common/loading_indicator.dart';
-import 'package:example/src/common/posts_list.dart';
-import 'package:example/src/common/posts_list_empty.dart';
-import 'package:example/src/model/post.dart';
-import 'package:example/src/model/post_repository.dart';
+import 'package:example/src/post/model/post.dart';
+import 'package:example/src/post/model/post_repository.dart';
+import 'package:example/src/post/ui/posts_list.dart';
+import 'package:example/src/post/ui/posts_list_empty.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,21 +36,20 @@ class _PostsPageState extends State<PostsPage> {
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<ListBloc<Post>>(context)
-      ..loadElements();
+    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadElements();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Posts')),
-      body: ViewStateBuilder(
+      body: ViewStateBuilder<List<Post>, ListBloc<Post>>(
         bloc: listBloc,
         onLoading: (context) => LoadingIndicator(),
-        onSuccess: (context, posts) =>
-            PostsList(posts: posts, onRefresh: _refreshPosts),
-        onRefreshing: (context, posts) =>
-            PostsList(posts: posts, onRefresh: _refreshPosts),
+        onSuccess: (context, List<Post> posts) =>
+            PostsList(posts, onRefresh: _refreshPosts),
+        onRefreshing: (context, List<Post> posts) =>
+            PostsList(posts, onRefresh: _refreshPosts),
         onEmpty: (context) => PostsListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
       ),

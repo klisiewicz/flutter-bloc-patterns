@@ -1,6 +1,6 @@
 import 'package:example/src/common/loading_page_indicator.dart';
-import 'package:example/src/common/posts_list.dart';
-import 'package:example/src/model/post.dart';
+import 'package:example/src/post/model/post.dart';
+import 'package:example/src/post/ui/posts_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:infinite_widgets/infinite_widgets.dart';
@@ -9,7 +9,8 @@ class PostsListPaged extends StatelessWidget {
   final PagedList<Post> page;
   final VoidCallback onLoadNextPage;
 
-  const PostsListPaged(this.page, {
+  const PostsListPaged(
+    this.page, {
     Key key,
     @required this.onLoadNextPage,
   }) : super(key: key);

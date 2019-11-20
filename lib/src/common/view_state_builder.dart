@@ -28,11 +28,24 @@ typedef ErrorCallback = Widget Function(
   dynamic error,
 );
 
+/// [ViewStateBuilder] is responsible for building the UI based on the [ViewState].
+/// It's a wrapper over the [BlocBuilder] widget so it accepts a [bloc] object and
+/// a set of handy callbacks, which corresponds to each possible state:
+/// [onReady] callback for the the initial state,
+/// [onLoading] callback for the data loading state,
+/// [onRefreshing] callback for the data refreshing state,
+/// [onSuccess] callback for the data success state,
+/// [onEmpty] callback for for no result state,
+/// [onError] callback function for an error state.
+
+/// [T] - the type of list elements,
+/// [B] - the type of bloc.
 class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
     extends BlocBuilder<B, ViewState> {
+
   ViewStateBuilder({
     Key key,
-    @required B bloc,
+    B bloc,
     InitialCallback onReady,
     LoadingCallback onLoading,
     RefreshingCallback<T> onRefreshing,
@@ -40,26 +53,25 @@ class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
     EmptyCallback onEmpty,
     ErrorCallback onError,
     BlocBuilderCondition<ViewState> condition,
-  })  : assert(bloc != null, 'Bloc must be provided.'),
-        super(
+  }) : super(
           key: key,
           bloc: bloc,
           condition: condition,
           builder: (BuildContext context, ViewState state) {
             if (state is Initial) {
-              return onReady?.call(context) ?? Container();
+              return onReady?.call(context) ?? SizedBox();
             } else if (state is Loading) {
-              return onLoading?.call(context) ?? Container();
+              return onLoading?.call(context) ?? SizedBox();
             } else if (state is Refreshing<T>) {
-              return onRefreshing?.call(context, state.data) ?? Container();
+              return onRefreshing?.call(context, state.data) ?? SizedBox();
             } else if (state is Success<T>) {
-              return onSuccess?.call(context, state.data) ?? Container();
+              return onSuccess?.call(context, state.data) ?? SizedBox();
             } else if (state is Empty) {
-              return onEmpty?.call(context) ?? Container();
+              return onEmpty?.call(context) ?? SizedBox();
             } else if (state is Failure) {
-              return onError?.call(context, state.error) ?? Container();
+              return onError?.call(context, state.error) ?? SizedBox();
             } else {
-              return Container();
+              return SizedBox();
             }
           },
         );

@@ -5,7 +5,7 @@ import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'view_test_util.dart';
+import '../util/view_test_util.dart';
 
 class BlocMock extends Mock implements Bloc<int, ViewState> {}
 

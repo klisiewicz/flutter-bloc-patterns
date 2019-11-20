@@ -1,46 +1,47 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:example/src/model/post.dart';
-import 'package:example/src/model/post_details.dart';
-import 'package:example/src/model/user.dart';
+import 'package:example/src/common/url.dart';
+import 'package:example/src/post/model/post.dart';
+import 'package:example/src/post/model/post_details.dart';
+import 'package:example/src/user/model/user.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/details.dart';
 import 'package:flutter_bloc_patterns/filter_list.dart';
+import 'package:flutter_bloc_patterns/paged_filter_list.dart';
 import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:http/http.dart' as http;
 
-const baseUrl = 'https://jsonplaceholder.typicode.com/posts';
+const _postsUrl = '$baseUrl/posts';
 
 class PostListRepository implements ListRepository<Post> {
   @override
-  Future<List<Post>> getAll() => _getPostsFromUrl(baseUrl);
+  Future<List<Post>> getAll() => _getPostsFromUrl(_postsUrl);
 }
 
-class FilterPostRepository implements FilterRepository<Post, User> {
+class FilterPostRepository implements FilterListRepository<Post, User> {
   @override
-  Future<List<Post>> getAll() => _getPostsFromUrl(baseUrl);
+  Future<List<Post>> getAll() => _getPostsFromUrl(_postsUrl);
 
   @override
   Future<List<Post>> getBy(User user) {
     if (user == null || user.id == null)
-      return _getPostsFromUrl(baseUrl);
+      return _getPostsFromUrl(_postsUrl);
     else
-      return _getPostsFromUrl('$baseUrl?userId=${user.id}');
+      return _getPostsFromUrl('$_postsUrl?userId=${user.id}');
   }
 }
 
-class PagedPostRepository implements PagedRepository<Post> {
+class PagedPostRepository implements PagedListRepository<Post> {
   @override
-  Future<List<Post>> getAll(Page pageable) =>
-      _getPostsFromUrl(
-          '$baseUrl?_start=${pageable.offset}&_limit=${pageable.size}');
+  Future<List<Post>> getAll(Page page) =>
+      _getPostsFromUrl('$_postsUrl?_start=${page.offset}&_limit=${page.size}');
 }
 
 class PostDetailsRepository implements DetailsRepository<PostDetails, int> {
   @override
   Future<PostDetails> getById(int id) async {
-    final response = await http.get('$baseUrl/$id');
+    final response = await http.get('$_postsUrl/$id');
 
     if (response.statusCode == HttpStatus.notFound)
       return null;

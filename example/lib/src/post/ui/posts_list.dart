@@ -1,4 +1,4 @@
-import 'package:example/src/model/post.dart';
+import 'package:example/src/post/model/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 
@@ -7,9 +7,9 @@ class PostsList extends StatelessWidget {
   final VoidCallback onRefresh;
   final ValueSetter<Post> onPostSelected;
 
-  const PostsList({
+  const PostsList(
+    this.posts, {
     Key key,
-    this.posts,
     this.onRefresh,
     this.onPostSelected,
   }) : super(key: key);
@@ -19,11 +19,10 @@ class PostsList extends StatelessWidget {
     return RefreshView(
       child: ListView.separated(
         itemCount: posts.length,
-        itemBuilder: (context, index) =>
-            PostListItem(
-              posts[index],
-              onPostSelected: onPostSelected,
-            ),
+        itemBuilder: (context, index) => PostListItem(
+          posts[index],
+          onPostSelected: onPostSelected,
+        ),
         separatorBuilder: (context, index) => Divider(height: 1),
       ),
       onRefresh: onRefresh,
@@ -35,14 +34,14 @@ class PostListItem extends StatelessWidget {
   final Post post;
   final ValueSetter<Post> onPostSelected;
 
-  const PostListItem(this.post, {
+  const PostListItem(
+    this.post, {
     this.onPostSelected,
     Key key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      ListTile(
+  Widget build(BuildContext context) => ListTile(
         title: Text(post.title),
         onTap: () {
           onPostSelected?.call(post);

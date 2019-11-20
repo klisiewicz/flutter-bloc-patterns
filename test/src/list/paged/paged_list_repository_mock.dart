@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter_bloc_patterns/paged_list.dart';
 
-class InMemoryPagedRepository<T> implements PagedRepository<T> {
+class InMemoryPagedListRepository<T> implements PagedListRepository<T> {
   final List<T> elements;
 
-  InMemoryPagedRepository(this.elements);
+  InMemoryPagedListRepository(this.elements);
 
   @override
   Future<List<T>> getAll(Page page) async {
@@ -20,7 +20,7 @@ class InMemoryPagedRepository<T> implements PagedRepository<T> {
   }
 }
 
-class FailingPagedRepository<T> implements PagedRepository<T> {
+class FailingPagedRepository<T> implements PagedListRepository<T> {
   final dynamic error;
 
   FailingPagedRepository(this.error);

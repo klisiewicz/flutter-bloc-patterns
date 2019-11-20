@@ -34,22 +34,23 @@ A `ListRepository` implementation should provide only one method:
 
 `Future<List<T>> getAll();` - this method is responsible for providing all the data to the `ListBloc`.
 
-Where `T` is the element type returned by this repository.
+Where:
+* `T` is the element type returned by this repository.
 
 ##### Usage
 1. Create `ListBloc` using `BlocProvider` or any other `DI` framework:
 
 ```dart
 BlocProvider(
-    builder: (context) => ListBloc<Data>(DataRepository()),
-    child: DataPage(),
+    builder: (context) => ListBloc<Post>(PostListRepository()),
+    child: PostsPage(),
 );
 ```
 
 2. Trigger loading data. Typically it can be done in the `StatefulWidget`'s `initState` method:
 
 ```dart
-listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadElements();
+listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadElements();
 ```
 
 3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
@@ -59,9 +60,9 @@ listBloc = BlocProvider.of<ListBloc<Data>>(context)..loadElements();
 Widget build(BuildContext context) {
     return ViewStateBuilder(
         bloc: listBloc,
-        onLoading: (context) => _buildIndicator(),
-        onSuccess: (context, elements) _buildList(elements),
-        onError: (context, error) => _buildErrorMessage(error),
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, posts) => PostsList(posts),
+        onError: (context, error) => ErrorMessage(error),
     );
 }
 ```
@@ -74,7 +75,7 @@ An extension to the `ListBloc` that allows filtering.
 
 ##### FilterRepository
 
-`FilterRepository` provides two methods:
+`FilterListRepository` provides two methods:
 
 `Future<List<T>> getAll();` - this method is called when a `null` filter is provided and should return all elements,
 `Future<List<T>> getBy(F filter);` - this method is called with `nonnull` filter and should return only elements that match it.
@@ -88,15 +89,15 @@ Where:
 
 ```dart
 BlocProvider(
-    builder: (context) => FilteredListBloc<Data>(DataFilterRepository()),
-    child: DataPage(),
+    builder: (context) => FilteredListBloc<Post>(PostFilterListRepository()),
+    child: PostsPage(),
 );
 ```
     
 2. Trigger loading data with the initial filter value. Typically it can be done in the `StatefulWidget`'s `initState` method. The `filter` parameter is optional and when it's not provided all elements from the `repository` will be fetched.
 
 ```dart
-filteredListBloc = BlocProvider.of<FilteredListBloc<Data>>(context)..loadElements(filter: initialFilter);
+filteredListBloc = BlocProvider.of<FilteredListBloc<Post>>(context)..loadElements(filter: filter);
 ```
 
 3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
@@ -106,9 +107,9 @@ filteredListBloc = BlocProvider.of<FilteredListBloc<Data>>(context)..loadElement
 Widget build(BuildContext context) {
     return ViewStateBuilder(
         bloc: listBloc,
-        onLoading: (context) => _buildIndicator(),
-        onSuccess: (context, elements) _buildList(elements),
-        onError: (context, error) => _buildErrorMessage(error),
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, posts) => PostsList(posts),
+        onError: (context, error) => ErrorMessage(error),
     );
 }
 ```
@@ -125,26 +126,28 @@ Contains information about the current page, this is `number` and `size`.
 #### PagedList
 List of elements with information if there are more elements or not.
 
-#### PagedRepository
-`PagedRepository` comes with only one method:
+#### PagedListRepository
+`PagedListRepository` comes with only one method:
 
-`Future<List<T>> getAll(Page page);` - this method retrieves elements meeting the pagination restriction provided by the `page` object. When elements are exceeded it should return an empty list or throw `PageNotFoundException`. `PagedListBloc` will hande both cases in the same way.
+`Future<List<T>> getAll(Page page);` - this method retrieves elements meeting the pagination restriction provided by the `page` object.
+When elements are exceeded it should return an empty list or throw `PageNotFoundException`. `PagedListBloc` will handle both cases in the same way.
 
-Where `T` is the element type returned by this repository.
+Where:
+* `T` is the element type returned by this repository.
 
 #### Usage
 1. Create `PagedListBloc` using `BlocProvider` or any other `DI` framework:
 ```dart
 BlocProvider(
-    builder: (context) => PagedListBloc<Data>(DataPagedRepository()),
-    child: DataPage(),
+    builder: (context) => PagedListBloc<Post>(PostPagedRepository()),
+    child: PostsPage(),
 );
 ```
 
 2. Trigger loading first page. Typically it can be done in the `StatefulWidget`'s `initState` method. This is the place, where you can set the page size. Once it is set, it cannot be changed.
 
 ```dart
-listBloc = BlocProvider.of<PagedListBloc<Data>>(context)..loadFirstPage(pageSize: 10);
+listBloc = BlocProvider.of<PagedListBloc<Post>>(context)..loadFirstPage(pageSize: 10);
 ```
 
 3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
@@ -154,9 +157,9 @@ listBloc = BlocProvider.of<PagedListBloc<Data>>(context)..loadFirstPage(pageSize
 Widget build(BuildContext context) {
     return ViewStateBuilder(
         bloc: listBloc,
-        onLoading: (context) => _buildIndicator(),
-        onSuccess: (context, page) _buildInfiniteList(page),
-        onError: (context, error) => _buildErrorMessage(error),
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, pagedPosts) => PostsInfiniteList(pagedPosts),
+        onError: (context, error) => ErrorMessage(error),
     );
 }
 ```
@@ -165,16 +168,81 @@ Widget build(BuildContext context) {
 
 ```dart
 InfiniteListView(
-    itemBuilder: (context, index) => _buildListItem(page.elements[index]),
+    itemBuilder: (context, index) => PostListItem(page.elements[index]),
     itemCount: page.elements.length,
     hasNext: page.hasMoreElements,
     nextData: listBloc.loadNextPage,
-    loadingWidget: _buildPageLoadingIndicator(),
+    loadingWidget: PageLoadingIndicator(),
 );
 ```
 
 ##### See also
 [Paged List BLoC Sample App](example/lib/src/list_paged_app.dart)
+
+### PagedListFilterBloc
+A list BLoC with pagination and filtering. It works best with [Infinite Widgets](https://github.com/jaumard/infinite_widgets) but a custom presentation layer can provided as well.
+
+#### Page
+Contains information about the current page, this is `number` and `size`.
+
+#### PagedList
+List of elements with information if there are more elements or not.
+
+#### PagedListFilterRepository
+`PagedListFilterRepository` provides only two methods:
+
+`Future<List<T>> getAll(Page page);` - retrieves elements meeting the pagination restriction provided by the `page` object.
+`Future<List<T>> getBy(Page page, F filter);` - retrieves elements meeting pagination as well as the filter restrictions provided by the `page` and `filter` objects.
+
+When elements are exceeded it should return an empty list or throw `PageNotFoundException`. `PagedListFilterBloc` will handle both cases in the same way.
+
+Where:
+* `T` is the element type returned by this repository,
+* `F` is the filter type, which can be primitive as well as complex object.
+
+#### Usage
+1. Create `PagedListFilterBloc` using `BlocProvider` or any other `DI` framework:
+```dart
+BlocProvider(
+    builder: (context) => PagedListFilterBloc<Post>(PostPagedFilterRepository()),
+    child: PostsPage(),
+);
+```
+
+2. Trigger loading first page. Typically it can be done in the `StatefulWidget`'s `initState` method. This is the place, where you can set the page size. Once it is set, it cannot be changed.
+
+```dart
+listBloc = BlocProvider.of<PagedListFilterBloc<Post>>(context)..loadFirstPage(pageSize: 10, filter: filter);
+```
+
+3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
+
+```dart
+@override
+Widget build(BuildContext context) {
+    return ViewStateBuilder(
+        bloc: listBloc,
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, pagedPosts) => PostsInfiniteList(pagedPosts),
+        onError: (context, error) => ErrorMessage(error),
+    );
+}
+```
+
+4. For building the presentation layer you can use `InfiniteListView` or `InfiniteGridView` which are part of [Infinite Widgets](https://github.com/jaumard/infinite_widgets) library. Thanks to this you can easilly apply the `Page` properties straight into the `InfiniteListView` with no additional work required.
+
+```dart
+InfiniteListView(
+    itemBuilder: (context, index) => PostListItem(page.elements[index]),
+    itemCount: page.elements.length,
+    hasNext: page.hasMoreElements,
+    nextData: listBloc.loadNextPage,
+    loadingWidget: PageLoadingIndicator(),
+);
+```
+
+##### See also
+[Paged List BLoC Sample App](example/lib/src/list_paged_filter_app.dart)
 
 ### DetailsBloc
 A BLoC that allows to fetch a single element with given identifier.
@@ -194,15 +262,15 @@ Where:
 
 ```dart
 BlocProvider(
-    builder: (context) => DetailsBloc<Data, int>(DataDetailsRepository()),
-    child: DataDetailsPage(settings.arguments as int),
+    builder: (context) => DetailsBloc<PostDetails, int>(PostDetailsRepository()),
+    child: PostDetailsPage(settings.arguments as int),
 );
 ```
 
 2. Trigger loading the element. Typically it can be done in the `StatefulWidget`'s `initState` method.
 
 ```dart
-listBloc = BlocProvider.of<DetailsBloc<Data, int>>(context).loadElement(widget.id);
+listBloc = BlocProvider.of<DetailsBloc<PostDetails, int>>(context)..loadElement(widget.id);
 ```
 
 3. Use the `ViewStateBuilder` to build the UI and provide `builder` functions for states you want to handle:
@@ -212,9 +280,9 @@ listBloc = BlocProvider.of<DetailsBloc<Data, int>>(context).loadElement(widget.i
 Widget build(BuildContext context) {
     return ViewStateBuilder(
         bloc: detailsBloc,
-        onLoading: (context) => _buildIndicator(),
-        onSuccess: (context, element) _buildElement(element),
-        onError: (context, error) => _buildErrorMessage(error),
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, post) => PostDetailsContent(post),
+        onError: (context, error) => ErrorMessage(error),
     );
 }
 ```

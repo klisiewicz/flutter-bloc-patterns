@@ -38,10 +38,24 @@ void main() {
     expect(firstPage.size, size);
   });
 
-  test('should not return previous page when', () {
+  test('should not return previous page for the first page', () {
     final firstPage = Page.first(size: size);
     final previousPage = firstPage.previous();
     expect(previousPage.number, 0);
     expect(previousPage.size, size);
+  });
+
+  test('should be equal when page number and size are the same', () {
+    final page = Page(number: 1, size: size);
+    final samePage = Page(number: 1, size: size);
+    expect(page == samePage, isTrue);
+  });
+
+  test('should return page size and number when calling toString', () {
+    final firstPage = Page.first(size: size);
+    expect(
+      firstPage.toString(),
+      '${firstPage.runtimeType} (number: 0, size: $size)',
+    );
   });
 }

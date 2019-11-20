@@ -1,6 +1,6 @@
 name: flutter_bloc_patterns
 description: A set of most common BLoC use cases build on top of flutter_bloc library.
-version: 0.2.2
+version: 0.3.0
 author: Karol Lisiewicz <karol.lisiewicz@gmail.com>
 homepage: https://github.com/klisiewicz/flutter-bloc-patterns
 
@@ -10,13 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  equatable: ^0.6.1
-  bloc: ^1.0.0
-  flutter_bloc: ^1.0.0
+  equatable: ^1.0.0
+  bloc: ^2.0.0
+  flutter_bloc: ^2.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
-  bloc_test: ^1.0.0
+  bloc_test: ^2.1.0
 flutter:
