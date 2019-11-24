@@ -1,10 +1,10 @@
 import 'package:example/src/common/error_message.dart';
 import 'package:example/src/common/loading_indicator.dart';
-import 'package:example/src/common/posts_list.dart';
-import 'package:example/src/common/posts_list_empty.dart';
-import 'package:example/src/model/post.dart';
-import 'package:example/src/model/post_repository.dart';
-import 'package:example/src/model/user.dart';
+import 'package:example/src/post/model/post.dart';
+import 'package:example/src/post/model/post_repository.dart';
+import 'package:example/src/post/ui/posts_list.dart';
+import 'package:example/src/post/ui/posts_list_empty.dart';
+import 'package:example/src/user/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
@@ -62,9 +62,9 @@ class _PostsPageState extends State<_PostsPage> {
       bloc: listBloc,
       onLoading: (context) => LoadingIndicator(),
       onSuccess: (context, posts) =>
-          PostsList(posts: posts, onRefresh: _refreshPosts),
+          PostsList(posts, onRefresh: _refreshPosts),
       onRefreshing: (context, posts) =>
-          PostsList(posts: posts, onRefresh: _refreshPosts),
+          PostsList(posts, onRefresh: _refreshPosts),
       onEmpty: (context) => PostsListEmpty(),
       onError: (context, error) => ErrorMessage(error: error),
     );

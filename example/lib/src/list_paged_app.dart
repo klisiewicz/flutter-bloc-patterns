@@ -1,9 +1,9 @@
 import 'package:example/src/common/error_message.dart';
 import 'package:example/src/common/loading_indicator.dart';
-import 'package:example/src/common/posts_list_empty.dart';
-import 'package:example/src/common/posts_list_paged.dart';
-import 'package:example/src/model/post.dart';
-import 'package:example/src/model/post_repository.dart';
+import 'package:example/src/post/model/post.dart';
+import 'package:example/src/post/model/post_repository.dart';
+import 'package:example/src/post/ui/posts_list_empty.dart';
+import 'package:example/src/post/ui/posts_list_paged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
@@ -44,17 +44,15 @@ class _PostsPageState extends State<_PostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Posts')),
-      body: BlocBuilder(
+      body: ViewStateBuilder(
         bloc: _listBloc,
-        builder: ViewStateBuilder(
-          onLoading: (context) => LoadingIndicator(),
-          onSuccess: (context, page) => PostsListPaged(
-            page,
-            onLoadNextPage: _listBloc.loadNextPage,
-          ),
-          onEmpty: (context) => PostsListEmpty(),
-          onError: (context, error) => ErrorMessage(error: error),
-        ).build,
+        onLoading: (context) => LoadingIndicator(),
+        onSuccess: (context, page) => PostsListPaged(
+          page,
+          onLoadNextPage: _listBloc.loadNextPage,
+        ),
+        onEmpty: (context) => PostsListEmpty(),
+        onError: (context, error) => ErrorMessage(error: error),
       ),
     );
   }

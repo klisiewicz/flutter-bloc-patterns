@@ -1,9 +1,9 @@
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 
-/// [PagedRepository] allows to retrieve elements using the pagination.
+/// [PagedListRepository] allows to retrieve elements using the pagination.
 ///
 /// [T] - the type of returned elements.
-abstract class PagedRepository<T> {
+abstract class PagedListRepository<T> {
   /// Retrieves elements meeting the pagination restriction provided by
   /// the [page] object.
   /// When elements are exceeded should return an empty list or throw

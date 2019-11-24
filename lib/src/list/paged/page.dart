@@ -38,5 +38,5 @@ class Page extends Equatable {
   List<Object> get props => [number, size];
 
   @override
-  String toString() => 'Page (number: $number, size: $size)';
+  String toString() => '$runtimeType (number: $number, size: $size)';
 }

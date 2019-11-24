@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -14,11 +16,12 @@ class PagedList<T> extends Equatable {
   /// [elements] - list of elements, cannot be null or empty,
   /// [hasReachedMax] - flag informing if all elements has already been fetched.
   /// True if there are more pages, false otherwise.
-  PagedList(this.elements, {this.hasReachedMax = false})
+  PagedList(List<T> elements, {this.hasReachedMax = false})
       : assert(
           elements != null && elements.isNotEmpty,
           'Elements cannot be empty',
-        );
+        ),
+        this.elements = UnmodifiableListView(elements);
 
   bool get hasMoreElements => !hasReachedMax;
 

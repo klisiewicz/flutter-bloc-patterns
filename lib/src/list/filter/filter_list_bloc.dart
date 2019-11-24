@@ -17,12 +17,12 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 /// [T] - the type of list elements.
 /// [F] - the type of filter.
 class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
-  final FilterRepository<T, F> _repository;
+  final FilterListRepository<T, F> _repository;
   F _filter;
 
-  FilterListBloc(FilterRepository<T, F> repository)
-      : assert(repository != null),
-        this._repository = repository;
+  FilterListBloc(FilterListRepository<T, F> filterListRepository)
+      : assert(filterListRepository != null),
+        this._repository = filterListRepository;
 
   @override
   ViewState get initialState => Initial();

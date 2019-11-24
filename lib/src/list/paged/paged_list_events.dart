@@ -9,14 +9,17 @@ abstract class PagedListEvent extends Equatable {
 }
 
 /// Event indicating that a page needs to be loaded.
-class LoadPage extends PagedListEvent {
+///
+/// [F] - the filter type.
+class LoadPage<F> extends PagedListEvent {
   final Page page;
+  final F filter;
 
-  const LoadPage(this.page) : assert(page != null);
-
-  @override
-  List<Object> get props => [page];
+  const LoadPage(this.page, {this.filter}) : assert(page != null);
 
   @override
-  String toString() => 'LoadPage: $page';
+  List<Object> get props => [page, filter];
+
+  @override
+  String toString() => '$runtimeType: $page ${filter != null ? filter : ''}';
 }

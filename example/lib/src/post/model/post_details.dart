@@ -1,4 +1,4 @@
-import 'package:example/src/model/post.dart';
+import 'package:example/src/post/model/post.dart';
 
 class PostDetails extends Post {
   final String body;

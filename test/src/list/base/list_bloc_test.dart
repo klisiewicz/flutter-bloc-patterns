@@ -7,12 +7,12 @@ import 'package:mockito/mockito.dart';
 import 'list_repository_mock.dart';
 
 void main() {
-  ListBloc<int> listBloc;
+  ListBloc<int> bloc;
   ListRepository<int> repository;
 
   setUp(() {
     repository = ListRepositoryMock<int>();
-    listBloc = ListBloc(repository);
+    bloc = ListBloc(repository);
   });
 
   void givenEmptyRepository() =>
@@ -25,7 +25,7 @@ void main() {
       when(repository.getAll()).thenThrow(_exception);
 
   Future<void> thenExpectStates(Iterable<ViewState> states) async => expect(
-        listBloc,
+        bloc,
         emitsInOrder(states),
       );
 
@@ -36,7 +36,7 @@ void main() {
   });
 
   group('loading elements', () {
-    void whenLoadingElements() => listBloc.loadElements();
+    void whenLoadingElements() => bloc.loadElements();
 
     test('should emit loaded empty list when there is no data', () {
       givenEmptyRepository();
@@ -70,8 +70,8 @@ void main() {
   });
 
   group('refreshing elements', () {
-    void whenLoadingElements() => listBloc.loadElements();
-    void whenRefreshingElements() => listBloc.refreshElements();
+    void whenLoadingElements() => bloc.loadElements();
+    void whenRefreshingElements() => bloc.refreshElements();
 
     test('should refresh elements when loading is finished', () {
       givenRepositoryWithElements();
@@ -90,7 +90,7 @@ void main() {
   });
 
   tearDown(() {
-    listBloc.close();
+    bloc.close();
   });
 }
 

@@ -2,7 +2,7 @@ import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'filter_repository_mock.dart';
+import 'filter_list_repository_mock.dart';
 
 void main() {
   final _someData = [1, 2, 3];
@@ -10,22 +10,21 @@ void main() {
   final _matchingFilter = _someData[0];
   final _matchingElements = [_someData[0]];
 
-  FilterListBloc<int, int> filterListBloc;
+  FilterListBloc<int, int> bloc;
 
-  void whenLoadingElements({int filter}) =>
-      filterListBloc.loadElements(filter: filter);
+  void whenLoadingElements({int filter}) => bloc.loadElements(filter: filter);
 
   void whenRefreshingElements({int filter}) =>
-      filterListBloc.refreshElements(filter: filter);
+      bloc.refreshElements(filter: filter);
 
   Future<void> thenExpectStates(Iterable<ViewState> states) => expectLater(
-        filterListBloc,
+        bloc,
         emitsInOrder(states),
       );
 
   group('empty repository', () {
     setUp(() {
-      filterListBloc = FilterListBloc(InMemoryFilterRepository());
+      bloc = FilterListBloc(InMemoryFilterRepository());
     });
 
     test('should emit list loaded empty state when no filter is set', () {
@@ -47,13 +46,13 @@ void main() {
     });
 
     tearDown(() {
-      filterListBloc.close();
+      bloc.close();
     });
   });
 
   group('repository with elements', () {
     setUp(() {
-      filterListBloc = FilterListBloc(
+      bloc = FilterListBloc(
         InMemoryFilterRepository(_someData),
       );
     });
@@ -115,7 +114,7 @@ void main() {
     });
 
     tearDown(() {
-      filterListBloc.close();
+      bloc.close();
     });
   });
 
@@ -123,7 +122,7 @@ void main() {
     final exception = Exception('Oh no, I failed!');
 
     setUp(() {
-      filterListBloc = FilterListBloc(FailingFilterRepository(exception));
+      bloc = FilterListBloc(FailingFilterRepository(exception));
     });
 
     test('should emit list not loaded when no filter is set', () {
@@ -147,7 +146,7 @@ void main() {
     });
 
     tearDown(() {
-      filterListBloc.close();
+      bloc.close();
     });
   });
 
@@ -155,7 +154,7 @@ void main() {
     final error = Error();
 
     setUp(() {
-      filterListBloc = FilterListBloc(FailingFilterRepository(error));
+      bloc = FilterListBloc(FailingFilterRepository(error));
     });
 
     test('should emit list error when error occurs', () {
@@ -168,7 +167,7 @@ void main() {
     });
 
     tearDown(() {
-      filterListBloc.close();
+      bloc.close();
     });
   });
 }
