@@ -1,3 +1,7 @@
+## [0.3.1]
+
+* `ViewState` exported.
+
 ## [0.3.0]
 
 * `PagedFilterListBloc` - a list BLoC with pagination and filtering,
