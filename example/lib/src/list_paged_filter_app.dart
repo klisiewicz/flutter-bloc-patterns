@@ -18,7 +18,7 @@ class PagedFilterListSampleApp extends StatelessWidget {
       title: 'Paged Filter List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        builder: (_) => PagedListFilterBloc<Photo, Album>(
+        create: (_) => PagedListFilterBloc<Photo, Album>(
           PagedFilterPhotoRepository(),
         ),
         child: _PhotosPage(),
@@ -33,7 +33,7 @@ class _PhotosPage extends StatefulWidget {
 }
 
 class _PhotosPageState extends State<_PhotosPage> {
-  final myAlbum = Album(id: 1);
+  final _myAlbum = const Album(id: 1);
   PagedListFilterBloc<Photo, Album> _photosBloc;
 
   @override
@@ -42,22 +42,22 @@ class _PhotosPageState extends State<_PhotosPage> {
     _photosBloc = BlocProvider.of<PagedListFilterBloc<Photo, Album>>(context)
       ..loadFirstPage(
         pageSize: 12,
-        filter: myAlbum,
+        filter: _myAlbum,
       );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Photos')),
+      appBar: AppBar(title: const Text('Photos')),
       body: ViewStateBuilder<PagedList<Photo>, PagedListFilterBloc>(
         bloc: _photosBloc,
-        onLoading: (context) => LoadingIndicator(),
+        onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PhotosListPaged(
           page,
           onLoadNextPage: _photosBloc.loadNextPage,
         ),
-        onEmpty: (context) => PhotosListEmpty(),
+        onEmpty: (context) => const PhotosListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
       ),
     );

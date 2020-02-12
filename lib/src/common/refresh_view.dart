@@ -46,14 +46,14 @@ class _RefreshViewState extends State<RefreshView> {
     _refreshCompleter = Completer();
 
     return RefreshIndicator(
-      child: widget.child,
-      onRefresh: _refresh,
       backgroundColor: widget.backgroundColor,
       color: widget.color,
       displacement: widget.displacement,
       notificationPredicate: widget.notificationPredicate,
       semanticsLabel: widget.semanticsLabel,
       semanticsValue: widget.semanticsValue,
+      onRefresh: _refresh,
+      child: widget.child,
     );
   }
 

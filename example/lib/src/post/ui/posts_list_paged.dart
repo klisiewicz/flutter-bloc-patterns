@@ -22,7 +22,7 @@ class PostsListPaged extends StatelessWidget {
       itemCount: page.elements.length,
       hasNext: page.hasMoreElements,
       nextData: onLoadNextPage,
-      loadingWidget: LoadingPageIndicator(),
+      loadingWidget: const LoadingPageIndicator(),
     );
   }
 }

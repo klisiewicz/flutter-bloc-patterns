@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+@immutable
 class Album {
   final int id;
   final String title;

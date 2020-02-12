@@ -12,7 +12,7 @@ class PostDetails extends Post {
           title: title,
         );
 
-  factory PostDetails.fromJson(Map<String, dynamic> json) {
+  factory PostDetails.fromJson(dynamic json) {
     return PostDetails(
       id: json['id'] as int,
       title: json['title'] as String,

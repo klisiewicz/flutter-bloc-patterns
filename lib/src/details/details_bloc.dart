@@ -17,7 +17,7 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
 
   DetailsBloc(DetailsRepository<T, I> detailsRepository)
       : assert(detailsRepository != null),
-        this._detailsRepository = detailsRepository;
+        _detailsRepository = detailsRepository;
 
   @override
   ViewState get initialState => Initial();
@@ -27,7 +27,7 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
 
   @override
   Stream<ViewState> mapEventToState(DetailsEvent event) async* {
-    if (event is LoadDetails) {
+    if (event is LoadDetails<I>) {
       yield* _mapLoadDetails(event.id);
     }
   }
@@ -41,6 +41,7 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
       yield Empty();
     } catch (e) {
       yield Failure(e);
+      rethrow;
     }
   }
 }

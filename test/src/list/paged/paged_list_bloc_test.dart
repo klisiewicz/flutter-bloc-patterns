@@ -183,7 +183,7 @@ void main() {
     });
 
     group('repository unable to find page', () {
-      final pageNotFound = PageNotFoundException(0);
+      const pageNotFound = PageNotFoundException(0);
       setUp(() {
         repository = FailingPagedRepository(pageNotFound);
         bloc = PagedListBloc<int>(repository);

@@ -42,7 +42,6 @@ typedef ErrorCallback = Widget Function(
 /// [B] - the type of bloc.
 class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
     extends BlocBuilder<B, ViewState> {
-
   ViewStateBuilder({
     Key key,
     B bloc,
@@ -59,19 +58,20 @@ class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
           condition: condition,
           builder: (BuildContext context, ViewState state) {
             if (state is Initial) {
-              return onReady?.call(context) ?? SizedBox();
+              return onReady?.call(context) ?? const SizedBox();
             } else if (state is Loading) {
-              return onLoading?.call(context) ?? SizedBox();
+              return onLoading?.call(context) ?? const SizedBox();
             } else if (state is Refreshing<T>) {
-              return onRefreshing?.call(context, state.data) ?? SizedBox();
+              return onRefreshing?.call(context, state.data) ??
+                  const SizedBox();
             } else if (state is Success<T>) {
-              return onSuccess?.call(context, state.data) ?? SizedBox();
+              return onSuccess?.call(context, state.data) ?? const SizedBox();
             } else if (state is Empty) {
-              return onEmpty?.call(context) ?? SizedBox();
+              return onEmpty?.call(context) ?? const SizedBox();
             } else if (state is Failure) {
-              return onError?.call(context, state.error) ?? SizedBox();
+              return onError?.call(context, state.error) ?? const SizedBox();
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );

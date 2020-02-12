@@ -12,13 +12,13 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 /// Call [refreshElements] to perform a refresh.
 ///
 /// [T] - type of list items.
-class ListBloc<T> extends FilterListBloc<T, Null> {
+class ListBloc<T> extends FilterListBloc<T, void> {
   ListBloc(ListRepository<T> listRepository)
       : assert(listRepository != null),
         super(_FilterRepositoryAdapter(listRepository));
 }
 
-class _FilterRepositoryAdapter<T> extends FilterListRepository<T, Null> {
+class _FilterRepositoryAdapter<T> extends FilterListRepository<T, void> {
   final ListRepository<T> listRepository;
 
   _FilterRepositoryAdapter(this.listRepository);
@@ -27,5 +27,5 @@ class _FilterRepositoryAdapter<T> extends FilterListRepository<T, Null> {
   Future<List<T>> getAll() => listRepository.getAll();
 
   @override
-  Future<List<T>> getBy(Null filter) => listRepository.getAll();
+  Future<List<T>> getBy(void filter) => listRepository.getAll();
 }

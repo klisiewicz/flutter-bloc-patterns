@@ -25,10 +25,11 @@ class FilterPostRepository implements FilterListRepository<Post, User> {
 
   @override
   Future<List<Post>> getBy(User user) {
-    if (user == null || user.id == null)
+    if (user == null || user.id == null) {
       return _getPostsFromUrl(_postsUrl);
-    else
+    } else {
       return _getPostsFromUrl('$_postsUrl?userId=${user.id}');
+    }
   }
 }
 
@@ -43,11 +44,11 @@ class PostDetailsRepository implements DetailsRepository<PostDetails, int> {
   Future<PostDetails> getById(int id) async {
     final response = await http.get('$_postsUrl/$id');
 
-    if (response.statusCode == HttpStatus.notFound)
+    if (response.statusCode == HttpStatus.notFound) {
       return null;
-    else if (response.statusCode != HttpStatus.ok)
+    } else if (response.statusCode != HttpStatus.ok) {
       throw Exception('Failed to load post with id $id');
-
+    }
     final dynamic postJson = json.decode(response.body);
     return PostDetails.fromJson(postJson);
   }
@@ -56,11 +57,17 @@ class PostDetailsRepository implements DetailsRepository<PostDetails, int> {
 Future<List<Post>> _getPostsFromUrl(String url) async {
   final response = await http.get(url);
 
-  if (response.statusCode != HttpStatus.ok)
+  if (response.statusCode != HttpStatus.ok) {
     throw Exception('Failed to load post');
+  }
 
-  final List<dynamic> postsJson = json.decode(response.body);
-  final posts = postsJson.map((post) => Post.fromJson(post)).toList();
-  // Shuffle the list to achieve refresh impression
-  return posts..shuffle();
+  final dynamic postsJson = json.decode(response.body);
+  if (postsJson is List) {
+    final List<Post> posts =
+        postsJson.map((post) => Post.fromJson(post)).toList();
+    // Shuffle the list to achieve refresh impression
+    return posts..shuffle();
+  } else {
+    return [];
+  }
 }

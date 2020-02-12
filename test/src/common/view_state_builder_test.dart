@@ -10,7 +10,7 @@ import '../util/view_test_util.dart';
 class BlocMock extends Mock implements Bloc<int, ViewState> {}
 
 void main() {
-  Bloc<dynamic, ViewState> bloc;
+  Bloc<int, ViewState> bloc;
   const readyKey = Key('ready');
   const loadKey = Key('loading');
   const refreshKey = Key('refreshing');
@@ -22,7 +22,7 @@ void main() {
 
   setUpAll(() {
     bloc = BlocMock();
-    when(bloc.skip(any)).thenAnswer((_) => Stream.empty());
+    when(bloc.skip(any)).thenAnswer((_) => const Stream.empty());
   });
 
   Widget makeTestableViewStateBuilder() {
@@ -41,7 +41,7 @@ void main() {
 
   testWidgets('should diplay onReady widget when block is in inital state',
       (WidgetTester tester) async {
-        when(bloc.state).thenReturn(Initial());
+    when(bloc.state).thenReturn(Initial());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -60,7 +60,7 @@ void main() {
   testWidgets(
       'should diplay onRefreshing widget when block is in refreshing state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Refreshing(someData));
+    when(bloc.state).thenReturn(const Refreshing(someData));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -78,7 +78,7 @@ void main() {
 
   testWidgets('should diplay onSuccess widget when block is in success state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Success(someData));
+    when(bloc.state).thenReturn(const Success(someData));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 

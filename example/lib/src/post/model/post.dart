@@ -7,7 +7,7 @@ class Post {
     this.title,
   });
 
-  factory Post.fromJson(Map<String, dynamic> json) {
+  factory Post.fromJson(dynamic json) {
     return Post(
       id: json['id'] as int,
       title: json['title'] as String,

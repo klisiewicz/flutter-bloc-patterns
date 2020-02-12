@@ -18,11 +18,14 @@ class PagedFilterPhotoRepository
   Future<List<Photo>> getBy(Page page, Album album) async {
     final response = await http.get(_buildUrl(page, album));
 
-    if (response.statusCode != HttpStatus.ok)
-      throw Exception('Failed to load post');
+    if (response.statusCode != HttpStatus.ok) {
+      throw Exception('Failed to load photos');
+    }
 
-    final List<dynamic> postsJson = json.decode(response.body);
-    return postsJson.map((photo) => Photo.fromJson(photo)).toList();
+    final dynamic postsJson = json.decode(response.body);
+    return (postsJson is List)
+        ? postsJson.map((photo) => Photo.fromJson(photo)).toList()
+        : [];
   }
 
   String _buildUrl(Page page, Album album) {

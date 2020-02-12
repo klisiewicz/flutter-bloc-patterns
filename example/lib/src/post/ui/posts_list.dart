@@ -17,15 +17,15 @@ class PostsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshView(
+      onRefresh: onRefresh,
       child: ListView.separated(
         itemCount: posts.length,
         itemBuilder: (context, index) => PostListItem(
           posts[index],
           onPostSelected: onPostSelected,
         ),
-        separatorBuilder: (context, index) => Divider(height: 1),
+        separatorBuilder: (context, index) => const Divider(height: 1),
       ),
-      onRefresh: onRefresh,
     );
   }
 }

@@ -1,3 +1,9 @@
+## [0.4.0]
+
+* Migrating to `bloc` 3.0.0 and `flutter_bloc` 3.2.0,
+* Rethrowing `errors` from `blocs` to make them available in the `onError` method,
+* Code style improvements.
+
 ## [0.3.1]
 
 * `ViewState` exported.

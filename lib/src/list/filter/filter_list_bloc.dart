@@ -22,7 +22,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
 
   FilterListBloc(FilterListRepository<T, F> filterListRepository)
       : assert(filterListRepository != null),
-        this._repository = filterListRepository;
+        _repository = filterListRepository;
 
   @override
   ViewState get initialState => Initial();
@@ -47,9 +47,9 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
 
   @override
   Stream<ViewState> mapEventToState(ListEvent event) async* {
-    if (event is LoadList) {
+    if (event is LoadList<F>) {
       yield* _mapLoadList(event.filter);
-    } else if (event is RefreshList && _isRefreshPossible(event)) {
+    } else if (event is RefreshList<F> && _isRefreshPossible(event)) {
       yield* _mapRefreshList(event.filter);
     }
   }
@@ -69,7 +69,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   }
 
   List<T> _getCurrentStateElements() =>
-      (state is Success) ? (state as Success).data : [];
+      (state is Success<List<T>>) ? (state as Success<List<T>>).data : [];
 
   Stream<ViewState> _getListState(F filter) async* {
     try {
@@ -79,12 +79,13 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
           : Empty();
     } catch (e) {
       yield Failure(e);
+      rethrow;
     } finally {
       _filter = filter;
     }
   }
 
-  Future<List> _getElementsFromRepository(F filter) {
+  Future<List<T>> _getElementsFromRepository(F filter) {
     if (filter != null) {
       return _repository.getBy(filter);
     } else {

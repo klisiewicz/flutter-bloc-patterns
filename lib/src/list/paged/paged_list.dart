@@ -21,7 +21,7 @@ class PagedList<T> extends Equatable {
           elements != null && elements.isNotEmpty,
           'Elements cannot be empty',
         ),
-        this.elements = UnmodifiableListView(elements);
+        elements = UnmodifiableListView(elements);
 
   bool get hasMoreElements => !hasReachedMax;
 

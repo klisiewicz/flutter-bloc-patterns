@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 
 /// [PagedListRepository] allows to retrieve elements using the pagination.
@@ -11,11 +12,13 @@ abstract class PagedListRepository<T> {
   Future<List<T>> getAll(Page page);
 }
 
-// Exception thrown when page with given number doesn't exist.
+/// Exception thrown when page with given number doesn't exist.
+@immutable
 class PageNotFoundException implements Exception {
-  final pageNumber;
+  /// The page number that wasn't found.
+  final int pageNumber;
 
-  PageNotFoundException(this.pageNumber);
+  const PageNotFoundException(this.pageNumber);
 
   @override
   String toString() =>

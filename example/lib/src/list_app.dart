@@ -18,7 +18,7 @@ class ListSampleApp extends StatelessWidget {
       title: 'List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        builder: (_) => ListBloc<Post>(PostListRepository()),
+        create: (_) => ListBloc<Post>(PostListRepository()),
         child: PostsPage(),
       ),
     );
@@ -42,15 +42,15 @@ class _PostsPageState extends State<PostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Posts')),
+      appBar: AppBar(title: const Text('Posts')),
       body: ViewStateBuilder<List<Post>, ListBloc<Post>>(
         bloc: listBloc,
-        onLoading: (context) => LoadingIndicator(),
+        onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, List<Post> posts) =>
             PostsList(posts, onRefresh: _refreshPosts),
         onRefreshing: (context, List<Post> posts) =>
             PostsList(posts, onRefresh: _refreshPosts),
-        onEmpty: (context) => PostsListEmpty(),
+        onEmpty: (context) => const PostsListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
       ),
     );
