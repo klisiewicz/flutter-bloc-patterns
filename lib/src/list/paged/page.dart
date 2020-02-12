@@ -18,7 +18,7 @@ class Page extends Equatable {
 
   /// Creates first page.
   /// [size] - the size of the page to be returned.
-  Page.first({int size}) : this(number: 0, size: size);
+  const Page.first({int size}) : this(number: 0, size: size);
 
   /// Returns the offset to be taken according to page and page size.
   int get offset => size * number;

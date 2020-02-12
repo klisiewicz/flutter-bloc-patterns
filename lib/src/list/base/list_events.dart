@@ -18,6 +18,7 @@ class LoadList<F> extends ListEvent {
   @override
   List<Object> get props => [filter];
 
+  @override
   String toString() => '$runtimeType: $filter';
 }
 
@@ -32,5 +33,6 @@ class RefreshList<F> extends ListEvent {
   @override
   List<Object> get props => [filter];
 
+  @override
   String toString() => '$runtimeType: $filter';
 }

@@ -21,5 +21,5 @@ class LoadPage<F> extends PagedListEvent {
   List<Object> get props => [page, filter];
 
   @override
-  String toString() => '$runtimeType: $page ${filter != null ? filter : ''}';
+  String toString() => '$runtimeType: $page ${filter ?? ''}';
 }

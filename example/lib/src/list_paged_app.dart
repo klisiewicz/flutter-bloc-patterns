@@ -18,7 +18,7 @@ class PagedListSampleApp extends StatelessWidget {
       title: 'Paged List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        builder: (_) => PagedListBloc<Post>(PagedPostRepository()),
+        create: (_) => PagedListBloc<Post>(PagedPostRepository()),
         child: _PostsPage(),
       ),
     );
@@ -31,7 +31,7 @@ class _PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<_PostsPage> {
-  PagedListBloc _listBloc;
+  PagedListBloc<Post> _listBloc;
 
   @override
   void initState() {
@@ -43,15 +43,15 @@ class _PostsPageState extends State<_PostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Posts')),
-      body: ViewStateBuilder(
+      appBar: AppBar(title: const Text('Posts')),
+      body: ViewStateBuilder<PagedList<Post>, PagedListBloc>(
         bloc: _listBloc,
-        onLoading: (context) => LoadingIndicator(),
+        onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PostsListPaged(
           page,
           onLoadNextPage: _listBloc.loadNextPage,
         ),
-        onEmpty: (context) => PostsListEmpty(),
+        onEmpty: (context) => const PostsListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
       ),
     );

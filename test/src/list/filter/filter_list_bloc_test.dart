@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'filter_list_repository_mock.dart';
 
 void main() {
-  final _someData = [1, 2, 3];
-  final _notMatchingFilter = 0;
+  const _someData = [1, 2, 3];
+  const _notMatchingFilter = 0;
   final _matchingFilter = _someData[0];
   final _matchingElements = [_someData[0]];
 
@@ -64,7 +64,7 @@ void main() {
       thenExpectStates([
         Initial(),
         Loading(),
-        Success(_someData),
+        const Success(_someData),
       ]);
     });
 
@@ -95,7 +95,7 @@ void main() {
         Initial(),
         Loading(),
         Empty(),
-        Refreshing<List<int>>([]),
+        const Refreshing<List<int>>([]),
         Success<List<int>>(_matchingElements),
       ]);
     });

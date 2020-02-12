@@ -41,16 +41,16 @@ class _PostsPageState extends State<_PostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Posts')),
-      body: ViewStateBuilder(
+      appBar: AppBar(title: const Text('Posts')),
+      body: ViewStateBuilder<List<Post>, ListBloc<Post>>(
         bloc: listBloc,
-        onLoading: (context) => LoadingIndicator(),
+        onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, posts) => PostsList(
           posts,
           onPostSelected: _navigateToPostDetails,
           onRefresh: listBloc.refreshElements,
         ),
-        onEmpty: (context) => PostsListEmpty(),
+        onEmpty: (context) => const PostsListEmpty(),
       ),
     );
   }
@@ -88,10 +88,10 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Post')),
-      body: ViewStateBuilder(
+      appBar: AppBar(title: const Text('Post')),
+      body: ViewStateBuilder<PostDetails, DetailsBloc<PostDetails, int>>(
         bloc: detailsBloc,
-        onLoading: (context) => LoadingIndicator(),
+        onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, post) => _PostDetailsContent(post),
         onEmpty: _showSnackbarAndPopPage,
         onError: (context, error) => ErrorMessage(error: error),
@@ -103,7 +103,7 @@ class _PostDetailPageState extends State<_PostDetailPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Scaffold.of(context)
           .showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Post not found!'),
               duration: Duration(seconds: 2),
             ),
@@ -132,15 +132,15 @@ class _PostDetailsContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(post.title, style: Theme.of(context).textTheme.title),
-            SizedBox(height: 8),
+            Text(post.title, style: Theme.of(context).textTheme.headline6),
+            const SizedBox(height: 8),
             Text(
               post.body,
-              style: Theme.of(context).textTheme.body1,
+              style: Theme.of(context).textTheme.bodyText2,
               textAlign: TextAlign.justify,
             ),
           ],
@@ -161,14 +161,14 @@ class _Router {
       case _Route.home:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            builder: (_) => ListBloc<Post>(PostListRepository()),
+            create: (_) => ListBloc<Post>(PostListRepository()),
             child: _PostsPage(),
           ),
         );
       case _Route.post:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            builder: (_) => DetailsBloc<PostDetails, int>(
+            create: (_) => DetailsBloc<PostDetails, int>(
               PostDetailsRepository(),
             ),
             child: _PostDetailPage(settings.arguments as int),

@@ -23,7 +23,7 @@ class FilterListSampleApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: BlocProvider(
-        builder: (_) => FilterListBloc<Post, User>(FilterPostRepository()),
+        create: (_) => FilterListBloc<Post, User>(FilterPostRepository()),
         child: _PostsPage(),
       ),
     );
@@ -55,17 +55,16 @@ class _PostsPageState extends State<_PostsPage> {
     );
   }
 
-  AppBar _buildAppBar() => AppBar(title: Text('Posts'));
+  AppBar _buildAppBar() => AppBar(title: const Text('Posts'));
 
   Widget _buildBody() {
-    return ViewStateBuilder(
+    return ViewStateBuilder<List<Post>, FilterListBloc<Post, User>>(
       bloc: listBloc,
-      onLoading: (context) => LoadingIndicator(),
-      onSuccess: (context, posts) =>
-          PostsList(posts, onRefresh: _refreshPosts),
+      onLoading: (context) => const LoadingIndicator(),
+      onSuccess: (context, posts) => PostsList(posts, onRefresh: _refreshPosts),
       onRefreshing: (context, posts) =>
           PostsList(posts, onRefresh: _refreshPosts),
-      onEmpty: (context) => PostsListEmpty(),
+      onEmpty: (context) => const PostsListEmpty(),
       onError: (context, error) => ErrorMessage(error: error),
     );
   }
@@ -78,11 +77,11 @@ class _PostsPageState extends State<_PostsPage> {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.description),
-          title: Text('All'),
+          title: const Text('All'),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle),
-          title: Text('Mine'),
+          title: const Text('Mine'),
         ),
       ],
       onTap: _updateSelectedPosts,
@@ -90,7 +89,7 @@ class _PostsPageState extends State<_PostsPage> {
   }
 
   void _updateSelectedPosts(int index) {
-    final user = (index == _Posts.mine.index) ? User(_myUserId) : null;
+    final user = (index == _Posts.mine.index) ? const User(_myUserId) : null;
     if (user != listBloc.filter) {
       listBloc.loadElements(filter: user);
       setState(() {

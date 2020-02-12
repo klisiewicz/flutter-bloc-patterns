@@ -12,14 +12,14 @@ import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart'
 /// Call [loadNextPage] to fetch next page of data.
 ///
 /// [T] - the type of list elements.
-class PagedListBloc<T> extends PagedListFilterBloc<T, Null> {
+class PagedListBloc<T> extends PagedListFilterBloc<T, void> {
   PagedListBloc(PagedListRepository<T> pagedListRepository)
       : assert(pagedListRepository != null),
         super(_PagedListRepositoryAdapter<T>(pagedListRepository));
 }
 
 class _PagedListRepositoryAdapter<T>
-    implements PagedListFilterRepository<T, Null> {
+    implements PagedListFilterRepository<T, void> {
   final PagedListRepository<T> pagedListRepository;
 
   _PagedListRepositoryAdapter(this.pagedListRepository);
@@ -28,6 +28,6 @@ class _PagedListRepositoryAdapter<T>
   Future<List<T>> getAll(Page page) => pagedListRepository.getAll(page);
 
   @override
-  Future<List<T>> getBy(Page page, Null filter) =>
+  Future<List<T>> getBy(Page page, void filter) =>
       pagedListRepository.getAll(page);
 }

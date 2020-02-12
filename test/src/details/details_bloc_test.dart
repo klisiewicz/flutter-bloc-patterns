@@ -51,7 +51,7 @@ void main() {
       thenExpectStates([
         Initial(),
         Loading(),
-        Success(_someData),
+        const Success(_someData),
       ]);
     });
 

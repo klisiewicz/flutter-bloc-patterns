@@ -48,7 +48,7 @@ class Empty extends ViewState {
 class Success<T> extends ViewState {
   final T data;
 
-  Success(this.data) : assert(data != null);
+  const Success(this.data) : assert(data != null);
 
   @override
   List<Object> get props => [data];
@@ -62,7 +62,7 @@ class Success<T> extends ViewState {
 class Failure extends ViewState {
   final dynamic error;
 
-  Failure(this.error) : assert(error != null);
+  const Failure(this.error) : assert(error != null);
 
   @override
   List<Object> get props => [error];

@@ -26,13 +26,14 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
 
   PagedListFilterBloc(PagedListFilterRepository<T, F> pagedListFilterRepository)
       : assert(pagedListFilterRepository != null),
-        this._pagedFilterRepository = pagedListFilterRepository;
+        _pagedFilterRepository = pagedListFilterRepository;
 
   @override
   ViewState get initialState => Initial();
 
-  List<T> get _currentElements =>
-      (state is Success) ? (state as Success).data.elements : [];
+  List<T> get _currentElements => (state is Success<PagedList<T>>)
+      ? (state as Success<PagedList<T>>).data.elements
+      : [];
 
   Page _page;
 
@@ -52,13 +53,13 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   /// Loads next page. When no page has been loaded before the first one is
   /// loaded with the default page size [_defaultPageSize].
   void loadNextPage() {
-    _page = _page?.next() ?? Page.first(size: defaultPageSize);
+    _page = _page?.next() ?? const Page.first(size: defaultPageSize);
     add(LoadPage(_page, filter: _filter));
   }
 
   @override
   Stream<ViewState> mapEventToState(PagedListEvent event) async* {
-    if (event is LoadPage) {
+    if (event is LoadPage<F>) {
       yield* _mapLoadPage(event.page, event.filter);
     }
   }
@@ -75,6 +76,7 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
       yield* _emitEmptyPageLoaded(page);
     } catch (e) {
       yield Failure(e);
+      rethrow;
     }
   }
 
