@@ -41,7 +41,7 @@ void main() {
 
   testWidgets('should diplay onReady widget when block is in inital state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Initial());
+    when(bloc.state).thenReturn(const Initial());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -50,7 +50,7 @@ void main() {
 
   testWidgets('should diplay onLoading widget when block is in loading state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Loading());
+    when(bloc.state).thenReturn(const Loading());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 
@@ -69,7 +69,7 @@ void main() {
 
   testWidgets('should diplay onEmpty widget when block is in empty state',
       (WidgetTester tester) async {
-    when(bloc.state).thenReturn(Empty());
+    when(bloc.state).thenReturn(const Empty());
 
     await tester.pumpWidget(makeTestableViewStateBuilder());
 

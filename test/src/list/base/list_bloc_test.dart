@@ -31,7 +31,7 @@ void main() {
 
   test('should be initialized in initial state', () {
     thenExpectStates([
-      Initial(),
+      const Initial(),
     ]);
   });
 
@@ -41,7 +41,7 @@ void main() {
     test('should emit loaded empty list when there is no data', () {
       givenEmptyRepository();
       whenLoadingElements();
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Empty(),
@@ -51,7 +51,7 @@ void main() {
     test('should emit list loaded state when loading data is successful', () {
       givenRepositoryWithElements();
       whenLoadingElements();
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Success(_someData),
@@ -62,8 +62,8 @@ void main() {
       givenFailingRepository();
       whenLoadingElements();
       thenExpectStates([
-        Initial(),
-        Loading(),
+        const Initial(),
+        const Loading(),
         Failure(_exception),
       ]);
     });
@@ -79,7 +79,7 @@ void main() {
       whenLoadingElements();
       whenRefreshingElements();
 
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Success(_someData),
@@ -95,4 +95,4 @@ void main() {
 }
 
 final _exception = Exception('I\'ve failed my lord...');
-final _someData = [1, 2, 3];
+const _someData = [1, 2, 3];

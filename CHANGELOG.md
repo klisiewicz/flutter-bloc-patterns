@@ -1,3 +1,7 @@
+## [0.5.0]
+
+* `const` constructors for `ViewState`. 
+
 ## [0.4.0]
 
 * Migrating to `bloc` 3.0.0 and `flutter_bloc` 3.2.0,
