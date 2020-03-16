@@ -1,6 +1,6 @@
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

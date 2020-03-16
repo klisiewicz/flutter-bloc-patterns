@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 BlocStateAssertion withBloc(Bloc<dynamic, ViewState> bloc) =>

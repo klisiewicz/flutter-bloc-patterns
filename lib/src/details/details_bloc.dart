@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/details.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/details/details_events.dart';
 import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 
 /// A BLoC that allows to fetch a single element with given identifier.
 ///
@@ -20,7 +20,7 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
         _detailsRepository = detailsRepository;
 
   @override
-  ViewState get initialState => Initial();
+  ViewState get initialState => const Initial();
 
   /// Loads an element with given [id].
   void loadElement([I id]) => add(LoadDetails(id));
@@ -34,11 +34,11 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
 
   Stream<ViewState> _mapLoadDetails(I id) async* {
     try {
-      yield Loading();
+      yield const Loading();
       final element = await _detailsRepository.getById(id);
-      yield element != null ? Success<T>(element) : Empty();
+      yield element != null ? Success<T>(element) : const Empty();
     } on ElementNotFoundException {
-      yield Empty();
+      yield const Empty();
     } catch (e) {
       yield Failure(e);
       rethrow;

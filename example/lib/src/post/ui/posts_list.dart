@@ -1,6 +1,6 @@
 import 'package:example/src/post/model/post.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_patterns/base_list.dart';
+import 'package:flutter_bloc_patterns/view.dart';
 
 class PostsList extends StatelessWidget {
   final List<Post> posts;

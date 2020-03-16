@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc_patterns/base_list.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

@@ -1,10 +1,9 @@
 import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_patterns/base_list.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 
 /// A list BLoC with allowing filtering capabilities but without pagination.
 /// Thus it should be used with a reasonable small amount of data.
@@ -25,7 +24,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
         _repository = filterListRepository;
 
   @override
-  ViewState get initialState => Initial();
+  ViewState get initialState => const Initial();
 
   F get filter => _filter;
 
@@ -58,7 +57,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
       state is Success || state is Empty;
 
   Stream<ViewState> _mapLoadList(F filter) async* {
-    yield Loading();
+    yield const Loading();
     yield* _getListState(filter);
   }
 
@@ -76,7 +75,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
       final List<T> elements = await _getElementsFromRepository(filter);
       yield elements.isNotEmpty
           ? Success<List<T>>(UnmodifiableListView(elements))
-          : Empty();
+          : const Empty();
     } catch (e) {
       yield Failure(e);
       rethrow;

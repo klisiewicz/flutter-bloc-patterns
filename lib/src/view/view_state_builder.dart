@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 
 /// Callback function for the the initial state.
 typedef InitialCallback = Widget Function(BuildContext context);
@@ -38,7 +38,7 @@ typedef ErrorCallback = Widget Function(
 /// [onEmpty] callback for for no result state,
 /// [onError] callback function for an error state.
 
-/// [T] - the type of list elements,
+/// [T] - the type of elements,
 /// [B] - the type of bloc.
 class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
     extends BlocBuilder<B, ViewState> {
