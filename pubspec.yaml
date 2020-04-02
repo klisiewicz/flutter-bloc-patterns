@@ -19,5 +19,3 @@ dev_dependencies:
   bloc_test: ^4.0.0
   lint: ^1.1.1
   mockito: ^4.1.1
-
-flutter:

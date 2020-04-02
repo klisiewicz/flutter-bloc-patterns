@@ -3,27 +3,27 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 
-/// Callback function for the the initial state.
-typedef InitialCallback = Widget Function(BuildContext context);
+/// Builder function for the the initial state.
+typedef InitialBuilder = Widget Function(BuildContext context);
 
-/// Callback function for the data loading state.
-typedef LoadingCallback = Widget Function(BuildContext context);
+/// Builder function for the data loading state.
+typedef LoadingBuilder = Widget Function(BuildContext context);
 
-/// Callback function for a success. The data was fetched and nonnull
+/// Builder function for a success state. The data was fetched and nonnull
 /// element was returned.
-typedef SuccessCallback<T> = Widget Function(BuildContext context, T data);
+typedef SuccessBuilder<T> = Widget Function(BuildContext context, T data);
 
-/// Callback function for the data refreshing state. Can only occur after
-/// [SuccessCallback].
-typedef RefreshingCallback<T> = Widget Function(BuildContext context, T data);
+/// Builder function for the data refreshing state. Can only occur after
+/// [SuccessBuilder].
+typedef RefreshingBuilder<T> = Widget Function(BuildContext context, T data);
 
-/// Callback function for no result. The data was fetched
+/// Builder function for no result. The data was fetched
 /// successfully, but a null element was returned.
-typedef EmptyCallback = Widget Function(BuildContext context);
+typedef EmptyBuilder = Widget Function(BuildContext context);
 
-/// Callback function for an error. It contains an [error] that has caused
+/// Builder function for an error. It contains an [error] that has caused
 /// which may allow a view to react differently on different errors.
-typedef ErrorCallback = Widget Function(
+typedef ErrorBuilder = Widget Function(
   BuildContext context,
   dynamic error,
 );
@@ -31,13 +31,13 @@ typedef ErrorCallback = Widget Function(
 /// [ViewStateBuilder] is responsible for building the UI based on the [ViewState].
 /// It's a wrapper over the [BlocBuilder] widget so it accepts a [bloc] object and
 /// a set of handy callbacks, which corresponds to each possible state:
-/// [onReady] callback for the the initial state,
-/// [onLoading] callback for the data loading state,
-/// [onRefreshing] callback for the data refreshing state,
-/// [onSuccess] callback for the data success state,
-/// [onEmpty] callback for for no result state,
-/// [onError] callback function for an error state.
-
+/// [onReady] builder for the the initial state,
+/// [onLoading] builder for the data loading state,
+/// [onRefreshing] builder for the data refreshing state,
+/// [onSuccess] builder for the data success state,
+/// [onEmpty] builder for for no result state,
+/// [onError] builder function for an error state.
+///
 /// [T] - the type of elements,
 /// [B] - the type of bloc.
 class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
@@ -45,12 +45,12 @@ class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
   ViewStateBuilder({
     Key key,
     B bloc,
-    InitialCallback onReady,
-    LoadingCallback onLoading,
-    RefreshingCallback<T> onRefreshing,
-    SuccessCallback<T> onSuccess,
-    EmptyCallback onEmpty,
-    ErrorCallback onError,
+    InitialBuilder onReady,
+    LoadingBuilder onLoading,
+    RefreshingBuilder<T> onRefreshing,
+    SuccessBuilder<T> onSuccess,
+    EmptyBuilder onEmpty,
+    ErrorBuilder onError,
     BlocBuilderCondition<ViewState> condition,
   }) : super(
           key: key,

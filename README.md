@@ -23,6 +23,16 @@ A `Repository` to handles data operations. It knows where to get the data from a
 * `onEmpty` - informs the presentation layer that the loading is completed, but `null` or empty data was retrieved,
 * `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
 
+##### ViewStateListener
+`ViewStateListener` is responsible for performing an action based on the view state. It should be used for functionality that needs to occur only in response to a state change such as navigation, showing a `SnackBar` etc. `ViewStateListener` is a wrapper over the `BlocListener` widget so it accepts a `bloc` object as well as a `child` widget and a set of handy callbacks corresponding to a given state:
+
+* `onLoading` - informs the presentation layer that the data is being loaded,
+* `onRefreshing` - informs the presentation layer that the data is being refreshed,
+* `onSuccess` - informs the presentation layer that the loading is completed and a `nonnull` and not empty data was retrieved,
+* `onEmpty` - informs the presentation layer that the loading is completed, but `null` or empty data was retrieved,
+* `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
+
+
 ## Features
 
 ### ListBloc

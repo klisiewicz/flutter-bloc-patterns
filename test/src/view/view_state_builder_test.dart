@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
@@ -7,7 +8,8 @@ import 'package:mockito/mockito.dart';
 
 import '../util/view_test_util.dart';
 
-class BlocMock extends Mock implements Bloc<int, ViewState> {}
+class MockTestBloc extends MockBloc<int, ViewState>
+    implements Bloc<int, ViewState> {}
 
 void main() {
   Bloc<int, ViewState> bloc;
@@ -20,9 +22,8 @@ void main() {
   const someData = 0;
   final someError = Exception();
 
-  setUpAll(() {
-    bloc = BlocMock();
-    when(bloc.skip(any)).thenAnswer((_) => const Stream.empty());
+  setUp(() {
+    bloc = MockTestBloc();
   });
 
   Widget makeTestableViewStateBuilder() {
@@ -95,7 +96,7 @@ void main() {
     expect(find.byKey(errorKey), findsOneWidget);
   });
 
-  tearDownAll(() {
+  tearDown(() {
     bloc.close();
   });
 }

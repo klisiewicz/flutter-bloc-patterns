@@ -1,4 +1,3 @@
-import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/paged_filter_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_filter_bloc.dart';
