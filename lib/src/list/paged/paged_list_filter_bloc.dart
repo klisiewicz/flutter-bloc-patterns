@@ -1,11 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/paged_filter_list.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 
 /// A list BLoC with pagination and filtering.
 ///
@@ -29,7 +28,7 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
         _pagedFilterRepository = pagedListFilterRepository;
 
   @override
-  ViewState get initialState => Initial();
+  ViewState get initialState => const Initial();
 
   List<T> get _currentElements => (state is Success<PagedList<T>>)
       ? (state as Success<PagedList<T>>).data.elements
@@ -82,17 +81,15 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
 
   Stream<ViewState> _emitLoadingWhenFirstPage(Page page) async* {
     if (page.isFirst) {
-      yield Loading();
+      yield const Loading();
     }
   }
 
   Stream<ViewState> _emitEmptyPageLoaded(Page page) async* {
-    yield (_isFirst(page))
-        ? Empty()
+    yield (page.isFirst)
+        ? const Empty()
         : Success(PagedList<T>(_currentElements, hasReachedMax: true));
   }
-
-  bool _isFirst(Page page) => page.number == 0;
 
   Stream<ViewState> _emitNextPageLoaded(
     Page page,

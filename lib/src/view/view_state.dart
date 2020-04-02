@@ -12,12 +12,16 @@ abstract class ViewState extends Equatable {
 
 /// The initial view state.
 class Initial extends ViewState {
+  const Initial();
+
   @override
   String toString() => 'Initial';
 }
 
 /// State indicating that data is being loaded.
 class Loading extends ViewState {
+  const Loading();
+
   @override
   String toString() => 'Loading';
 }
@@ -39,6 +43,8 @@ class Refreshing<T> extends ViewState {
 
 /// State indicating that data was loaded successfully, but was null or empty.
 class Empty extends ViewState {
+  const Empty();
+
   @override
   String toString() => 'Empty';
 }

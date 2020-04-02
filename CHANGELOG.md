@@ -1,3 +1,9 @@
+## [0.5.0] * Breaking Changes *
+
+* `RefreshView`, `ViewState` and `ViewStateBuilder` should be imported via `package:flutter_bloc_patterns/view.dart`,
+* `ViewStateListener` for handling features that need to occur once per state change such as navigation, showing a `SnackBar`, showing a `Dialog`, etc,
+* `const` constructors for `ViewState`.
+
 ## [0.4.0]
 
 * Migrating to `bloc` 3.0.0 and `flutter_bloc` 3.2.0,

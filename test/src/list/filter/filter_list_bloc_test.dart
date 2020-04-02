@@ -1,5 +1,5 @@
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'filter_list_repository_mock.dart';
@@ -7,8 +7,8 @@ import 'filter_list_repository_mock.dart';
 void main() {
   const _someData = [1, 2, 3];
   const _notMatchingFilter = 0;
-  final _matchingFilter = _someData[0];
-  final _matchingElements = [_someData[0]];
+  const _matchingFilter = 1;
+  const _matchingElements = [1];
 
   FilterListBloc<int, int> bloc;
 
@@ -29,7 +29,7 @@ void main() {
 
     test('should emit list loaded empty state when no filter is set', () {
       whenLoadingElements();
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Empty(),
@@ -38,7 +38,7 @@ void main() {
 
     test('should emit list loaded empty state when filter is set', () {
       whenLoadingElements(filter: _notMatchingFilter);
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Empty(),
@@ -61,16 +61,16 @@ void main() {
         'should emit list loaded state with all elements when no filter is set',
         () {
       whenLoadingElements();
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
-        const Success(_someData),
+        Success(_someData),
       ]);
     });
 
     test('should emit list loaded state with elements matching the filter', () {
       whenLoadingElements(filter: _matchingFilter);
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Success(_matchingElements),
@@ -80,7 +80,7 @@ void main() {
     test('should emit loaded empty list when no elements matches the filter',
         () {
       whenLoadingElements(filter: _notMatchingFilter);
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Empty(),
@@ -91,11 +91,11 @@ void main() {
       whenLoadingElements(filter: _notMatchingFilter);
       whenRefreshingElements(filter: _matchingFilter);
 
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Empty(),
-        const Refreshing<List<int>>([]),
+        Refreshing<List<int>>([]),
         Success<List<int>>(_matchingElements),
       ]);
     });
@@ -104,7 +104,7 @@ void main() {
       whenLoadingElements(filter: _matchingFilter);
       whenRefreshingElements(filter: _notMatchingFilter);
 
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Success(_matchingElements),
@@ -129,8 +129,8 @@ void main() {
       whenLoadingElements();
 
       thenExpectStates([
-        Initial(),
-        Loading(),
+        const Initial(),
+        const Loading(),
         Failure(exception),
       ]);
     });
@@ -139,8 +139,8 @@ void main() {
       whenLoadingElements(filter: _notMatchingFilter);
 
       thenExpectStates([
-        Initial(),
-        Loading(),
+        const Initial(),
+        const Loading(),
         Failure(exception),
       ]);
     });
@@ -160,8 +160,8 @@ void main() {
     test('should emit list error when error occurs', () {
       whenLoadingElements();
       thenExpectStates([
-        Initial(),
-        Loading(),
+        const Initial(),
+        const Loading(),
         Failure(error),
       ]);
     });

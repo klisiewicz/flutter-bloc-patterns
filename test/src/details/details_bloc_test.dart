@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/details.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/details/details_bloc.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'details_repository_mock.dart';
@@ -32,13 +32,13 @@ void main() {
         detailsBloc.loadElement(_noneExistingId);
 
     test('should be initialized in initial state', () {
-      thenExpectStates([Initial()]);
+      thenExpectStates([const Initial()]);
     });
 
     test('should emit details not found when theres no element with given id',
         () {
       whenLoadingNoneExistingElement();
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Empty(),
@@ -48,10 +48,10 @@ void main() {
     test('should emit details loaded when there is an element with given id',
         () {
       whenLoadingExistingElement();
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
-        const Success(_someData),
+        Success(_someData),
       ]);
     });
 
@@ -73,8 +73,8 @@ void main() {
       givenFailingRepository(_exception);
       whenLoadingElement();
       thenExpectStates([
-        Initial(),
-        Loading(),
+        const Initial(),
+        const Loading(),
         Failure(_exception),
       ]);
     });
@@ -84,7 +84,7 @@ void main() {
         () {
       givenFailingRepository(ElementNotFoundException(0));
       whenLoadingElement();
-      thenExpectStates([
+      thenExpectStates(const [
         Initial(),
         Loading(),
         Empty(),
@@ -95,8 +95,8 @@ void main() {
       givenFailingRepository(_error);
       whenLoadingElement();
       thenExpectStates([
-        Initial(),
-        Loading(),
+        const Initial(),
+        const Loading(),
         Failure(_error),
       ]);
     });

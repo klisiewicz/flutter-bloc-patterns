@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/paged_list.dart';
-import 'package:flutter_bloc_patterns/src/common/view_state.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../util/bdd.dart';
@@ -25,7 +25,7 @@ void main() {
         () {
       when(loadingFirstPage);
       then(() {
-        withBloc(bloc).expectStates([
+        withBloc(bloc).expectStates(const [
           Initial(),
           Loading(),
           Empty(),
@@ -56,8 +56,8 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          Initial(),
-          Loading(),
+          const Initial(),
+          const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
         ]);
       });
@@ -73,8 +73,8 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          Initial(),
-          Loading(),
+          const Initial(),
+          const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
         ]);
@@ -92,8 +92,8 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          Initial(),
-          Loading(),
+          const Initial(),
+          const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
           Success(PagedList(
@@ -116,8 +116,8 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          Initial(),
-          Loading(),
+          const Initial(),
+          const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
           Success(
@@ -147,8 +147,8 @@ void main() {
         when(loadingFirstPage);
         then(() {
           withBloc(bloc).expectStates([
-            Initial(),
-            Loading(),
+            const Initial(),
+            const Loading(),
             Failure(exception),
           ]);
         });
@@ -170,8 +170,8 @@ void main() {
         when(loadingFirstPage);
         then(() {
           withBloc(bloc).expectStates([
-            Initial(),
-            Loading(),
+            const Initial(),
+            const Loading(),
             Failure(error),
           ]);
         });
@@ -192,7 +192,7 @@ void main() {
       test('should emit list loaded empty when first page was not found', () {
         when(loadingFirstPage);
         then(() {
-          withBloc(bloc).expectStates([
+          withBloc(bloc).expectStates(const [
             Initial(),
             Loading(),
             Empty(),
