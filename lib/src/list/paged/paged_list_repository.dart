@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_patterns/page.dart';
 
 /// [PagedListRepository] allows to retrieve elements using the pagination.
 ///

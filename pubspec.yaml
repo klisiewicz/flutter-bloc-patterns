@@ -1,6 +1,6 @@
 name: flutter_bloc_patterns
 description: A set of most common BLoC use cases build on top of flutter_bloc library.
-version: 0.5.0
+version: 0.6.0
 homepage: https://github.com/klisiewicz/flutter-bloc-patterns
 
 environment:
