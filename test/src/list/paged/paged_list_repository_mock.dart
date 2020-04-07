@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter_bloc_patterns/page.dart';
 import 'package:flutter_bloc_patterns/paged_list.dart';
 
 class InMemoryPagedListRepository<T> implements PagedListRepository<T> {

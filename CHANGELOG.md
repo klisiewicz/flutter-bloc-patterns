@@ -1,3 +1,7 @@
+## [0.6.0] * Breaking Changes *
+
+* `Page` should be imported via `package:flutter_bloc_patterns/page.dart`,
+
 ## [0.5.0] * Breaking Changes *
 
 * `RefreshView`, `ViewState` and `ViewStateBuilder` should be imported via `package:flutter_bloc_patterns/view.dart`,
