@@ -94,8 +94,6 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   Stream<ViewState> _emitNextPageLoaded(
     Page<T>page,
   ) async* {
-    print("$page");
-    print("$_currentElements -- ${page.elements}");
     final List<T> allElements = _currentElements + page.elements;
     yield Success(
       PagedList<T>(allElements, hasReachedMax: page.size > page.elements.length, total: page.total),
