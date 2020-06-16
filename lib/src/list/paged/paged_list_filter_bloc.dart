@@ -58,19 +58,19 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
 
   @override
   Stream<ViewState> mapEventToState(PagedListEvent event) async* {
-    if (event is LoadPage<F>) {
+    if (event is LoadPage<T, F>) {
       yield* _mapLoadPage(event.page, event.filter);
     }
   }
 
-  Stream<ViewState> _mapLoadPage(Page page, F filter) async* {
+  Stream<ViewState> _mapLoadPage(Page<T> page, F filter) async* {
     try {
       yield* _emitLoadingWhenFirstPage(page);
-      final List<T> pageElements =
+      final Page<T> pageElements =
           await _pagedFilterRepository.getBy(page, filter);
-      yield* (pageElements.isEmpty)
+      yield* (pageElements.elements?.isEmpty ?? true)
           ? _emitEmptyPageLoaded(page)
-          : _emitNextPageLoaded(page, pageElements);
+          : _emitNextPageLoaded(page);
     } on PageNotFoundException catch (_) {
       yield* _emitEmptyPageLoaded(page);
     } catch (e) {
@@ -79,25 +79,24 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
     }
   }
 
-  Stream<ViewState> _emitLoadingWhenFirstPage(Page page) async* {
+  Stream<ViewState> _emitLoadingWhenFirstPage(Page<T> page) async* {
     if (page.isFirst) {
       yield const Loading();
     }
   }
 
-  Stream<ViewState> _emitEmptyPageLoaded(Page page) async* {
+  Stream<ViewState> _emitEmptyPageLoaded(Page<T> page) async* {
     yield (page.isFirst)
         ? const Empty()
-        : Success(PagedList<T>(_currentElements, hasReachedMax: true));
+        : Success(PagedList<T>(_currentElements, hasReachedMax: true, total: page.total));
   }
 
   Stream<ViewState> _emitNextPageLoaded(
-    Page page,
-    List<T> pageElements,
+    Page<T>page,
   ) async* {
-    final List<T> allElements = _currentElements + pageElements;
+    final List<T> allElements = _currentElements + page.elements;
     yield Success(
-      PagedList<T>(allElements, hasReachedMax: page.size > pageElements.length),
+      PagedList<T>(allElements, hasReachedMax: page.size > page.elements.length, total: page.total),
     );
   }
 }

@@ -24,9 +24,9 @@ class _PagedListRepositoryAdapter<T>
   _PagedListRepositoryAdapter(this.pagedListRepository);
 
   @override
-  Future<List<T>> getAll(Page page) => pagedListRepository.getAll(page);
+  Future<Page<T>> getAll(Page<T> page) => pagedListRepository.getAll(page);
 
   @override
-  Future<List<T>> getBy(Page page, void filter) =>
+  Future<Page<T>> getBy(Page<T> page, void filter) =>
       pagedListRepository.getAll(page);
 }

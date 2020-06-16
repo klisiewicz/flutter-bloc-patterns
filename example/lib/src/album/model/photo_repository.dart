@@ -13,10 +13,10 @@ class PagedFilterPhotoRepository
   static const _photosUrl = '$baseUrl/photos';
 
   @override
-  Future<List<Photo>> getAll(Page page) => getBy(page, null);
+  Future<Page<Photo>> getAll(Page<Photo> page) => getBy(page, null);
 
   @override
-  Future<List<Photo>> getBy(Page page, Album album) async {
+  Future<Page<Photo>> getBy(Page<Photo> page, Album album) async {
     final response = await http.get(_buildUrl(page, album));
 
     if (response.statusCode != HttpStatus.ok) {
@@ -24,9 +24,9 @@ class PagedFilterPhotoRepository
     }
 
     final dynamic postsJson = json.decode(response.body);
-    return (postsJson is List)
+    return page.withElements((postsJson is List)
         ? postsJson.map((photo) => Photo.fromJson(photo)).toList()
-        : [];
+        : []);
   }
 
   String _buildUrl(Page page, Album album) {

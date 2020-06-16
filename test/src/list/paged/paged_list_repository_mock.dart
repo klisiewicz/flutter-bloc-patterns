@@ -9,15 +9,15 @@ class InMemoryPagedListRepository<T> implements PagedListRepository<T> {
   InMemoryPagedListRepository(this.elements);
 
   @override
-  Future<List<T>> getAll(Page page) async {
-    if (elements.isEmpty) return [];
-    if (page.offset >= elements.length) return [];
+  Future<Page<T>> getAll(Page<T> page) async {
+    if (elements.isEmpty) return page.withElements(elements);
+    if (page.offset >= elements.length) return page.withElements([]);
 
     final pageElements = elements.sublist(
       page.offset,
       min(page.offset + page.size, elements.length),
     );
-    return pageElements;
+    return page.withElements(pageElements);
   }
 }
 
@@ -27,5 +27,5 @@ class FailingPagedRepository<T> implements PagedListRepository<T> {
   FailingPagedRepository(this.error);
 
   @override
-  Future<List<T>> getAll(Page page) => throw error;
+  Future<Page<T>> getAll(Page<T> page) => throw error;
 }

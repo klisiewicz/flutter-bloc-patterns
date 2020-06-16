@@ -10,13 +10,14 @@ import 'package:flutter/foundation.dart';
 class PagedList<T> extends Equatable {
   final List<T> elements;
   final bool hasReachedMax;
+  final int total;
 
   /// Creates paged list.
   ///
   /// [elements] - list of elements, cannot be null or empty,
   /// [hasReachedMax] - flag informing if all elements has already been fetched.
   /// True if there are more pages, false otherwise.
-  PagedList(List<T> elements, {this.hasReachedMax = false})
+  PagedList(List<T> elements, {this.hasReachedMax = false, this.total})
       : assert(
           elements != null && elements.isNotEmpty,
           'Elements cannot be empty',
@@ -26,8 +27,8 @@ class PagedList<T> extends Equatable {
   bool get hasMoreElements => !hasReachedMax;
 
   @override
-  List<Object> get props => [elements, hasReachedMax];
+  List<Object> get props => [elements, hasReachedMax, total];
 
   @override
-  String toString() => '$elements, hasReachedMax: $hasReachedMax';
+  String toString() => '$elements, total: $total, hasReachedMax: $hasReachedMax';
 }

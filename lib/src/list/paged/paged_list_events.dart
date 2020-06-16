@@ -11,8 +11,8 @@ abstract class PagedListEvent extends Equatable {
 /// Event indicating that a page needs to be loaded.
 ///
 /// [F] - the filter type.
-class LoadPage<F> extends PagedListEvent {
-  final Page page;
+class LoadPage<T,F> extends PagedListEvent {
+  final Page<T> page;
   final F filter;
 
   const LoadPage(this.page, {this.filter}) : assert(page != null);

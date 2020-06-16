@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 
 /// Pagination information.
 @immutable
-class Page extends Equatable {
+class Page<T> extends Equatable {
   final int number;
   final int size;
+  final int total;
+  final List <T>elements;
 
   /// Creates a [Page] object.
   /// [number] - zero based page index.
@@ -13,6 +15,8 @@ class Page extends Equatable {
   const Page({
     this.number = 0,
     this.size,
+    this.elements,
+    this.total
   })  : assert(number >= 0, 'Page index must not be less than zero'),
         assert(size >= 1, 'Page size must not be less than one');
 
@@ -33,6 +37,9 @@ class Page extends Equatable {
   /// one already is the first one.
   Page previous() =>
       (number == 0) ? this : Page(number: number - 1, size: size);
+
+  Page<T> withElements(List<T>elements, {int total}) =>
+      Page<T>(number: number, size: size, elements: elements ?? <T>[], total: total);
 
   @override
   List<Object> get props => [number, size];

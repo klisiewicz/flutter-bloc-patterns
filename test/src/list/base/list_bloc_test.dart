@@ -94,5 +94,5 @@ void main() {
   });
 }
 
-final _exception = Exception('I\'ve failed my lord...');
+final _exception = Exception("I've failed my lord...");
 const _someData = [1, 2, 3];

@@ -9,7 +9,7 @@ abstract class PagedListRepository<T> {
   /// the [page] object.
   /// When elements are exceeded should return an empty list or throw
   /// the [PageNotFoundException].
-  Future<List<T>> getAll(Page page);
+  Future<Page<T>> getAll(Page<T> page);
 }
 
 /// Exception thrown when page with given number doesn't exist.

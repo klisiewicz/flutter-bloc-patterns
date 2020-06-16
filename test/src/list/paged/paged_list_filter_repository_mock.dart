@@ -11,10 +11,10 @@ class InMemoryPagedListFilterRepository<T, F>
   InMemoryPagedListFilterRepository(this.elements);
 
   @override
-  Future<List<T>> getAll(Page page) => getBy(page, null);
+  Future<Page<T>> getAll(Page<T> page) => getBy(page, null);
 
   @override
-  Future<List<T>> getBy(Page page, F filter) {
+  Future<Page<T>> getBy(Page<T> page, F filter) {
     final elementsMatchingFilter =
         elements.where((item) => item == filter).toList();
     return InMemoryPagedListRepository(elementsMatchingFilter).getAll(page);
@@ -28,8 +28,8 @@ class FailingPagedListFilterRepository<T, F>
   FailingPagedListFilterRepository(this.error);
 
   @override
-  Future<List<T>> getAll(Page page) => throw error;
+  Future<Page<T>> getAll(Page<T> page) => throw error;
 
   @override
-  Future<List<T>> getBy(Page page, F filter) => throw error;
+  Future<Page<T>> getBy(Page<T> page, F filter) => throw error;
 }

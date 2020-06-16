@@ -35,8 +35,8 @@ class FilterPostRepository implements FilterListRepository<Post, User> {
 
 class PagedPostRepository implements PagedListRepository<Post> {
   @override
-  Future<List<Post>> getAll(Page page) =>
-      _getPostsFromUrl('$_postsUrl?_start=${page.offset}&_limit=${page.size}');
+  Future<Page<Post>> getAll(Page<Post> page) async =>
+      page.withElements(await _getPostsFromUrl('$_postsUrl?_start=${page.offset}&_limit=${page.size}'));
 }
 
 class PostDetailsRepository implements DetailsRepository<PostDetails, int> {

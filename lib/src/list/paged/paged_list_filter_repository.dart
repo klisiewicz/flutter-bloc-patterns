@@ -12,5 +12,5 @@ abstract class PagedListFilterRepository<T, F> extends PagedListRepository<T> {
   /// pagination restriction provided by the [page] object and.
   /// When elements are exceeded should return an empty list or throw
   /// the [PageNotFoundException].
-  Future<List<T>> getBy(Page page, F filter);
+  Future<Page<T>> getBy(Page<T> page, F filter);
 }

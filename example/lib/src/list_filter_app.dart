@@ -74,14 +74,14 @@ class _PostsPageState extends State<_PostsPage> {
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
       currentIndex: selectedPosts.index,
-      items: [
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.description),
-          title: const Text('All'),
+          title: Text('All'),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle),
-          title: const Text('Mine'),
+          title: Text('Mine'),
         ),
       ],
       onTap: _updateSelectedPosts,
