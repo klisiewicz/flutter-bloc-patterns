@@ -34,7 +34,7 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
       ? (state as Success<PagedList<T>>).data.elements
       : [];
 
-  Page _page;
+  Page<T> _page;
 
   F get filter => _filter;
 
@@ -44,7 +44,7 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   /// It's most suitable for initial data fetch or for retry action when
   /// the first fetch fails.
   void loadFirstPage({int pageSize = defaultPageSize, F filter}) {
-    _page = Page.first(size: pageSize);
+    _page = Page<T>.first(size: pageSize);
     _filter = filter;
     add(LoadPage(_page, filter: _filter));
   }
@@ -52,7 +52,7 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   /// Loads next page. When no page has been loaded before the first one is
   /// loaded with the default page size [_defaultPageSize].
   void loadNextPage() {
-    _page = _page?.next() ?? const Page.first(size: defaultPageSize);
+    _page = _page?.next() ?? Page<T>.first(size: defaultPageSize);
     add(LoadPage(_page, filter: _filter));
   }
 
@@ -66,11 +66,11 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   Stream<ViewState> _mapLoadPage(Page<T> page, F filter) async* {
     try {
       yield* _emitLoadingWhenFirstPage(page);
-      final Page<T> pageElements =
+      final Page<T> loadedPage =
           await _pagedFilterRepository.getBy(page, filter);
-      yield* (pageElements.elements?.isEmpty ?? true)
-          ? _emitEmptyPageLoaded(page)
-          : _emitNextPageLoaded(page);
+      yield* (loadedPage.elements?.isEmpty ?? true)
+          ? _emitEmptyPageLoaded(loadedPage)
+          : _emitNextPageLoaded(loadedPage);
     } on PageNotFoundException catch (_) {
       yield* _emitEmptyPageLoaded(page);
     } catch (e) {
@@ -94,6 +94,8 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   Stream<ViewState> _emitNextPageLoaded(
     Page<T>page,
   ) async* {
+    print("$page");
+    print("$_currentElements -- ${page.elements}");
     final List<T> allElements = _currentElements + page.elements;
     yield Success(
       PagedList<T>(allElements, hasReachedMax: page.size > page.elements.length, total: page.total),

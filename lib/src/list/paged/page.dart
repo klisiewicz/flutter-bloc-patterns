@@ -31,19 +31,19 @@ class Page<T> extends Equatable {
   bool get isFirst => number == 0;
 
   /// Returns next [Page].
-  Page next() => Page(number: number + 1, size: size);
+  Page<T> next() => Page<T>(number: number + 1, size: size);
 
   /// Returns the previous [Page] or the first [Page] if the current
   /// one already is the first one.
-  Page previous() =>
-      (number == 0) ? this : Page(number: number - 1, size: size);
+  Page<T> previous() =>
+      (number == 0) ? this : Page<T>(number: number - 1, size: size);
 
   Page<T> withElements(List<T>elements, {int total}) =>
       Page<T>(number: number, size: size, elements: elements ?? <T>[], total: total);
 
   @override
-  List<Object> get props => [number, size];
+  List<Object> get props => [number, size, elements, total];
 
   @override
-  String toString() => '$runtimeType (number: $number, size: $size)';
+  String toString() => '$runtimeType (number: $number, size: $size, total: $total)';
 }
