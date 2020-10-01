@@ -17,9 +17,9 @@ void main() {
     expect(firstEvent, isNot(equals(secondEvent)));
   });
 
-  test('toString should contain runtime type and id value', () {
+  test('toString should contain LoadDetails and id value', () {
     const event = LoadDetails<int>(1);
 
-    expect(event.toString(), 'LoadDetails<int>: 1');
+    expect(event.toString(), 'LoadDetails: 1');
   });
 }

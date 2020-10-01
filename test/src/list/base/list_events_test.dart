@@ -18,10 +18,10 @@ void main() {
       expect(firstEvent, isNot(equals(secondEvent)));
     });
 
-    test('toString should contain runtime type and filter value', () {
+    test('toString should contain LoadList and filter value', () {
       const event = LoadList<int>(1);
 
-      expect(event.toString(), 'LoadList<int>: 1');
+      expect(event.toString(), 'LoadList: 1');
     });
   });
 
@@ -42,10 +42,10 @@ void main() {
       expect(firstEvent, isNot(equals(secondEvent)));
     });
 
-    test('toString should contain runtime type and filter value', () {
+    test('toString should contain RefreshList and filter value', () {
       const event = RefreshList<int>(1);
 
-      expect(event.toString(), 'RefreshList<int>: 1');
+      expect(event.toString(), 'RefreshList: 1');
     });
   });
 }
