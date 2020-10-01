@@ -1,3 +1,7 @@
+## [0.7.0] * Breaking Changes *
+
+* Migrating to `bloc` 6.0.3 and `flutter_bloc` 6.0.5,
+
 ## [0.6.0] * Breaking Changes *
 
 * `Page` should be imported via `package:flutter_bloc_patterns/page.dart`,
