@@ -19,5 +19,5 @@ class LoadDetails<I> extends DetailsEvent {
   List<Object> get props => [id];
 
   @override
-  String toString() => '$runtimeType: $id';
+  String toString() => 'LoadDetails: $id';
 }
