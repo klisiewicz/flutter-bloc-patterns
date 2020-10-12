@@ -1,6 +1,6 @@
 ## [0.7.0] * Breaking Changes *
 
-* Migrating to `bloc` 6.0.3 and `flutter_bloc` 6.0.5,
+* Migrating to `bloc` 5.0.1 and `flutter_bloc` 5.0.1,
 
 ## [0.6.0] * Breaking Changes *
 
