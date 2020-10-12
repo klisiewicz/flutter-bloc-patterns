@@ -28,6 +28,14 @@ typedef ErrorBuilder = Widget Function(
   dynamic error,
 );
 
+/// Signature for the [buildWhen] function which takes the previous [ViewState]
+/// and the current [ViewState] and returns a [bool] which determines whether
+/// to rebuild the `view` with the current `state`.
+typedef ViewStateBuilderCondition = bool Function(
+  ViewState previous,
+  ViewState current,
+);
+
 /// [ViewStateBuilder] is responsible for building the UI based on the [ViewState].
 /// It's a wrapper over the [BlocBuilder] widget so it accepts a [bloc] object and
 /// a set of handy callbacks, which corresponds to each possible state:
@@ -51,11 +59,11 @@ class ViewStateBuilder<T, B extends Bloc<dynamic, ViewState>>
     SuccessBuilder<T> onSuccess,
     EmptyBuilder onEmpty,
     ErrorBuilder onError,
-    BlocBuilderCondition<ViewState> condition,
+    ViewStateBuilderCondition buildWhen,
   }) : super(
           key: key,
           bloc: bloc,
-          condition: condition,
+          buildWhen: buildWhen,
           builder: (BuildContext context, ViewState state) {
             if (state is Initial) {
               return onReady?.call(context) ?? const SizedBox();

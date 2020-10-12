@@ -35,7 +35,7 @@ void main() {
       thenExpectStates([const Initial()]);
     });
 
-    test('should emit details not found when theres no element with given id',
+    test('should emit details not found when there is no element with given id',
         () {
       whenLoadingNoneExistingElement();
       thenExpectStates(const [

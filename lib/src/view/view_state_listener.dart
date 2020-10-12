@@ -23,6 +23,14 @@ typedef ErrorCallback = void Function(
   dynamic error,
 );
 
+/// Signature for the [listenWhen] function which takes the previous [ViewState]
+/// and the current [ViewState] and is responsible for returning a [bool] which
+/// determines whether or not to call the [listener] function.
+typedef ViewStateListenerCondition = bool Function(
+  ViewState previous,
+  ViewState current,
+);
+
 /// [ViewStateListener] is responsible for performing an action based on the
 /// [ViewState].
 /// It should be used for functionality that needs to occur only in response to
@@ -44,7 +52,7 @@ class ViewStateListener<T, B extends Bloc<dynamic, ViewState>>
   ViewStateListener({
     Key key,
     B bloc,
-    BlocListenerCondition<ViewState> condition,
+    ViewStateListenerCondition listenWhen,
     LoadingCallback onLoading,
     RefreshingCallback<T> onRefreshing,
     SuccessCallback<T> onSuccess,
@@ -54,7 +62,7 @@ class ViewStateListener<T, B extends Bloc<dynamic, ViewState>>
   }) : super(
           key: key,
           bloc: bloc,
-          condition: condition,
+          listenWhen: listenWhen,
           child: child,
           listener: (BuildContext context, ViewState state) {
             if (state is Loading) {

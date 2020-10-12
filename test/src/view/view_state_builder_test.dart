@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -49,7 +49,7 @@ void main() {
     expect(find.byKey(readyKey), findsOneWidget);
   });
 
-  testWidgets('should diplay onLoading widget when block is in loading state',
+  testWidgets('should display onLoading widget when block is in loading state',
       (WidgetTester tester) async {
     when(bloc.state).thenReturn(const Loading());
 
@@ -86,9 +86,8 @@ void main() {
     expect(find.byKey(successKey), findsOneWidget);
   });
 
-  testWidgets('should diplay onError widget when block is in failure state',
+  testWidgets('should display onError widget when block is in failure state',
       (WidgetTester tester) async {
-    when(bloc.initialState).thenReturn(Failure(someError));
     when(bloc.state).thenReturn(Failure(someError));
 
     await tester.pumpWidget(makeTestableViewStateBuilder());

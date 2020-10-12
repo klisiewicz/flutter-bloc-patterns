@@ -2,6 +2,7 @@ import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 
 /// A basic list BLoC with no filtering or pagination. Thus it should be used
 /// with a reasonable small amount of data.
@@ -13,9 +14,9 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 ///
 /// [T] - type of list items.
 class ListBloc<T> extends FilterListBloc<T, void> {
-  ListBloc(ListRepository<T> listRepository)
-      : assert(listRepository != null),
-        super(_FilterRepositoryAdapter(listRepository));
+  ListBloc(ListRepository<T> repository)
+      : assert(repository != null),
+        super(_FilterRepositoryAdapter(repository));
 }
 
 class _FilterRepositoryAdapter<T> extends FilterListRepository<T, void> {
