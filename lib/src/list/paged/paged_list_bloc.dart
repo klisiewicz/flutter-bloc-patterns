@@ -2,6 +2,7 @@ import 'package:flutter_bloc_patterns/paged_filter_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_filter_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 
 /// A list BLoC with pagination but without filtering.
 ///
@@ -12,9 +13,9 @@ import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart'
 ///
 /// [T] - the type of list elements.
 class PagedListBloc<T> extends PagedListFilterBloc<T, void> {
-  PagedListBloc(PagedListRepository<T> pagedListRepository)
-      : assert(pagedListRepository != null),
-        super(_PagedListRepositoryAdapter<T>(pagedListRepository));
+  PagedListBloc(PagedListRepository<T> repository)
+      : assert(repository != null),
+        super(_PagedListRepositoryAdapter<T>(repository));
 }
 
 class _PagedListRepositoryAdapter<T>

@@ -5,6 +5,7 @@ import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 
 /// A list BLoC with pagination and filtering.
 ///
@@ -20,15 +21,13 @@ import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   static const defaultPageSize = 10;
 
-  final PagedListFilterRepository<T, F> _pagedFilterRepository;
+  final PagedListFilterRepository<T, F> _repository;
   F _filter;
 
-  PagedListFilterBloc(PagedListFilterRepository<T, F> pagedListFilterRepository)
-      : assert(pagedListFilterRepository != null),
-        _pagedFilterRepository = pagedListFilterRepository;
-
-  @override
-  ViewState get initialState => const Initial();
+  PagedListFilterBloc(PagedListFilterRepository<T, F> repository)
+      : assert(repository != null),
+        _repository = repository,
+        super(const Initial());
 
   List<T> get _currentElements => (state is Success<PagedList<T>>)
       ? (state as Success<PagedList<T>>).data.elements
@@ -66,8 +65,7 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   Stream<ViewState> _mapLoadPage(Page page, F filter) async* {
     try {
       yield* _emitLoadingWhenFirstPage(page);
-      final List<T> pageElements =
-          await _pagedFilterRepository.getBy(page, filter);
+      final List<T> pageElements = await _repository.getBy(page, filter);
       yield* (pageElements.isEmpty)
           ? _emitEmptyPageLoaded(page)
           : _emitNextPageLoaded(page, pageElements);
@@ -75,7 +73,6 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
       yield* _emitEmptyPageLoaded(page);
     } catch (e) {
       yield Failure(e);
-      rethrow;
     }
   }
 

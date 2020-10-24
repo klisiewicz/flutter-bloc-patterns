@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 
 /// A list BLoC with allowing filtering capabilities but without pagination.
 /// Thus it should be used with a reasonable small amount of data.
@@ -19,12 +20,10 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   final FilterListRepository<T, F> _repository;
   F _filter;
 
-  FilterListBloc(FilterListRepository<T, F> filterListRepository)
-      : assert(filterListRepository != null),
-        _repository = filterListRepository;
-
-  @override
-  ViewState get initialState => const Initial();
+  FilterListBloc(FilterListRepository<T, F> repository)
+      : assert(repository != null),
+        _repository = repository,
+        super(const Initial());
 
   F get filter => _filter;
 
@@ -78,7 +77,6 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
           : const Empty();
     } catch (e) {
       yield Failure(e);
-      rethrow;
     } finally {
       _filter = filter;
     }
