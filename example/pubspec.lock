@@ -14,7 +14,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.1"
+    version: "6.1.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -50,13 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0-nullsafety.3"
-  cubit:
-    dependency: transitive
-    description:
-      name: cubit
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -89,21 +82,14 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.1"
+    version: "6.1.1"
   flutter_bloc_patterns:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.7.0"
-  flutter_cubit:
-    dependency: transitive
-    description:
-      name: flutter_cubit
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
+    version: "0.8.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
