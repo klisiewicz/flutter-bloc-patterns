@@ -2,6 +2,8 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../util/bdd.dart';
+import '../../util/bloc_state_assertion.dart';
 import 'filter_list_repository_mock.dart';
 
 void main() {
@@ -12,37 +14,25 @@ void main() {
 
   FilterListBloc<int, int> bloc;
 
-  void whenLoadingElements({int filter}) => bloc.loadElements(filter: filter);
+  void loadingElements({int filter}) => bloc.loadElements(filter: filter);
 
-  void whenRefreshingElements({int filter}) =>
-      bloc.refreshElements(filter: filter);
-
-  Future<void> thenExpectStates(Iterable<ViewState> states) => expectLater(
-        bloc,
-        emitsInOrder(states),
-      );
+  void refreshingElements({int filter}) => bloc.refreshElements(filter: filter);
 
   group('empty repository', () {
     setUp(() {
       bloc = FilterListBloc(InMemoryFilterRepository());
     });
 
-    test('should emit list loaded empty state when no filter is set', () {
-      whenLoadingElements();
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Empty(),
-      ]);
+    test('should emit [$Loading, $Empty] state when no filter is set', () {
+      when(() => loadingElements());
+      then(() => withBloc(bloc).expectStates(const [Loading(), Empty()]));
     });
 
-    test('should emit list loaded empty state when filter is set', () {
-      whenLoadingElements(filter: _notMatchingFilter);
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Empty(),
-      ]);
+    test(
+        'should emit[$Loading, $Empty] when filter that matches no elements is set',
+        () {
+      when(() => loadingElements(filter: _notMatchingFilter));
+      then(() => withBloc(bloc).expectStates(const [Loading(), Empty()]));
     });
 
     tearDown(() {
@@ -58,59 +48,59 @@ void main() {
     });
 
     test(
-        'should emit list loaded state with all elements when no filter is set',
+        'should emit [$Loading, $Success] with all elements when no filter is set',
         () {
-      whenLoadingElements();
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Success(_someData),
-      ]);
+      when(() => loadingElements());
+      then(
+        () =>
+            withBloc(bloc).expectStates(const [Loading(), Success(_someData)]),
+      );
     });
 
-    test('should emit list loaded state with elements matching the filter', () {
-      whenLoadingElements(filter: _matchingFilter);
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Success(_matchingElements),
-      ]);
-    });
-
-    test('should emit loaded empty list when no elements matches the filter',
+    test('should emit [$Loading, $Success] with elements matching the filter',
         () {
-      whenLoadingElements(filter: _notMatchingFilter);
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Empty(),
-      ]);
+      when(() => loadingElements(filter: _matchingFilter));
+      then(
+        () => withBloc(bloc)
+            .expectStates(const [Loading(), Success(_matchingElements)]),
+      );
     });
 
-    test('should emit list loaded when refreshing with matching filter', () {
-      whenLoadingElements(filter: _notMatchingFilter);
-      whenRefreshingElements(filter: _matchingFilter);
+    test('should emit [$Loading, $Empty] when no elements matches the filter',
+        () {
+      when(() => loadingElements(filter: _notMatchingFilter));
+      then(
+        () => withBloc(bloc).expectStates(const [Loading(), Empty()]),
+      );
+    });
 
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Empty(),
-        Refreshing<List<int>>([]),
-        Success<List<int>>(_matchingElements),
-      ]);
+    test(
+        'should emit [$Loading, $Empty, $Refreshing, $Success] when refreshing with matching filter',
+        () {
+      when(() => loadingElements(filter: _notMatchingFilter));
+      when(() => refreshingElements(filter: _matchingFilter));
+      then(
+        () => withBloc(bloc).expectStates(const [
+          Loading(),
+          Empty(),
+          Refreshing<List<int>>([]),
+          Success<List<int>>(_matchingElements),
+        ]),
+      );
     });
 
     test('should include loaded elements when refreshing', () {
-      whenLoadingElements(filter: _matchingFilter);
-      whenRefreshingElements(filter: _notMatchingFilter);
+      when(() => loadingElements(filter: _matchingFilter));
+      when(() => refreshingElements(filter: _notMatchingFilter));
 
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Success(_matchingElements),
-        Refreshing(_matchingElements),
-        Empty(),
-      ]);
+      then(
+        () => withBloc(bloc).expectStates(const [
+          Loading(),
+          Success(_matchingElements),
+          Refreshing(_matchingElements),
+          Empty(),
+        ]),
+      );
     });
 
     tearDown(() {
@@ -125,24 +115,22 @@ void main() {
       bloc = FilterListBloc(FailingFilterRepository(exception));
     });
 
-    test('should emit list not loaded when no filter is set', () {
-      whenLoadingElements();
-
-      thenExpectStates([
-        const Initial(),
-        const Loading(),
-        Failure(exception),
-      ]);
+    test('should emit [$Loading, $Failure] when no filter is set', () {
+      when(() => loadingElements());
+      then(
+        () => withBloc(bloc).expectStates(
+          [const Loading(), Failure(exception)],
+        ),
+      );
     });
 
-    test('should emit list not loaded when filter is set', () {
-      whenLoadingElements(filter: _notMatchingFilter);
-
-      thenExpectStates([
-        const Initial(),
-        const Loading(),
-        Failure(exception),
-      ]);
+    test('should emit [$Loading, $Failure] when filter is set', () {
+      when(() => loadingElements(filter: _notMatchingFilter));
+      then(
+        () => withBloc(bloc).expectStates(
+          [const Loading(), Failure(exception)],
+        ),
+      );
     });
 
     tearDown(() {
@@ -157,13 +145,13 @@ void main() {
       bloc = FilterListBloc(FailingFilterRepository(error));
     });
 
-    test('should emit list error when error occurs', () {
-      whenLoadingElements();
-      thenExpectStates([
-        const Initial(),
-        const Loading(),
-        Failure(error),
-      ]);
+    test('should emit [$Loading, $Failure] when error occurs', () {
+      when(() => loadingElements());
+      then(
+        () => withBloc(bloc).expectStates(
+          [const Loading(), Failure(error)],
+        ),
+      );
     });
 
     tearDown(() {
