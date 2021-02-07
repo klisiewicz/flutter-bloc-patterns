@@ -8,8 +8,8 @@ import 'package:mockito/mockito.dart';
 
 import '../util/view_test_util.dart';
 
-class MockTestBloc extends MockBloc<int, ViewState>
-    implements Bloc<int, ViewState> {}
+class MockTestBloc extends MockBloc<ViewState> implements Bloc<int, ViewState> {
+}
 
 class LoadingMock extends Mock {
   void call(BuildContext context);
@@ -54,7 +54,7 @@ void main() {
   Widget makeTestableViewStateListener() {
     return makeTestableWidget(
       child: ViewStateListener<int, Bloc<int, ViewState>>(
-        bloc: bloc,
+        cubit: bloc,
         onLoading: loadingCallback,
         onRefreshing: refreshCallback,
         onSuccess: successCallback,
