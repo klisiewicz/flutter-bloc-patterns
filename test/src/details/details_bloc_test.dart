@@ -31,25 +31,25 @@ void main() {
     void whenLoadingNoneExistingElement() =>
         detailsBloc.loadElement(_noneExistingId);
 
-    test('should be initialized in initial state', () {
-      thenExpectStates([const Initial()]);
+    test('should be initialized in $Initial state', () {
+      expect(detailsBloc.state, equals(const Initial()));
     });
 
-    test('should emit details not found when there is no element with given id',
+    test(
+        'should emit [$Loading, $Empty] when there is no element with given id',
         () {
       whenLoadingNoneExistingElement();
       thenExpectStates(const [
-        Initial(),
         Loading(),
         Empty(),
       ]);
     });
 
-    test('should emit details loaded when there is an element with given id',
+    test(
+        'should emit [$Loading, $Success] when there is an element with given id',
         () {
       whenLoadingExistingElement();
       thenExpectStates(const [
-        Initial(),
         Loading(),
         Success(_someData),
       ]);
@@ -69,33 +69,30 @@ void main() {
 
     void whenLoadingElement() => detailsBloc.loadElement(0);
 
-    test('should emit details not loaded when fetching element fails', () {
+    test('should emit [$Loading, $Failure] when fetching element fails', () {
       givenFailingRepository(_exception);
       whenLoadingElement();
       thenExpectStates([
-        const Initial(),
         const Loading(),
         Failure(_exception),
       ]);
     });
 
     test(
-        'should emit details not found when element not found exception is thrown',
+        'should emit [$Loading, $Empty] when $ElementNotFoundException is thrown',
         () {
       givenFailingRepository(ElementNotFoundException(0));
       whenLoadingElement();
       thenExpectStates(const [
-        Initial(),
         Loading(),
         Empty(),
       ]);
     });
 
-    test('should emit details error when an error is thrown', () {
+    test('should emit [$Loading, $Failure] when an error is thrown', () {
       givenFailingRepository(_error);
       whenLoadingElement();
       thenExpectStates([
-        const Initial(),
         const Loading(),
         Failure(_error),
       ]);
