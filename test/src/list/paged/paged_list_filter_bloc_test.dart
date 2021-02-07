@@ -25,12 +25,11 @@ void main() {
       bloc = PagedListFilterBloc<int, int>(repository);
     });
 
-    test('should emit list loaded empty when first page contains no elements',
+    test('should emit [$Loading, $Empty] when first page contains no elements',
         () {
       when(loadingFirstPage);
       then(
         () => withBloc(bloc).expectStates(const [
-          Initial(),
           Loading(),
           Empty(),
         ]),
@@ -54,7 +53,7 @@ void main() {
     });
 
     test(
-        'should emit list loaded with elements matching the filter when loading first page',
+        'should emit [$Loading, $Success] with elements matching the filter when loading first page',
         () {
       when(() {
         loadingFirstPage(filter: filter);
@@ -62,7 +61,6 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          const Initial(),
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
         ]);
@@ -70,7 +68,7 @@ void main() {
     });
 
     test(
-        'should emit list loaded with first, first and second page elements matching filter when loading two pages',
+        'should emit [$Loading, $Success, $Success] with first, first and second page elements matching filter when loading two pages',
         () {
       when(() {
         loadingFirstPage(filter: filter);
@@ -79,7 +77,6 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          const Initial(),
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: true)),
@@ -101,12 +98,11 @@ void main() {
         bloc = PagedListFilterBloc<int, int>(repository);
       });
 
-      test('should emit list not loaded when error occurs', () {
+      test('should emit [$Loading, $Failure] when error occurs', () {
         when(loadingFirstPage);
 
         then(
           () => withBloc(bloc).expectStates([
-            const Initial(),
             const Loading(),
             Failure(error),
           ]),
@@ -126,11 +122,10 @@ void main() {
         bloc = PagedListFilterBloc<int, int>(repository);
       });
 
-      test('should emit list loaded empty when first page was not found', () {
+      test('should emit [$Loading, $Empty] when first page was not found', () {
         when(loadingFirstPage);
         then(
           () => withBloc(bloc).expectStates(const [
-            Initial(),
             Loading(),
             Empty(),
           ]),
