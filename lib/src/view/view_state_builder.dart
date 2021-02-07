@@ -66,18 +66,20 @@ class ViewStateBuilder<T, C extends Cubit<ViewState>>
           buildWhen: buildWhen,
           builder: (BuildContext context, ViewState state) {
             if (state is Initial) {
-              return onReady?.call(context) ?? const SizedBox();
+              return onReady?.call(context) ?? const SizedBox.shrink();
             } else if (state is Loading) {
-              return onLoading?.call(context) ?? const SizedBox();
+              return onLoading?.call(context) ?? const SizedBox.shrink();
             } else if (state is Refreshing<T>) {
               return onRefreshing?.call(context, state.data) ??
-                  const SizedBox();
+                  const SizedBox.shrink();
             } else if (state is Success<T>) {
-              return onSuccess?.call(context, state.data) ?? const SizedBox();
+              return onSuccess?.call(context, state.data) ??
+                  const SizedBox.shrink();
             } else if (state is Empty) {
-              return onEmpty?.call(context) ?? const SizedBox();
+              return onEmpty?.call(context) ?? const SizedBox.shrink();
             } else if (state is Failure) {
-              return onError?.call(context, state.error) ?? const SizedBox();
+              return onError?.call(context, state.error) ??
+                  const SizedBox.shrink();
             } else {
               throw ArgumentError.value(state, 'state');
             }
