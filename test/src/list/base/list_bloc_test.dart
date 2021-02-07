@@ -2,8 +2,10 @@ import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mockito/mockito.dart' as mock;
 
+import '../../util/bdd.dart';
+import '../../util/bloc_state_assertion.dart';
 import 'list_repository_mock.dart';
 
 void main() {
@@ -15,77 +17,63 @@ void main() {
     bloc = ListBloc(repository);
   });
 
-  void givenEmptyRepository() =>
-      when(repository.getAll()).thenAnswer((_) async => []);
+  void emptyRepository() =>
+      mock.when(repository.getAll()).thenAnswer((_) async => []);
 
-  void givenRepositoryWithElements() =>
-      when(repository.getAll()).thenAnswer((_) async => _someData);
+  void repositoryWithElements() =>
+      mock.when(repository.getAll()).thenAnswer((_) async => _someData);
 
-  void givenFailingRepository() =>
-      when(repository.getAll()).thenThrow(_exception);
+  void failingRepository() =>
+      mock.when(repository.getAll()).thenThrow(_exception);
 
-  Future<void> thenExpectStates(Iterable<ViewState> states) async => expect(
-        bloc,
-        emitsInOrder(states),
-      );
+  void loadingElements() => bloc.loadElements();
+
+  void refreshingElements() => bloc.refreshElements();
 
   test('should be initialized in initial state', () {
-    thenExpectStates([
-      const Initial(),
-    ]);
+    expect(bloc.state, equals(const Initial()));
   });
 
   group('loading elements', () {
-    void whenLoadingElements() => bloc.loadElements();
-
-    test('should emit loaded empty list when there is no data', () {
-      givenEmptyRepository();
-      whenLoadingElements();
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Empty(),
-      ]);
+    test('should emit [$Loading, $Empty] when there is no data', () {
+      given(emptyRepository);
+      when(loadingElements);
+      then(() => withBloc(bloc).expectStates(const [Loading(), Empty()]));
     });
 
-    test('should emit list loaded state when loading data is successful', () {
-      givenRepositoryWithElements();
-      whenLoadingElements();
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Success(_someData),
-      ]);
+    test('should emit [$Loading, $Success] when loading data is successful',
+        () {
+      given(repositoryWithElements);
+      when(loadingElements);
+      then(() =>
+          withBloc(bloc).expectStates(const [Loading(), Success(_someData)]));
     });
 
-    test('should emit list not loaded when loading data fails', () {
-      givenFailingRepository();
-      whenLoadingElements();
-      thenExpectStates([
-        const Initial(),
-        const Loading(),
-        Failure(_exception),
-      ]);
+    test('should emit [$Loading, $Failure(error)] when loading data fails', () {
+      given(failingRepository);
+      when(loadingElements);
+      then(() =>
+          withBloc(bloc).expectStates([const Loading(), Failure(_exception)]));
     });
   });
 
   group('refreshing elements', () {
-    void whenLoadingElements() => bloc.loadElements();
-    void whenRefreshingElements() => bloc.refreshElements();
+    test(
+        'should emit [$Loading, $Success, $Refreshing, $Success] when loading and refreshing is succeeds',
+        () {
+      given(repositoryWithElements);
 
-    test('should refresh elements when loading is finished', () {
-      givenRepositoryWithElements();
+      when(loadingElements);
+      when(refreshingElements);
 
-      whenLoadingElements();
-      whenRefreshingElements();
-
-      thenExpectStates(const [
-        Initial(),
-        Loading(),
-        Success(_someData),
-        Refreshing(_someData),
-        Success(_someData),
-      ]);
+      then(
+        () => withBloc(bloc).expectStates(const [
+          Loading(),
+          Success(_someData),
+          Refreshing(_someData),
+          Success(_someData),
+        ]),
+      );
     });
   });
 
