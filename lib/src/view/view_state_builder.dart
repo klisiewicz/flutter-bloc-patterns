@@ -79,7 +79,7 @@ class ViewStateBuilder<T, C extends Cubit<ViewState>>
             } else if (state is Failure) {
               return onError?.call(context, state.error) ?? const SizedBox();
             } else {
-              return const SizedBox();
+              throw ArgumentError.value(state, 'state');
             }
           },
         );
