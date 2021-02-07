@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dart';
 
-const _delay = Duration(milliseconds: 1);
+const _delay = Duration.zero;
 
 class InMemoryFilterRepository<T, F> extends FilterListRepository<T, F> {
   final List<T> elements;
