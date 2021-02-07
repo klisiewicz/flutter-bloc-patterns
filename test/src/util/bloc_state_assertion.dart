@@ -10,8 +10,10 @@ class BlocStateAssertion {
 
   BlocStateAssertion._internal(this._bloc);
 
-  Future<void> expectStates(Iterable<ViewState> states) => expectLater(
-        _bloc,
-        emitsInOrder(states),
-      );
+  Future<void> expectStates(Iterable<ViewState> states) {
+    return expectLater(
+      _bloc,
+      emitsInOrder(states),
+    );
+  }
 }

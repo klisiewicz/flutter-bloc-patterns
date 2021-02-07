@@ -35,7 +35,6 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
       yield const Loading();
       final element = await _repository.getById(id);
       yield element != null ? Success<T>(element) : const Empty();
-      print('success emitted');
     } on ElementNotFoundException {
       yield const Empty();
     } catch (e) {
