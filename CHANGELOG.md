@@ -1,10 +1,14 @@
+## [0.8.0] * Breaking Changes *
+
+* Migrating to `bloc` 6.1.1 and `flutter_bloc` 6.1.1.
+
 ## [0.7.0] * Breaking Changes *
 
-* Migrating to `bloc` 5.0.1 and `flutter_bloc` 5.0.1,
+* Migrating to `bloc` 5.0.1 and `flutter_bloc` 5.0.1.
 
 ## [0.6.0] * Breaking Changes *
 
-* `Page` should be imported via `package:flutter_bloc_patterns/page.dart`,
+* `Page` should be imported via `package:flutter_bloc_patterns/page.dart`.
 
 ## [0.5.0] * Breaking Changes *
 
