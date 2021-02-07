@@ -21,12 +21,11 @@ void main() {
       bloc = PagedListBloc<int>(repository);
     });
 
-    test('should emit list loaded empty when first page contains no elements',
+    test('should emit [$Loading, $Empty] when first page contains no elements',
         () {
       when(loadingFirstPage);
       then(() {
         withBloc(bloc).expectStates(const [
-          Initial(),
           Loading(),
           Empty(),
         ]);
@@ -50,13 +49,12 @@ void main() {
     });
 
     test(
-        'should emit list loaded with first page elements when loading first page',
+        'should emit  [$Loading, $Success] with first page elements when loading first page',
         () {
       when(loadingFirstPage);
 
       then(() {
         withBloc(bloc).expectStates([
-          const Initial(),
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
         ]);
@@ -64,7 +62,7 @@ void main() {
     });
 
     test(
-        'should emit list loaded with first, first and second page elements when loading two pages',
+        'should emit [$Loading, $Success, $Success] with first, first and second page elements when loading two pages',
         () {
       when(() {
         loadingFirstPage();
@@ -73,7 +71,6 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          const Initial(),
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
@@ -82,7 +79,7 @@ void main() {
     });
 
     test(
-        'should emit list loaded with first, first and second and first, second and third page elements when loading three pages',
+        'should emit  [$Loading, $Success, $Success, $Success] with first, first and second and first, second and third page elements when loading three pages',
         () {
       when(() {
         loadingFirstPage();
@@ -92,7 +89,6 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          const Initial(),
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
@@ -105,7 +101,7 @@ void main() {
     });
 
     test(
-        'should emit list loaded with hasReachedMax when there are no more pages',
+        'should emit  [$Loading, $Success, $Success, $Success] with hasReachedMax when there are no more pages',
         () {
       when(() {
         loadingFirstPage();
@@ -116,7 +112,6 @@ void main() {
 
       then(() {
         withBloc(bloc).expectStates([
-          const Initial(),
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
@@ -143,11 +138,10 @@ void main() {
         bloc = PagedListBloc<int>(repository);
       });
 
-      test('should emit list not loaded when exception occurs', () {
+      test('should emit [$Loading, $Failure] when exception occurs', () {
         when(loadingFirstPage);
         then(() {
           withBloc(bloc).expectStates([
-            const Initial(),
             const Loading(),
             Failure(exception),
           ]);
@@ -166,11 +160,10 @@ void main() {
         bloc = PagedListBloc<int>(repository);
       });
 
-      test('should emit list not loaded when error occurs', () {
+      test('should emit [$Loading, $Failure] when error occurs', () {
         when(loadingFirstPage);
         then(() {
           withBloc(bloc).expectStates([
-            const Initial(),
             const Loading(),
             Failure(error),
           ]);
@@ -189,11 +182,10 @@ void main() {
         bloc = PagedListBloc<int>(repository);
       });
 
-      test('should emit list loaded empty when first page was not found', () {
+      test('should emit [$Loading, $Empty] when first page was not found', () {
         when(loadingFirstPage);
         then(() {
           withBloc(bloc).expectStates(const [
-            Initial(),
             Loading(),
             Empty(),
           ]);
