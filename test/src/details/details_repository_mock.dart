@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
 
-const _delay = Duration(milliseconds: 1);
+const _delay = Duration.zero;
 
 class InMemoryDetailsRepository<T, I> extends DetailsRepository<T, I> {
   final Map<I, T> elements;
