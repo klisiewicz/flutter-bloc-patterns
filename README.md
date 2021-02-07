@@ -134,7 +134,7 @@ Where:
 
 ## Dart version
 
-- Dart 2: >= 2.2.0
+- Dart 2: >= 2.6.0
 
 ## Author
 - [Karol Lisiewicz](https://github.com/klisiewicz)
