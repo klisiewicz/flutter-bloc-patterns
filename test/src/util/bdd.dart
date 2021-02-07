@@ -1,5 +1,7 @@
-void given(void Function() given) => given();
+import 'dart:async';
 
-void when(void Function() when) => when();
+FutureOr<void> given(FutureOr<void> Function() given) => given();
 
-void then(void Function() then) => then();
+FutureOr<void> when(FutureOr<void> Function() when) => when();
+
+FutureOr<void> then(FutureOr<void> Function() then) => then();
