@@ -102,7 +102,7 @@ class _PostDetailPageState extends State<_PostDetailPage> {
 
   Widget _showSnackbarAndPopPage(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(
             const SnackBar(
               content: Text('Post not found!'),

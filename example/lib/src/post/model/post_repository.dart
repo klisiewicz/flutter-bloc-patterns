@@ -35,15 +35,17 @@ class FilterPostRepository implements FilterListRepository<Post, User> {
 
 class PagedPostRepository implements PagedListRepository<Post> {
   @override
-  Future<List<Post>> getAll(Page page) =>
-      _getPostsFromUrl('$_postsUrl?_start=${page.offset}&_limit=${page.size}');
+  Future<List<Post>> getAll(Page page) {
+    return _getPostsFromUrl(
+      '$_postsUrl?_start=${page.offset}&_limit=${page.size}',
+    );
+  }
 }
 
 class PostDetailsRepository implements DetailsRepository<PostDetails, int> {
   @override
   Future<PostDetails> getById(int id) async {
-    final response = await http.get('$_postsUrl/$id');
-
+    final response = await http.get(UriData.fromString('$_postsUrl/$id').uri);
     if (response.statusCode == HttpStatus.notFound) {
       return null;
     } else if (response.statusCode != HttpStatus.ok) {
@@ -55,7 +57,7 @@ class PostDetailsRepository implements DetailsRepository<PostDetails, int> {
 }
 
 Future<List<Post>> _getPostsFromUrl(String url) async {
-  final response = await http.get(url);
+  final response = await http.get(UriData.fromString(url).uri);
 
   if (response.statusCode != HttpStatus.ok) {
     throw Exception('Failed to load post');
