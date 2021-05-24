@@ -1,3 +1,10 @@
+# Changelog
+
+## [0.9.0] * Breaking Changes *
+
+* Migrating to `bloc` 7.0.0 and `flutter_bloc` 7.0.0,
+* Migrating to `null-safety`.
+
 ## [0.8.0] * Breaking Changes *
 
 * Migrating to `bloc` 6.1.1 and `flutter_bloc` 6.1.1.
