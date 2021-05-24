@@ -8,10 +8,12 @@ import 'details_repository_mock.dart';
 void main() {
   DetailsBloc<String, int> detailsBloc;
 
-  Future<void> thenExpectStates(Iterable<ViewState> states) async => expect(
-        detailsBloc,
-        emitsInOrder(states),
-      );
+  Future<void> thenExpectStates(Iterable<ViewState> states) async {
+    expect(
+      detailsBloc.stream,
+      emitsInOrder(states),
+    );
+  }
 
   group('repository with elements', () {
     const _existingId = 1;

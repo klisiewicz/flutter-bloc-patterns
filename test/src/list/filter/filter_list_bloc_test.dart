@@ -24,7 +24,7 @@ void main() {
     });
 
     test('should emit [$Loading, $Empty] state when no filter is set', () {
-      when(() => loadingElements());
+      when(loadingElements);
       then(() => withBloc(bloc).expectStates(const [Loading(), Empty()]));
     });
 
@@ -50,7 +50,7 @@ void main() {
     test(
         'should emit [$Loading, $Success] with all elements when no filter is set',
         () {
-      when(() => loadingElements());
+      when(loadingElements);
       then(
         () =>
             withBloc(bloc).expectStates(const [Loading(), Success(_someData)]),

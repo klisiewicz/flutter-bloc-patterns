@@ -46,12 +46,12 @@ typedef ViewStateListenerCondition = bool Function(
 /// [onError] callback function for an error state.
 ///
 /// [T] - the type of elements,
-/// [C] - the type of cubit.
-class ViewStateListener<T, C extends Cubit<ViewState>>
-    extends BlocListener<C, ViewState> {
+/// [B] - the type of bloc.
+class ViewStateListener<T, B extends BlocBase<ViewState>>
+    extends BlocListener<B, ViewState> {
   ViewStateListener({
     Key key,
-    C cubit,
+    B bloc,
     ViewStateListenerCondition listenWhen,
     LoadingCallback onLoading,
     RefreshingCallback<T> onRefreshing,
@@ -61,7 +61,7 @@ class ViewStateListener<T, C extends Cubit<ViewState>>
     Widget child,
   }) : super(
           key: key,
-          cubit: cubit,
+          bloc: bloc,
           listenWhen: listenWhen,
           child: child,
           listener: (BuildContext context, ViewState state) {

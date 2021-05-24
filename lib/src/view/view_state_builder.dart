@@ -47,12 +47,12 @@ typedef ViewStateBuilderCondition = bool Function(
 /// [onError] builder function for an error state.
 ///
 /// [T] - the type of elements,
-/// [C] - the type of cubit.
-class ViewStateBuilder<T, C extends Cubit<ViewState>>
-    extends BlocBuilder<C, ViewState> {
+/// [B] - the type of bloc.
+class ViewStateBuilder<T, B extends BlocBase<ViewState>>
+    extends BlocBuilder<B, ViewState> {
   ViewStateBuilder({
     Key key,
-    C cubit,
+    B bloc,
     InitialBuilder onReady,
     LoadingBuilder onLoading,
     RefreshingBuilder<T> onRefreshing,
@@ -62,7 +62,7 @@ class ViewStateBuilder<T, C extends Cubit<ViewState>>
     ViewStateBuilderCondition buildWhen,
   }) : super(
           key: key,
-          cubit: cubit,
+          bloc: bloc,
           buildWhen: buildWhen,
           builder: (BuildContext context, ViewState state) {
             if (state is Initial) {

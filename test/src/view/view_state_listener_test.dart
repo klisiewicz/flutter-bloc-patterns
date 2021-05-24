@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_bloc_patterns/view.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../util/view_test_util.dart';
+import 'view_state_fakes.dart';
 
-class MockTestBloc extends MockBloc<ViewState> implements Bloc<int, ViewState> {
-}
+class MockTestBloc extends MockBloc<int, ViewState> {}
 
 class LoadingMock extends Mock {
   void call(BuildContext context);
@@ -42,6 +42,11 @@ void main() {
   EmptyCallback emptyCallback;
   ErrorCallback errorCallback;
 
+  setUpAll(() {
+    registerVieStateFallbackValue();
+    registerBuildContextFallbackValue();
+  });
+
   setUp(() {
     bloc = MockTestBloc();
     loadingCallback = LoadingMock();
@@ -54,7 +59,7 @@ void main() {
   Widget makeTestableViewStateListener() {
     return makeTestableWidget(
       child: ViewStateListener<int, Bloc<int, ViewState>>(
-        cubit: bloc,
+        bloc: bloc,
         onLoading: loadingCallback,
         onRefreshing: refreshCallback,
         onSuccess: successCallback,
@@ -74,11 +79,11 @@ void main() {
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verify(loadingCallback.call(any));
-    verifyNever(successCallback.call(any, any));
-    verifyNever(refreshCallback.call(any, any));
-    verifyNever(emptyCallback.call(any));
-    verifyNever(errorCallback.call(any, any));
+    verify(() => loadingCallback.call(any()));
+    verifyNever(() => successCallback.call(any(), any()));
+    verifyNever(() => refreshCallback.call(any(), any()));
+    verifyNever(() => emptyCallback.call(any()));
+    verifyNever(() => errorCallback.call(any(), any()));
   });
 
   testWidgets('should invoke success callback when loaded',
@@ -90,11 +95,11 @@ void main() {
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(loadingCallback.call(any));
-    verify(successCallback.call(any, _someData));
-    verifyNever(refreshCallback.call(any, any));
-    verifyNever(emptyCallback.call(any));
-    verifyNever(errorCallback.call(any, any));
+    verifyNever(() => loadingCallback.call(any()));
+    verify(() => successCallback.call(any(), _someData));
+    verifyNever(() => refreshCallback.call(any(), any()));
+    verifyNever(() => emptyCallback.call(any()));
+    verifyNever(() => errorCallback.call(any(), any()));
   });
 
   testWidgets('should invoke refresh callback when refreshing',
@@ -106,11 +111,11 @@ void main() {
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(loadingCallback.call(any));
-    verifyNever(successCallback.call(any, any));
-    verify(refreshCallback.call(any, _someData));
-    verifyNever(emptyCallback.call(any));
-    verifyNever(errorCallback.call(any, any));
+    verifyNever(() => loadingCallback.call(any()));
+    verifyNever(() => successCallback.call(any(), any()));
+    verify(() => refreshCallback.call(any(), _someData));
+    verifyNever(() => emptyCallback.call(any()));
+    verifyNever(() => errorCallback.call(any(), any()));
   });
 
   testWidgets('should invoke empty callback when empty',
@@ -122,11 +127,11 @@ void main() {
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(loadingCallback.call(any));
-    verifyNever(successCallback.call(any, any));
-    verifyNever(refreshCallback.call(any, any));
-    verify(emptyCallback.call(any));
-    verifyNever(errorCallback.call(any, any));
+    verifyNever(() => loadingCallback.call(any()));
+    verifyNever(() => successCallback.call(any(), any()));
+    verifyNever(() => refreshCallback.call(any(), any()));
+    verify(() => emptyCallback.call(any()));
+    verifyNever(() => errorCallback.call(any(), any()));
   });
 
   testWidgets('should invoke error callback when error',
@@ -138,10 +143,10 @@ void main() {
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(loadingCallback.call(any));
-    verifyNever(successCallback.call(any, any));
-    verifyNever(refreshCallback.call(any, any));
-    verifyNever(emptyCallback.call(any));
-    verify(errorCallback.call(any, _someException));
+    verifyNever(() => loadingCallback.call(any()));
+    verifyNever(() => successCallback.call(any(), any()));
+    verifyNever(() => refreshCallback.call(any(), any()));
+    verifyNever(() => emptyCallback.call(any()));
+    verify(() => errorCallback.call(any(), _someException));
   });
 }

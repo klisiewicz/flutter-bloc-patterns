@@ -2,7 +2,7 @@ import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart' as mock;
+import 'package:mocktail/mocktail.dart' as m;
 
 import '../../util/bdd.dart';
 import '../../util/bloc_state_assertion.dart';
@@ -18,13 +18,12 @@ void main() {
   });
 
   void emptyRepository() =>
-      mock.when(repository.getAll()).thenAnswer((_) async => []);
+      m.when(repository.getAll).thenAnswer((_) async => []);
 
   void repositoryWithElements() =>
-      mock.when(repository.getAll()).thenAnswer((_) async => _someData);
+      m.when(repository.getAll).thenAnswer((_) async => _someData);
 
-  void failingRepository() =>
-      mock.when(repository.getAll()).thenThrow(_exception);
+  void failingRepository() => m.when(repository.getAll).thenThrow(_exception);
 
   void loadingElements() => bloc.loadElements();
 

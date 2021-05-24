@@ -12,7 +12,7 @@ class BlocStateAssertion {
 
   Future<void> expectStates(Iterable<ViewState> states) {
     return expectLater(
-      _bloc,
+      _bloc.stream,
       emitsInOrder(states),
     );
   }

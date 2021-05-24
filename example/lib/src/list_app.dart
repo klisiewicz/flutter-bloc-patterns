@@ -45,7 +45,7 @@ class _PostsPageState extends State<PostsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
       body: ViewStateBuilder<List<Post>, ListBloc<Post>>(
-        cubit: listBloc,
+        bloc: listBloc,
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, List<Post> posts) =>
             PostsList(posts, onRefresh: _refreshPosts),

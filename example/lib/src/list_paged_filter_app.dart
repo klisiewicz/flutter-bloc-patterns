@@ -52,7 +52,7 @@ class _PhotosPageState extends State<_PhotosPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Photos')),
       body: ViewStateBuilder<PagedList<Photo>, PagedListFilterBloc>(
-        cubit: _photosBloc,
+        bloc: _photosBloc,
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PhotosListPaged(
           page,

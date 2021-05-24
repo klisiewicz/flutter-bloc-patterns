@@ -45,7 +45,7 @@ class _PostsPageState extends State<_PostsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
       body: ViewStateBuilder<PagedList<Post>, PagedListBloc>(
-        cubit: _listBloc,
+        bloc: _listBloc,
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PostsListPaged(
           page,
