@@ -29,10 +29,12 @@ class FilterPostRepository implements FilterListRepository<Post, User> {
 class PagedPostRepository implements PagedListRepository<Post> {
   @override
   Future<List<Post>> getAll(Page page) {
-    return _getPostsFromUrl(query: {
-      '_start': '${page.offset}',
-      '_limit': '${page.size}',
-    });
+    return _getPostsFromUrl(
+      query: {
+        '_start': '${page.offset}',
+        '_limit': '${page.size}',
+      },
+    );
   }
 }
 
@@ -50,7 +52,7 @@ class PostDetailsRepository implements DetailsRepository<PostDetails, int> {
     } else if (response.statusCode != HttpStatus.ok) {
       throw Exception('Failed to load post with id $id');
     }
-    final dynamic postJson = json.decode(response.body);
+    final Map postJson = json.decode(response.body) as Map;
     return PostDetails.fromJson(postJson);
   }
 }
@@ -70,7 +72,7 @@ Future<List<Post>> _getPostsFromUrl({
   }
   final dynamic postsJson = json.decode(response.body);
   if (postsJson is List) {
-    final posts = postsJson.map((post) => Post.fromJson(post)).toList();
+    final posts = postsJson.map((post) => Post.fromJson(post as Map)).toList();
     // Shuffle the list to achieve refresh impression
     return posts..shuffle();
   } else {

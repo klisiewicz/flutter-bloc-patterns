@@ -7,7 +7,7 @@ class Post {
     required this.title,
   });
 
-  factory Post.fromJson(dynamic json) {
+  factory Post.fromJson(Map json) {
     return Post(
       id: json['id'] as int,
       title: json['title'] as String,

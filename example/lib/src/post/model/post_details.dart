@@ -9,7 +9,7 @@ class PostDetails extends Post {
     required this.body,
   }) : super(id: id, title: title);
 
-  factory PostDetails.fromJson(dynamic json) {
+  factory PostDetails.fromJson(Map json) {
     return PostDetails(
       id: json['id'] as int,
       title: json['title'] as String,

@@ -1,5 +1,4 @@
 import 'package:flutter_bloc_patterns/paged_list.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -92,10 +91,12 @@ void main() {
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
-          Success(PagedList(
-            firstPage + secondPage + thirdPage,
-            hasReachedMax: true,
-          )),
+          Success(
+            PagedList(
+              firstPage + secondPage + thirdPage,
+              hasReachedMax: true,
+            ),
+          ),
         ]);
       });
     });

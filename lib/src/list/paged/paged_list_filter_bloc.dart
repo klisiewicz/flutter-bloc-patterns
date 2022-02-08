@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/paged_filter_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';

@@ -11,7 +11,7 @@ class Photo {
     required this.thumbnailUrl,
   });
 
-  factory Photo.fromJson(dynamic json) {
+  factory Photo.fromJson(Map json) {
     return Photo(
       id: json['id'] as int,
       title: json['title'] as String,

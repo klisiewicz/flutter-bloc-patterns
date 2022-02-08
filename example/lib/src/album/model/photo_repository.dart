@@ -9,7 +9,6 @@ import 'package:http/http.dart' as http;
 
 class PagedFilterPhotoRepository
     implements PagedListFilterRepository<Photo, Album> {
-
   @override
   Future<List<Photo>> getAll(Page page) async {
     final uri = _buildUri(page, null);
@@ -29,7 +28,7 @@ class PagedFilterPhotoRepository
     }
     final dynamic postsJson = json.decode(response.body);
     return (postsJson is List)
-        ? postsJson.map((photo) => Photo.fromJson(photo)).toList()
+        ? postsJson.map((photo) => Photo.fromJson(photo as Map)).toList()
         : [];
   }
 
@@ -39,10 +38,10 @@ class PagedFilterPhotoRepository
       host: 'jsonplaceholder.typicode.com',
       path: 'photos',
       queryParameters: {
-      '_start': '${page.offset}',
-      '_limit': '${page.size}',
-      if (album != null) 'albumId': '${album.id}'
-    },
+        '_start': '${page.offset}',
+        '_limit': '${page.size}',
+        if (album != null) 'albumId': '${album.id}'
+      },
     );
   }
 }

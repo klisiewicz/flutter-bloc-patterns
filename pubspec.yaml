@@ -9,7 +9,7 @@ environment:
 dependencies:
   bloc: ^7.0.0
   collection: ^1.15.0
-  equatable: ^2.0.2
+  equatable: ^2.0.3
   flutter:
     sdk: flutter
   flutter_bloc: ^7.0.1
@@ -18,5 +18,5 @@ dev_dependencies:
   bloc_test: ^8.0.0
   flutter_test:
     sdk: flutter
-  lint: ^1.5.3
+  lint: ^1.8.2
   mocktail: ^0.2.0

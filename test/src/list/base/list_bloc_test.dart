@@ -44,15 +44,19 @@ void main() {
         () {
       given(repositoryWithElements);
       when(loadingElements);
-      then(() =>
-          withBloc(bloc).expectStates(const [Loading(), Success(_someData)]));
+      then(
+        () =>
+            withBloc(bloc).expectStates(const [Loading(), Success(_someData)]),
+      );
     });
 
     test('should emit [$Loading, $Failure(error)] when loading data fails', () {
       given(failingRepository);
       when(loadingElements);
-      then(() =>
-          withBloc(bloc).expectStates([const Loading(), Failure(_exception)]));
+      then(
+        () =>
+            withBloc(bloc).expectStates([const Loading(), Failure(_exception)]),
+      );
     });
   });
 

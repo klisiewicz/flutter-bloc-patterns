@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// A widget that wraps a [widget] with a [RefreshIndicator] designed to
 /// be used with BLoC pattern.
