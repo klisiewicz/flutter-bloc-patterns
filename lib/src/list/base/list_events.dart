@@ -11,12 +11,12 @@ abstract class ListEvent extends Equatable {
 ///
 /// [F] - the filter type.
 class LoadList<F> extends ListEvent {
-  final F filter;
+  final F? filter;
 
   const LoadList([this.filter]);
 
   @override
-  List<Object> get props => [filter];
+  List<Object?> get props => [filter];
 
   @override
   String toString() => 'LoadList: $filter';
@@ -26,12 +26,12 @@ class LoadList<F> extends ListEvent {
 ///
 /// [F] - the filter type.
 class RefreshList<F> extends ListEvent {
-  final F filter;
+  final F? filter;
 
   const RefreshList([this.filter]);
 
   @override
-  List<Object> get props => [filter];
+  List<Object?> get props => [filter];
 
   @override
   String toString() => 'RefreshList: $filter';

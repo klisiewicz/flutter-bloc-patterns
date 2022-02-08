@@ -8,7 +8,7 @@ import 'details_repository_mock.dart';
 
 void main() {
   const someData = 0;
-  DetailsBloc<int, int> bloc;
+  late DetailsBloc<int, int> bloc;
 
   setUp(() {
     bloc = DetailsBloc(InMemoryDetailsRepository());

@@ -11,7 +11,7 @@ class InMemoryFilterRepository<T, F> extends FilterListRepository<T, F> {
   Future<List<T>> getAll() async => Future.delayed(_delay, () => elements);
 
   @override
-  Future<List<T>> getBy(F filter) {
+  Future<List<T>> getBy(F? filter) {
     return Future.delayed(
       _delay,
       () => elements.where((item) => item == filter).toList(),
@@ -20,7 +20,7 @@ class InMemoryFilterRepository<T, F> extends FilterListRepository<T, F> {
 }
 
 class FailingFilterRepository<T, F> extends FilterListRepository<T, F> {
-  final dynamic error;
+  final Object error;
 
   FailingFilterRepository(this.error);
 
@@ -28,5 +28,5 @@ class FailingFilterRepository<T, F> extends FilterListRepository<T, F> {
   Future<List<T>> getAll() => Future.delayed(_delay, () => throw error);
 
   @override
-  Future<List<T>> getBy(F filter) => Future.delayed(_delay, () => throw error);
+  Future<List<T>> getBy(F? filter) => Future.delayed(_delay, () => throw error);
 }

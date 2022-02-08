@@ -8,14 +8,14 @@ class InMemoryDetailsRepository<T, I> extends DetailsRepository<T, I> {
   InMemoryDetailsRepository([this.elements = const {}]);
 
   @override
-  Future<T> getById(I id) => Future.delayed(_delay, () => elements[id]);
+  Future<T?> getById(I id) => Future.delayed(_delay, () => elements[id]);
 }
 
 class FailingDetailsRepository<T, I> extends DetailsRepository<T, I> {
-  final dynamic error;
+  final Object error;
 
   FailingDetailsRepository(this.error);
 
   @override
-  Future<T> getById(I id) async => Future.delayed(_delay, () => throw error);
+  Future<T?> getById(I id) async => Future.delayed(_delay, () => throw error);
 }

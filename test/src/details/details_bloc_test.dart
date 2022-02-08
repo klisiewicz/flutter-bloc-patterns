@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'details_repository_mock.dart';
 
 void main() {
-  DetailsBloc<String, int> detailsBloc;
+  late DetailsBloc<String, int> detailsBloc;
 
   Future<void> thenExpectStates(Iterable<ViewState> states) async {
     expect(
@@ -66,7 +66,7 @@ void main() {
     final _exception = Exception('Oh no!');
     final _error = Error();
 
-    void givenFailingRepository(error) =>
+    void givenFailingRepository(Object error) =>
         detailsBloc = DetailsBloc(FailingDetailsRepository(error));
 
     void whenLoadingElement() => detailsBloc.loadElement(0);
@@ -77,17 +77,6 @@ void main() {
       thenExpectStates([
         const Loading(),
         Failure(_exception),
-      ]);
-    });
-
-    test(
-        'should emit [$Loading, $Empty] when $ElementNotFoundException is thrown',
-        () {
-      givenFailingRepository(ElementNotFoundException(0));
-      whenLoadingElement();
-      thenExpectStates(const [
-        Loading(),
-        Empty(),
       ]);
     });
 

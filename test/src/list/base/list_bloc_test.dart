@@ -9,8 +9,8 @@ import '../../util/bloc_state_assertion.dart';
 import 'list_repository_mock.dart';
 
 void main() {
-  ListBloc<int> bloc;
-  ListRepository<int> repository;
+  late ListBloc<int> bloc;
+  late ListRepository<int> repository;
 
   setUp(() {
     repository = ListRepositoryMock<int>();

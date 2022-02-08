@@ -13,10 +13,10 @@ abstract class DetailsEvent extends Equatable {
 class LoadDetails<I> extends DetailsEvent {
   final I id;
 
-  const LoadDetails([this.id]);
+  const LoadDetails(this.id);
 
   @override
-  List<Object> get props => [id];
+  List<Object?> get props => [id];
 
   @override
   String toString() => 'LoadDetails: $id';

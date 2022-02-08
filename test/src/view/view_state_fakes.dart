@@ -8,9 +8,9 @@ class ViewStateFake extends Fake implements ViewState {}
 class BuildContextFake extends Fake implements BuildContext {}
 
 void registerVieStateFallbackValue() {
-  registerFallbackValue<ViewState>(ViewStateFake());
+  registerFallbackValue(ViewStateFake());
 }
 
 void registerBuildContextFallbackValue() {
-  registerFallbackValue<BuildContext>(BuildContextFake());
+  registerFallbackValue(BuildContextFake());
 }

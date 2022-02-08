@@ -18,10 +18,7 @@ typedef EmptyCallback = void Function(BuildContext context);
 
 /// Callback function for an error. It contains an [error] that has caused
 /// which may allow a view to react differently on different errors.
-typedef ErrorCallback = void Function(
-  BuildContext context,
-  dynamic error,
-);
+typedef ErrorCallback = void Function(BuildContext context, Object error);
 
 /// Signature for the [listenWhen] function which takes the previous [ViewState]
 /// and the current [ViewState] and is responsible for returning a [bool] which
@@ -50,15 +47,15 @@ typedef ViewStateListenerCondition = bool Function(
 class ViewStateListener<T, B extends BlocBase<ViewState>>
     extends BlocListener<B, ViewState> {
   ViewStateListener({
-    Key key,
-    B bloc,
-    ViewStateListenerCondition listenWhen,
-    LoadingCallback onLoading,
-    RefreshingCallback<T> onRefreshing,
-    SuccessCallback<T> onSuccess,
-    EmptyCallback onEmpty,
-    ErrorCallback onError,
-    Widget child,
+    Key? key,
+    B? bloc,
+    ViewStateListenerCondition? listenWhen,
+    LoadingCallback? onLoading,
+    RefreshingCallback<T>? onRefreshing,
+    SuccessCallback<T>? onSuccess,
+    EmptyCallback? onEmpty,
+    ErrorCallback? onError,
+    Widget? child,
   }) : super(
           key: key,
           bloc: bloc,

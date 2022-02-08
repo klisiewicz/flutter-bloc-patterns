@@ -15,8 +15,7 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 /// [T] - type of list items.
 class ListBloc<T> extends FilterListBloc<T, void> {
   ListBloc(ListRepository<T> repository)
-      : assert(repository != null),
-        super(_FilterRepositoryAdapter(repository));
+      : super(_FilterRepositoryAdapter(repository));
 }
 
 class _FilterRepositoryAdapter<T> extends FilterListRepository<T, void> {

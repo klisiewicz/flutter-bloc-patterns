@@ -11,7 +11,7 @@ import 'view_state_keys.dart';
 class MockTestBloc extends MockBloc<int, ViewState> {}
 
 void main() {
-  Bloc<int, ViewState> bloc;
+  late Bloc<int, ViewState> bloc;
   const someData = 0;
   final someError = Exception();
 

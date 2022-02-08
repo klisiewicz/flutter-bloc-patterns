@@ -16,11 +16,10 @@ class PagedList<T> extends Equatable {
   /// [elements] - list of elements, cannot be null or empty,
   /// [hasReachedMax] - flag informing if all elements has already been fetched.
   /// True if there are more pages, false otherwise.
-  PagedList(List<T> elements, {this.hasReachedMax = false})
-      : assert(
-          elements != null && elements.isNotEmpty,
-          'Elements cannot be empty',
-        ),
+  PagedList(
+    List<T> elements, {
+    this.hasReachedMax = false,
+  })  : assert(elements.isNotEmpty, 'Elements cannot be empty'),
         elements = UnmodifiableListView(elements);
 
   bool get hasMoreElements => !hasReachedMax;

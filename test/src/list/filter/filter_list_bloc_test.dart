@@ -12,11 +12,12 @@ void main() {
   const _matchingFilter = 1;
   const _matchingElements = [1];
 
-  FilterListBloc<int, int> bloc;
+  late FilterListBloc<int, int> bloc;
 
-  void loadingElements({int filter}) => bloc.loadElements(filter: filter);
+  void loadingElements({int? filter}) => bloc.loadElements(filter: filter);
 
-  void refreshingElements({int filter}) => bloc.refreshElements(filter: filter);
+  void refreshingElements({int? filter}) =>
+      bloc.refreshElements(filter: filter);
 
   group('empty repository', () {
     setUp(() {

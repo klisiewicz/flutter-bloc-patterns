@@ -13,12 +13,15 @@ abstract class PagedListEvent extends Equatable {
 /// [F] - the filter type.
 class LoadPage<F> extends PagedListEvent {
   final Page page;
-  final F filter;
+  final F? filter;
 
-  const LoadPage(this.page, {this.filter}) : assert(page != null);
+  const LoadPage(
+    this.page, {
+    this.filter,
+  });
 
   @override
-  List<Object> get props => [page, filter];
+  List<Object?> get props => [page, filter];
 
   @override
   String toString() => 'LoadPage: $page ${filter ?? ''}';

@@ -12,13 +12,13 @@ class Page extends Equatable {
   /// [size] - the size of the page to be returned.
   const Page({
     this.number = 0,
-    this.size,
+    required this.size,
   })  : assert(number >= 0, 'Page index must not be less than zero'),
         assert(size >= 1, 'Page size must not be less than one');
 
   /// Creates first page.
   /// [size] - the size of the page to be returned.
-  const Page.first({int size}) : this(number: 0, size: size);
+  const Page.first({required int size}) : this(number: 0, size: size);
 
   /// Returns the offset to be taken according to page and page size.
   int get offset => size * number;

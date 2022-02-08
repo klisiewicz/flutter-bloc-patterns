@@ -8,8 +8,8 @@ import '../../util/bloc_state_assertion.dart';
 import 'paged_list_repository_mock.dart';
 
 void main() {
-  PagedListBloc<int> bloc;
-  PagedListRepository<int> repository;
+  late PagedListBloc<int> bloc;
+  late PagedListRepository<int> repository;
 
   void loadingFirstPage() => bloc.loadFirstPage(pageSize: 3);
 

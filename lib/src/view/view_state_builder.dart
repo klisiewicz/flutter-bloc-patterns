@@ -51,15 +51,15 @@ typedef ViewStateBuilderCondition = bool Function(
 class ViewStateBuilder<T, B extends BlocBase<ViewState>>
     extends BlocBuilder<B, ViewState> {
   ViewStateBuilder({
-    Key key,
-    B bloc,
-    InitialBuilder onReady,
-    LoadingBuilder onLoading,
-    RefreshingBuilder<T> onRefreshing,
-    SuccessBuilder<T> onSuccess,
-    EmptyBuilder onEmpty,
-    ErrorBuilder onError,
-    ViewStateBuilderCondition buildWhen,
+    Key? key,
+    B? bloc,
+    InitialBuilder? onReady,
+    LoadingBuilder? onLoading,
+    RefreshingBuilder<T>? onRefreshing,
+    SuccessBuilder<T>? onSuccess,
+    EmptyBuilder? onEmpty,
+    ErrorBuilder? onError,
+    ViewStateBuilderCondition? buildWhen,
   }) : super(
           key: key,
           bloc: bloc,
