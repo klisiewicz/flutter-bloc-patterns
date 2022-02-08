@@ -5,10 +5,10 @@ class Photo {
   final String thumbnailUrl;
 
   Photo({
-    this.id,
-    this.title,
-    this.url,
-    this.thumbnailUrl,
+    required this.id,
+    required this.title,
+    required this.url,
+    required this.thumbnailUrl,
   });
 
   factory Photo.fromJson(dynamic json) {

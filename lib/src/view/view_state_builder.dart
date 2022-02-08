@@ -25,7 +25,7 @@ typedef EmptyBuilder = Widget Function(BuildContext context);
 /// which may allow a view to react differently on different errors.
 typedef ErrorBuilder = Widget Function(
   BuildContext context,
-  dynamic error,
+  Object error,
 );
 
 /// Signature for the [buildWhen] function which takes the previous [ViewState]

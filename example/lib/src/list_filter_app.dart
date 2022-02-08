@@ -36,7 +36,7 @@ class _PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<_PostsPage> {
-  FilterListBloc<Post, User> listBloc;
+  late FilterListBloc<Post, User> listBloc;
   _Posts selectedPosts = _Posts.all;
 
   @override

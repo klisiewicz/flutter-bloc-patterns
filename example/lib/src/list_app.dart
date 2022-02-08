@@ -5,7 +5,6 @@ import 'package:example/src/post/model/post_repository.dart';
 import 'package:example/src/post/ui/posts_list.dart';
 import 'package:example/src/post/ui/posts_list_empty.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/view.dart';
@@ -32,7 +31,7 @@ class PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<PostsPage> {
-  ListBloc<Post> listBloc;
+  late ListBloc<Post> listBloc;
 
   @override
   void initState() {
@@ -47,9 +46,9 @@ class _PostsPageState extends State<PostsPage> {
       body: ViewStateBuilder<List<Post>, ListBloc<Post>>(
         bloc: listBloc,
         onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, List<Post> posts) =>
+        onSuccess: (context, posts) =>
             PostsList(posts, onRefresh: _refreshPosts),
-        onRefreshing: (context, List<Post> posts) =>
+        onRefreshing: (context, posts) =>
             PostsList(posts, onRefresh: _refreshPosts),
         onEmpty: (context) => const PostsListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),

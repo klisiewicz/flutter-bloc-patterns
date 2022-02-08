@@ -10,8 +10,8 @@ class PhotosListPaged extends StatelessWidget {
 
   const PhotosListPaged(
     this.page, {
-    Key key,
-    @required this.onLoadNextPage,
+    Key? key,
+    required this.onLoadNextPage,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,10 @@ class PhotosListPaged extends StatelessWidget {
 class _PhotoGridItem extends StatelessWidget {
   final Photo photo;
 
-  const _PhotoGridItem(this.photo, {Key key}) : super(key: key);
+  const _PhotoGridItem(
+    this.photo, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

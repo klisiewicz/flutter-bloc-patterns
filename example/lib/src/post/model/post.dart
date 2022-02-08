@@ -3,8 +3,8 @@ class Post {
   final String title;
 
   Post({
-    this.id,
-    this.title,
+    required this.id,
+    required this.title,
   });
 
   factory Post.fromJson(dynamic json) {

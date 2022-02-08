@@ -4,13 +4,10 @@ class PostDetails extends Post {
   final String body;
 
   PostDetails({
-    int id,
-    String title,
-    this.body,
-  }) : super(
-          id: id,
-          title: title,
-        );
+    required int id,
+    required String title,
+    required this.body,
+  }) : super(id: id, title: title);
 
   factory PostDetails.fromJson(dynamic json) {
     return PostDetails(

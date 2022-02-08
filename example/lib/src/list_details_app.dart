@@ -31,7 +31,7 @@ class _PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<_PostsPage> {
-  ListBloc<Post> listBloc;
+  late ListBloc<Post> listBloc;
 
   @override
   void initState() {
@@ -70,14 +70,17 @@ class _PostsPageState extends State<_PostsPage> {
 class _PostDetailPage extends StatefulWidget {
   final int postId;
 
-  const _PostDetailPage(this.postId, {Key key}) : super(key: key);
+  const _PostDetailPage(
+    this.postId, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   _PostDetailPageState createState() => _PostDetailPageState();
 }
 
 class _PostDetailPageState extends State<_PostDetailPage> {
-  DetailsBloc<PostDetails, int> detailsBloc;
+  late DetailsBloc<PostDetails, int> detailsBloc;
 
   @override
   void initState() {
@@ -90,18 +93,21 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Post')),
-      body: ViewStateBuilder<PostDetails, DetailsBloc<PostDetails, int>>(
+      body: ViewStateListener(
         bloc: detailsBloc,
-        onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, post) => _PostDetailsContent(post),
         onEmpty: _showSnackbarAndPopPage,
-        onError: (context, error) => ErrorMessage(error: error),
+        child: ViewStateBuilder<PostDetails, DetailsBloc<PostDetails, int>>(
+          bloc: detailsBloc,
+          onLoading: (context) => const LoadingIndicator(),
+          onSuccess: (context, post) => _PostDetailsContent(post),
+          onError: (context, error) => ErrorMessage(error: error),
+        ),
       ),
     );
   }
 
-  Widget _showSnackbarAndPopPage(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  void _showSnackbarAndPopPage(BuildContext context) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context)
           .showSnackBar(
             const SnackBar(
@@ -110,11 +116,8 @@ class _PostDetailPageState extends State<_PostDetailPage> {
             ),
           )
           .closed
-          .then((reason) {
-        Navigator.pop(context);
-      });
+          .then((reason) => Navigator.pop(context));
     });
-    return Container();
   }
 
   @override
@@ -127,7 +130,10 @@ class _PostDetailPageState extends State<_PostDetailPage> {
 class _PostDetailsContent extends StatelessWidget {
   final PostDetails post;
 
-  const _PostDetailsContent(this.post, {Key key}) : super(key: key);
+  const _PostDetailsContent(
+    this.post, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +162,7 @@ class _Route {
   static const String post = '/post';
 }
 
+// ignore: avoid_classes_with_only_static_members
 class _Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -172,7 +179,7 @@ class _Router {
             create: (_) => DetailsBloc<PostDetails, int>(
               PostDetailsRepository(),
             ),
-            child: _PostDetailPage(settings.arguments as int),
+            child: _PostDetailPage(settings.arguments! as int),
           ),
         );
       default:
