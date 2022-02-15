@@ -18,10 +18,7 @@ typedef EmptyCallback = void Function(BuildContext context);
 
 /// Callback function for an error. It contains an [error] that has caused
 /// which may allow a view to react differently on different errors.
-typedef ErrorCallback = void Function(
-  BuildContext context,
-  dynamic error,
-);
+typedef ErrorCallback = void Function(BuildContext context, Object error);
 
 /// Signature for the [listenWhen] function which takes the previous [ViewState]
 /// and the current [ViewState] and is responsible for returning a [bool] which
@@ -46,22 +43,22 @@ typedef ViewStateListenerCondition = bool Function(
 /// [onError] callback function for an error state.
 ///
 /// [T] - the type of elements,
-/// [C] - the type of cubit.
-class ViewStateListener<T, C extends Cubit<ViewState>>
-    extends BlocListener<C, ViewState> {
+/// [B] - the type of bloc.
+class ViewStateListener<T, B extends BlocBase<ViewState>>
+    extends BlocListener<B, ViewState> {
   ViewStateListener({
-    Key key,
-    C cubit,
-    ViewStateListenerCondition listenWhen,
-    LoadingCallback onLoading,
-    RefreshingCallback<T> onRefreshing,
-    SuccessCallback<T> onSuccess,
-    EmptyCallback onEmpty,
-    ErrorCallback onError,
-    Widget child,
+    Key? key,
+    B? bloc,
+    ViewStateListenerCondition? listenWhen,
+    LoadingCallback? onLoading,
+    RefreshingCallback<T>? onRefreshing,
+    SuccessCallback<T>? onSuccess,
+    EmptyCallback? onEmpty,
+    ErrorCallback? onError,
+    Widget? child,
   }) : super(
           key: key,
-          cubit: cubit,
+          bloc: bloc,
           listenWhen: listenWhen,
           child: child,
           listener: (BuildContext context, ViewState state) {

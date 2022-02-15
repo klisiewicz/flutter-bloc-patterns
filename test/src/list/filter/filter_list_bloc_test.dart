@@ -12,11 +12,12 @@ void main() {
   const _matchingFilter = 1;
   const _matchingElements = [1];
 
-  FilterListBloc<int, int> bloc;
+  late FilterListBloc<int, int> bloc;
 
-  void loadingElements({int filter}) => bloc.loadElements(filter: filter);
+  void loadingElements({int? filter}) => bloc.loadElements(filter: filter);
 
-  void refreshingElements({int filter}) => bloc.refreshElements(filter: filter);
+  void refreshingElements({int? filter}) =>
+      bloc.refreshElements(filter: filter);
 
   group('empty repository', () {
     setUp(() {
@@ -24,7 +25,7 @@ void main() {
     });
 
     test('should emit [$Loading, $Empty] state when no filter is set', () {
-      when(() => loadingElements());
+      when(loadingElements);
       then(() => withBloc(bloc).expectStates(const [Loading(), Empty()]));
     });
 
@@ -50,7 +51,7 @@ void main() {
     test(
         'should emit [$Loading, $Success] with all elements when no filter is set',
         () {
-      when(() => loadingElements());
+      when(loadingElements);
       then(
         () =>
             withBloc(bloc).expectStates(const [Loading(), Success(_someData)]),

@@ -18,21 +18,20 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 /// [F] - the type of filter.
 class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   final FilterListRepository<T, F> _repository;
-  F _filter;
+  F? _filter;
 
   FilterListBloc(FilterListRepository<T, F> repository)
-      : assert(repository != null),
-        _repository = repository,
+      : _repository = repository,
         super(const Initial());
 
-  F get filter => _filter;
+  F? get filter => _filter;
 
   /// Loads elements using the given [filter].
   ///
   /// It's most suitable for initial data fetch or for retry action when
   /// the first fetch fails. It can also be used when [filter] changes when a
   /// full reload is required.
-  void loadElements({F filter}) => add(LoadList(filter));
+  void loadElements({F? filter}) => add(LoadList(filter));
 
   /// Refreshes elements using the given [filter].
   ///
@@ -41,7 +40,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   ///
   /// It can be used when [filter] changes and there's no need for displaying a
   /// loading indicator.
-  void refreshElements({F filter}) => add(RefreshList(filter));
+  void refreshElements({F? filter}) => add(RefreshList(filter));
 
   @override
   Stream<ViewState> mapEventToState(ListEvent event) async* {
@@ -55,12 +54,12 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   bool _isRefreshPossible(ListEvent event) =>
       state is Success || state is Empty;
 
-  Stream<ViewState> _mapLoadList(F filter) async* {
+  Stream<ViewState> _mapLoadList(F? filter) async* {
     yield const Loading();
     yield* _getListState(filter);
   }
 
-  Stream<ViewState> _mapRefreshList(F filter) async* {
+  Stream<ViewState> _mapRefreshList(F? filter) async* {
     final elements = _getCurrentStateElements();
     yield Refreshing(elements);
     yield* _getListState(filter);
@@ -69,7 +68,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
   List<T> _getCurrentStateElements() =>
       (state is Success<List<T>>) ? (state as Success<List<T>>).data : [];
 
-  Stream<ViewState> _getListState(F filter) async* {
+  Stream<ViewState> _getListState(F? filter) async* {
     try {
       final List<T> elements = await _getElementsFromRepository(filter);
       yield elements.isNotEmpty
@@ -82,7 +81,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
     }
   }
 
-  Future<List<T>> _getElementsFromRepository(F filter) {
+  Future<List<T>> _getElementsFromRepository(F? filter) {
     if (filter != null) {
       return _repository.getBy(filter);
     } else {

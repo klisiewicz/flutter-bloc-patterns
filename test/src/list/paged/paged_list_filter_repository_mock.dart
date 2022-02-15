@@ -11,7 +11,9 @@ class InMemoryPagedListFilterRepository<T, F>
   InMemoryPagedListFilterRepository(this.elements);
 
   @override
-  Future<List<T>> getAll(Page page) => getBy(page, null);
+  Future<List<T>> getAll(Page page) async {
+    return InMemoryPagedListRepository(elements).getAll(page);
+  }
 
   @override
   Future<List<T>> getBy(Page page, F filter) {
@@ -23,13 +25,13 @@ class InMemoryPagedListFilterRepository<T, F>
 
 class FailingPagedListFilterRepository<T, F>
     implements PagedListFilterRepository<T, F> {
-  final dynamic error;
+  final Object error;
 
   FailingPagedListFilterRepository(this.error);
 
   @override
-  Future<List<T>> getAll(Page page) => throw error;
+  Future<List<T>> getAll(Page page) => Future.error(error);
 
   @override
-  Future<List<T>> getBy(Page page, F filter) => throw error;
+  Future<List<T>> getBy(Page page, F filter) => Future.error(error);
 }

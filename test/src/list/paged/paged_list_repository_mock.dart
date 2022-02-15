@@ -22,7 +22,7 @@ class InMemoryPagedListRepository<T> implements PagedListRepository<T> {
 }
 
 class FailingPagedRepository<T> implements PagedListRepository<T> {
-  final dynamic error;
+  final Object error;
 
   FailingPagedRepository(this.error);
 

@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
@@ -25,7 +24,7 @@ typedef EmptyBuilder = Widget Function(BuildContext context);
 /// which may allow a view to react differently on different errors.
 typedef ErrorBuilder = Widget Function(
   BuildContext context,
-  dynamic error,
+  Object error,
 );
 
 /// Signature for the [buildWhen] function which takes the previous [ViewState]
@@ -47,22 +46,22 @@ typedef ViewStateBuilderCondition = bool Function(
 /// [onError] builder function for an error state.
 ///
 /// [T] - the type of elements,
-/// [C] - the type of cubit.
-class ViewStateBuilder<T, C extends Cubit<ViewState>>
-    extends BlocBuilder<C, ViewState> {
+/// [B] - the type of bloc.
+class ViewStateBuilder<T, B extends BlocBase<ViewState>>
+    extends BlocBuilder<B, ViewState> {
   ViewStateBuilder({
-    Key key,
-    C cubit,
-    InitialBuilder onReady,
-    LoadingBuilder onLoading,
-    RefreshingBuilder<T> onRefreshing,
-    SuccessBuilder<T> onSuccess,
-    EmptyBuilder onEmpty,
-    ErrorBuilder onError,
-    ViewStateBuilderCondition buildWhen,
+    Key? key,
+    B? bloc,
+    InitialBuilder? onReady,
+    LoadingBuilder? onLoading,
+    RefreshingBuilder<T>? onRefreshing,
+    SuccessBuilder<T>? onSuccess,
+    EmptyBuilder? onEmpty,
+    ErrorBuilder? onError,
+    ViewStateBuilderCondition? buildWhen,
   }) : super(
           key: key,
-          cubit: cubit,
+          bloc: bloc,
           buildWhen: buildWhen,
           builder: (BuildContext context, ViewState state) {
             if (state is Initial) {

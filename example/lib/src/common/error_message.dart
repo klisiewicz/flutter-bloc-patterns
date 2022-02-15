@@ -1,13 +1,17 @@
 import 'package:flutter/widgets.dart';
 
 class ErrorMessage extends StatelessWidget {
-  final dynamic error;
+  final Object error;
 
   const ErrorMessage({
-    Key key,
-    this.error,
+    required this.error,
+    Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Center(child: Text(error.toString()));
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(error.toString()),
+    );
+  }
 }

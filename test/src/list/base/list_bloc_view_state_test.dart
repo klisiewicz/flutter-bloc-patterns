@@ -7,7 +7,7 @@ import '../../view/view_state_matchers.dart';
 import '../filter/filter_list_repository_mock.dart';
 
 void main() {
-  ListBloc<int> bloc;
+  late ListBloc<int> bloc;
 
   setUp(() {
     bloc = ListBloc(InMemoryFilterRepository());

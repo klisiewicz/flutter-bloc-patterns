@@ -35,16 +35,13 @@ class _PhotosPage extends StatefulWidget {
 
 class _PhotosPageState extends State<_PhotosPage> {
   final _myAlbum = const Album(id: 1);
-  PagedListFilterBloc<Photo, Album> _photosBloc;
+  late PagedListFilterBloc<Photo, Album> _photosBloc;
 
   @override
   void initState() {
     super.initState();
     _photosBloc = BlocProvider.of<PagedListFilterBloc<Photo, Album>>(context)
-      ..loadFirstPage(
-        pageSize: 12,
-        filter: _myAlbum,
-      );
+      ..loadFirstPage(pageSize: 12, filter: _myAlbum);
   }
 
   @override
@@ -52,7 +49,7 @@ class _PhotosPageState extends State<_PhotosPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Photos')),
       body: ViewStateBuilder<PagedList<Photo>, PagedListFilterBloc>(
-        cubit: _photosBloc,
+        bloc: _photosBloc,
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PhotosListPaged(
           page,

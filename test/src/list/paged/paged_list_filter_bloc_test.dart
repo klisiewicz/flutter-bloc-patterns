@@ -9,13 +9,17 @@ import '../../util/bloc_state_assertion.dart';
 import 'paged_list_filter_repository_mock.dart';
 
 void main() {
+  const filter = 1;
   const pageSize = 3;
 
-  PagedListFilterBloc<int, int> bloc;
-  PagedListFilterRepository<int, int> repository;
+  late PagedListFilterBloc<int, int> bloc;
+  late PagedListFilterRepository<int, int> repository;
 
-  void loadingFirstPage({int filter}) =>
-      bloc.loadFirstPage(pageSize: pageSize, filter: filter);
+  void loadingFirstPage({
+    required int filter,
+  }) {
+    bloc.loadFirstPage(pageSize: pageSize, filter: filter);
+  }
 
   void loadingNextPage() => bloc.loadNextPage();
 
@@ -27,7 +31,7 @@ void main() {
 
     test('should emit [$Loading, $Empty] when first page contains no elements',
         () {
-      when(loadingFirstPage);
+      when(() => loadingFirstPage(filter: filter));
       then(
         () => withBloc(bloc).expectStates(const [
           Loading(),
@@ -42,7 +46,6 @@ void main() {
   });
 
   group('repository with elements', () {
-    const filter = 1;
     const elements = [1, 1, 0, 1, 2, 3, 1, 1, 0];
     final firstPage = List<int>.generate(3, (i) => filter);
     final secondPage = List<int>.generate(2, (i) => filter);
@@ -55,9 +58,7 @@ void main() {
     test(
         'should emit [$Loading, $Success] with elements matching the filter when loading first page',
         () {
-      when(() {
-        loadingFirstPage(filter: filter);
-      });
+      when(() => loadingFirstPage(filter: filter));
 
       then(() {
         withBloc(bloc).expectStates([
@@ -99,7 +100,7 @@ void main() {
       });
 
       test('should emit [$Loading, $Failure] when error occurs', () {
-        when(loadingFirstPage);
+        when(() => loadingFirstPage(filter: 1));
 
         then(
           () => withBloc(bloc).expectStates([
@@ -123,7 +124,7 @@ void main() {
       });
 
       test('should emit [$Loading, $Empty] when first page was not found', () {
-        when(loadingFirstPage);
+        when(() => loadingFirstPage(filter: filter));
         then(
           () => withBloc(bloc).expectStates(const [
             Loading(),

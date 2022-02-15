@@ -36,7 +36,7 @@ class _PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<_PostsPage> {
-  FilterListBloc<Post, User> listBloc;
+  late FilterListBloc<Post, User> listBloc;
   _Posts selectedPosts = _Posts.all;
 
   @override
@@ -59,7 +59,7 @@ class _PostsPageState extends State<_PostsPage> {
 
   Widget _buildBody() {
     return ViewStateBuilder<List<Post>, FilterListBloc<Post, User>>(
-      cubit: listBloc,
+      bloc: listBloc,
       onLoading: (context) => const LoadingIndicator(),
       onSuccess: (context, posts) => PostsList(posts, onRefresh: _refreshPosts),
       onRefreshing: (context, posts) =>

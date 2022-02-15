@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/paged_filter_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
@@ -22,37 +21,39 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   static const defaultPageSize = 10;
 
   final PagedListFilterRepository<T, F> _repository;
-  F _filter;
+  F? _filter;
 
   PagedListFilterBloc(PagedListFilterRepository<T, F> repository)
-      : assert(repository != null),
-        _repository = repository,
+      : _repository = repository,
         super(const Initial());
 
   List<T> get _currentElements => (state is Success<PagedList<T>>)
       ? (state as Success<PagedList<T>>).data.elements
       : [];
 
-  Page _page;
+  Page? _page;
 
-  F get filter => _filter;
+  F? get filter => _filter;
 
   /// Loads elements using the given [filter] and [pageSize]. When no size
   /// is given [_defaultPageSize] is used.
   ///
   /// It's most suitable for initial data fetch or for retry action when
   /// the first fetch fails.
-  void loadFirstPage({int pageSize = defaultPageSize, F filter}) {
+  void loadFirstPage({
+    int pageSize = defaultPageSize,
+    F? filter,
+  }) {
     _page = Page.first(size: pageSize);
     _filter = filter;
-    add(LoadPage(_page, filter: _filter));
+    add(LoadPage(_page!, filter: _filter));
   }
 
   /// Loads next page. When no page has been loaded before the first one is
   /// loaded with the default page size [_defaultPageSize].
   void loadNextPage() {
     _page = _page?.next() ?? const Page.first(size: defaultPageSize);
-    add(LoadPage(_page, filter: _filter));
+    add(LoadPage(_page!, filter: _filter));
   }
 
   @override
@@ -62,10 +63,10 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
     }
   }
 
-  Stream<ViewState> _mapLoadPage(Page page, F filter) async* {
+  Stream<ViewState> _mapLoadPage(Page page, F? filter) async* {
     try {
       yield* _emitLoadingWhenFirstPage(page);
-      final List<T> pageElements = await _repository.getBy(page, filter);
+      final pageElements = await _getElements(page, filter);
       yield* (pageElements.isEmpty)
           ? _emitEmptyPageLoaded(page)
           : _emitNextPageLoaded(page, pageElements);
@@ -74,6 +75,12 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
     } catch (e) {
       yield Failure(e);
     }
+  }
+
+  Future<List<T>> _getElements(Page page, F? filter) async {
+    return filter != null
+        ? _repository.getBy(page, filter)
+        : _repository.getAll(page);
   }
 
   Stream<ViewState> _emitLoadingWhenFirstPage(Page page) async* {

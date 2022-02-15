@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/details.dart';
-import 'package:flutter_bloc_patterns/src/details/details_events.dart';
-import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 
@@ -16,12 +14,10 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
   final DetailsRepository<T, I> _repository;
 
-  DetailsBloc(this._repository)
-      : assert(_repository != null),
-        super(const Initial());
+  DetailsBloc(this._repository) : super(const Initial());
 
   /// Loads an element with given [id].
-  void loadElement([I id]) => add(LoadDetails(id));
+  void loadElement(I id) => add(LoadDetails(id));
 
   @override
   Stream<ViewState> mapEventToState(DetailsEvent event) async* {
@@ -35,8 +31,6 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
       yield const Loading();
       final element = await _repository.getById(id);
       yield element != null ? Success<T>(element) : const Empty();
-    } on ElementNotFoundException {
-      yield const Empty();
     } catch (e) {
       yield Failure(e);
     }

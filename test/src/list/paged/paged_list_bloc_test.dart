@@ -1,5 +1,4 @@
 import 'package:flutter_bloc_patterns/paged_list.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,8 +7,8 @@ import '../../util/bloc_state_assertion.dart';
 import 'paged_list_repository_mock.dart';
 
 void main() {
-  PagedListBloc<int> bloc;
-  PagedListRepository<int> repository;
+  late PagedListBloc<int> bloc;
+  late PagedListRepository<int> repository;
 
   void loadingFirstPage() => bloc.loadFirstPage(pageSize: 3);
 
@@ -92,10 +91,12 @@ void main() {
           const Loading(),
           Success(PagedList(firstPage, hasReachedMax: false)),
           Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
-          Success(PagedList(
-            firstPage + secondPage + thirdPage,
-            hasReachedMax: true,
-          )),
+          Success(
+            PagedList(
+              firstPage + secondPage + thirdPage,
+              hasReachedMax: true,
+            ),
+          ),
         ]);
       });
     });
