@@ -1,0 +1,29 @@
+name: Flutter analyze and tests
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+    tags-ignore:
+      - 'v*'
+
+jobs:
+  on-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+
+      - name: Download pub dependencies
+        run: flutter pub get
+
+      - name: Check formatting
+        run: flutter format --set-exit-if-changed --dry-run .
+
+      - name: Run analyzer
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
