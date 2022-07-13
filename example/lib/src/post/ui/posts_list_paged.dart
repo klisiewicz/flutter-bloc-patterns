@@ -18,9 +18,9 @@ class PostsListPaged extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InfiniteListView(
-      itemBuilder: (context, index) => PostListItem(page.elements[index]),
-      itemCount: page.elements.length,
-      hasNext: page.hasMoreElements,
+      itemBuilder: (context, index) => PostListItem(page.items[index]),
+      itemCount: page.items.length,
+      hasNext: page.hasMoreItems,
       nextData: onLoadNextPage,
       loadingWidget: const LoadingPageIndicator(),
     );

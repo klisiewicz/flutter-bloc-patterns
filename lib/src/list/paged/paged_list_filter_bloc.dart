@@ -15,27 +15,30 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 /// when loading the next page.
 /// Call [loadNextPage] to fetch next page of data.
 ///
-/// [T] - the type of list elements.
+/// [T] - the type of list items.
 /// [F] - the type of filter.
 class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
   static const defaultPageSize = 10;
 
   final PagedListFilterRepository<T, F> _repository;
+
   F? _filter;
-
-  PagedListFilterBloc(PagedListFilterRepository<T, F> repository)
-      : _repository = repository,
-        super(const Initial());
-
-  List<T> get _currentElements => (state is Success<PagedList<T>>)
-      ? (state as Success<PagedList<T>>).data.elements
-      : [];
-
-  Page? _page;
 
   F? get filter => _filter;
 
-  /// Loads elements using the given [filter] and [pageSize]. When no size
+  Page? _page;
+
+  List<T> get _currentItems => (state is Success<PagedList<T>>)
+      ? (state as Success<PagedList<T>>).data.items
+      : [];
+
+  PagedListFilterBloc(PagedListFilterRepository<T, F> repository)
+      : _repository = repository,
+        super(const Initial()) {
+    on<LoadPage<F>>(_loadPage);
+  }
+
+  /// Loads items using the given [filter] and [pageSize]. When no size
   /// is given [_defaultPageSize] is used.
   ///
   /// It's most suitable for initial data fetch or for retry action when
@@ -56,52 +59,57 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
     add(LoadPage(_page!, filter: _filter));
   }
 
-  @override
-  Stream<ViewState> mapEventToState(PagedListEvent event) async* {
-    if (event is LoadPage<F>) {
-      yield* _mapLoadPage(event.page, event.filter);
-    }
-  }
-
-  Stream<ViewState> _mapLoadPage(Page page, F? filter) async* {
+  Future<void> _loadPage(LoadPage<F> event, Emitter<ViewState> emit) async {
+    final page = event.page;
     try {
-      yield* _emitLoadingWhenFirstPage(page);
-      final pageElements = await _getElements(page, filter);
-      yield* (pageElements.isEmpty)
-          ? _emitEmptyPageLoaded(page)
-          : _emitNextPageLoaded(page, pageElements);
+      _emitLoadingWhenFirstPage(page, emit);
+      final pageItems = await _getItems(page, filter);
+      pageItems.isEmpty
+          ? _emitEmptyPageLoaded(page, emit)
+          : _emitNextPageLoaded(page, pageItems, emit);
     } on PageNotFoundException catch (_) {
-      yield* _emitEmptyPageLoaded(page);
+      _emitEmptyPageLoaded(page, emit);
     } catch (e) {
-      yield Failure(e);
+      emit(Failure(e));
     }
   }
 
-  Future<List<T>> _getElements(Page page, F? filter) async {
+  void _emitLoadingWhenFirstPage(
+    Page page,
+    Emitter<ViewState> emit,
+  ) {
+    if (page.isFirst) {
+      emit(const Loading());
+    }
+  }
+
+  void _emitEmptyPageLoaded(
+    Page page,
+    Emitter<ViewState> emit,
+  ) {
+    emit(
+      page.isFirst
+          ? const Empty()
+          : Success(PagedList<T>(_currentItems, hasReachedMax: true)),
+    );
+  }
+
+  void _emitNextPageLoaded(
+    Page page,
+    List<T> pageItems,
+    Emitter<ViewState> emit,
+  ) {
+    final allItems = _currentItems + pageItems;
+    emit(
+      Success(
+        PagedList<T>(allItems, hasReachedMax: page.size > pageItems.length),
+      ),
+    );
+  }
+
+  Future<List<T>> _getItems(Page page, F? filter) async {
     return filter != null
         ? _repository.getBy(page, filter)
         : _repository.getAll(page);
-  }
-
-  Stream<ViewState> _emitLoadingWhenFirstPage(Page page) async* {
-    if (page.isFirst) {
-      yield const Loading();
-    }
-  }
-
-  Stream<ViewState> _emitEmptyPageLoaded(Page page) async* {
-    yield (page.isFirst)
-        ? const Empty()
-        : Success(PagedList<T>(_currentElements, hasReachedMax: true));
-  }
-
-  Stream<ViewState> _emitNextPageLoaded(
-    Page page,
-    List<T> pageElements,
-  ) async* {
-    final List<T> allElements = _currentElements + pageElements;
-    yield Success(
-      PagedList<T>(allElements, hasReachedMax: page.size > pageElements.length),
-    );
   }
 }

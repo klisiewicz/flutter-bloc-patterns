@@ -15,7 +15,7 @@ void main() {
     );
   }
 
-  group('repository with elements', () {
+  group('repository with items', () {
     const _existingId = 1;
     const _noneExistingId = -1;
     const _someData = 'Hello Word';
@@ -28,10 +28,10 @@ void main() {
       );
     });
 
-    void whenLoadingExistingElement() => detailsBloc.loadElement(_existingId);
+    void whenLoadingExistingElement() => detailsBloc.loadItem(_existingId);
 
     void whenLoadingNoneExistingElement() =>
-        detailsBloc.loadElement(_noneExistingId);
+        detailsBloc.loadItem(_noneExistingId);
 
     test('should be initialized in $Initial state', () {
       expect(detailsBloc.state, equals(const Initial()));
@@ -69,7 +69,7 @@ void main() {
     void givenFailingRepository(Object error) =>
         detailsBloc = DetailsBloc(FailingDetailsRepository(error));
 
-    void whenLoadingElement() => detailsBloc.loadElement(0);
+    void whenLoadingElement() => detailsBloc.loadItem(0);
 
     test('should emit [$Loading, $Failure] when fetching element fails', () {
       givenFailingRepository(_exception);

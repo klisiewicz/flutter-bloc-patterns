@@ -6,20 +6,20 @@ import 'paged_list_repository_mock.dart';
 
 class InMemoryPagedListFilterRepository<T, F>
     implements PagedListFilterRepository<T, F> {
-  final List<T> elements;
+  final List<T> items;
 
-  InMemoryPagedListFilterRepository(this.elements);
+  InMemoryPagedListFilterRepository(this.items);
 
   @override
   Future<List<T>> getAll(Page page) async {
-    return InMemoryPagedListRepository(elements).getAll(page);
+    return InMemoryPagedListRepository(items).getAll(page);
   }
 
   @override
   Future<List<T>> getBy(Page page, F filter) {
-    final elementsMatchingFilter =
-        elements.where((item) => item == filter).toList();
-    return InMemoryPagedListRepository(elementsMatchingFilter).getAll(page);
+    final itemsMatchingFilter =
+        items.where((item) => item == filter).toList();
+    return InMemoryPagedListRepository(itemsMatchingFilter).getAll(page);
   }
 }
 

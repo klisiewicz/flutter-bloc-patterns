@@ -45,7 +45,7 @@ typedef ViewStateBuilderCondition = bool Function(
 /// [onEmpty] builder for for no result state,
 /// [onError] builder function for an error state.
 ///
-/// [T] - the type of elements,
+/// [T] - the type of items,
 /// [B] - the type of bloc.
 class ViewStateBuilder<T, B extends BlocBase<ViewState>>
     extends BlocBuilder<B, ViewState> {

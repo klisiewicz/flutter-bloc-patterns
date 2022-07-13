@@ -36,7 +36,7 @@ class _PostsPageState extends State<PostsPage> {
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadElements();
+    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadItems();
   }
 
   @override
@@ -56,5 +56,5 @@ class _PostsPageState extends State<PostsPage> {
     );
   }
 
-  void _refreshPosts() => listBloc.refreshElements();
+  void _refreshPosts() => listBloc.refreshItems();
 }

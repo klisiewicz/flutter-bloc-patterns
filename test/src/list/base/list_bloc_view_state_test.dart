@@ -35,7 +35,7 @@ void main() {
           (WidgetTester tester) async {
         await pumpViewStateBuilder(tester);
         expectReadyWidgetIsDisplayed();
-        bloc.loadElements();
+        bloc.loadItems();
         await tester.asyncPump();
         expectLoadingWidgetIsDisplayed();
         await tester.asyncPump();
@@ -55,7 +55,7 @@ void main() {
           (WidgetTester tester) async {
         await pumpViewStateBuilder(tester);
         expectReadyWidgetIsDisplayed();
-        bloc.loadElements();
+        bloc.loadItems();
         await tester.asyncPump();
         expectLoadingWidgetIsDisplayed();
         await tester.asyncPump();
@@ -77,7 +77,7 @@ void main() {
           (WidgetTester tester) async {
         await pumpViewStateBuilder(tester);
         expectReadyWidgetIsDisplayed();
-        bloc.loadElements();
+        bloc.loadItems();
         await tester.asyncPump();
         expectLoadingWidgetIsDisplayed();
         await tester.asyncPump();

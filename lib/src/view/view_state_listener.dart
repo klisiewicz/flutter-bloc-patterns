@@ -42,7 +42,7 @@ typedef ViewStateListenerCondition = bool Function(
 /// [onEmpty] callback for for no result state,
 /// [onError] callback function for an error state.
 ///
-/// [T] - the type of elements,
+/// [T] - the type of items,
 /// [B] - the type of bloc.
 class ViewStateListener<T, B extends BlocBase<ViewState>>
     extends BlocListener<B, ViewState> {

@@ -1,3 +1,4 @@
+@Timeout(Duration(seconds: 1))
 import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
@@ -20,62 +21,71 @@ void main() {
   void emptyRepository() =>
       m.when(repository.getAll).thenAnswer((_) async => []);
 
-  void repositoryWithElements() =>
+  void repositoryWithItems() =>
       m.when(repository.getAll).thenAnswer((_) async => _someData);
 
   void failingRepository() => m.when(repository.getAll).thenThrow(_exception);
 
-  void loadingElements() => bloc.loadElements();
+  void loadingItems() => bloc.loadItems();
 
-  void refreshingElements() => bloc.refreshElements();
+  void refreshingItems() => bloc.refreshItems();
 
   test('should be initialized in initial state', () {
     expect(bloc.state, equals(const Initial()));
   });
 
-  group('loading elements', () {
-    test('should emit [$Loading, $Empty] when there is no data', () {
+  group('loading items', () {
+    test('should emit [$Loading, $Empty] when there is no data', () async {
       given(emptyRepository);
-      when(loadingElements);
-      then(() => withBloc(bloc).expectStates(const [Loading(), Empty()]));
-    });
-
-    test('should emit [$Loading, $Success] when loading data is successful',
-        () {
-      given(repositoryWithElements);
-      when(loadingElements);
-      then(
-        () =>
-            withBloc(bloc).expectStates(const [Loading(), Success(_someData)]),
+      when(loadingItems);
+      await then(
+        () async => withBloc(bloc).expectStates(
+          const [Loading(), Empty()],
+        ),
       );
     });
 
-    test('should emit [$Loading, $Failure(error)] when loading data fails', () {
+    test('should emit [$Loading, $Success] when loading data is successful',
+            () async {
+      given(repositoryWithItems);
+      when(loadingItems);
+      await then(
+        () async => withBloc(bloc).expectStates(
+          const [Loading(), Success(_someData)],
+        ),
+      );
+    });
+
+    test('should emit [$Loading, $Failure] when loading data fails', () async {
       given(failingRepository);
-      when(loadingElements);
-      then(
-        () =>
-            withBloc(bloc).expectStates([const Loading(), Failure(_exception)]),
+      when(loadingItems);
+      await then(
+        () async => withBloc(bloc).expectStates(
+          [const Loading(), Failure(_exception)],
+        ),
       );
     });
   });
 
-  group('refreshing elements', () {
+  group('refreshing items', () {
     test(
         'should emit [$Loading, $Success, $Refreshing, $Success] when loading and refreshing is succeeds',
-        () {
-      given(repositoryWithElements);
+            () async {
+      given(repositoryWithItems);
 
-      when(loadingElements);
-      when(refreshingElements);
+      when(loadingItems);
 
-      then(
-        () => withBloc(bloc).expectStates(const [
-          Loading(),
-          Success(_someData),
-          Refreshing(_someData),
-          Success(_someData),
-        ]),
+      await then(
+        () async => withBloc(bloc).expectStates(
+          const [Loading(), Success(_someData)],
+        ),
+      );
+
+      when(refreshingItems);
+      await then(
+        () async => withBloc(bloc).expectStates(
+          const [Refreshing(_someData), Success(_someData)],
+        ),
       );
     });
   });

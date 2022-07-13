@@ -10,7 +10,7 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 /// Call [loadFirstPage] to fetch first page of data.
 /// Call [loadNextPage] to fetch next page of data.
 ///
-/// [T] - the type of list elements.
+/// [T] - the type of list items.
 class PagedListBloc<T> extends PagedListFilterBloc<T, void> {
   PagedListBloc(PagedListRepository<T> repository)
       : super(_PagedListRepositoryAdapter<T>(repository));

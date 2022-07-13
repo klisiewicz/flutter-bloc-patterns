@@ -36,7 +36,7 @@ class _PostsPageState extends State<_PostsPage> {
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadElements();
+    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadItems();
   }
 
   @override
@@ -49,7 +49,7 @@ class _PostsPageState extends State<_PostsPage> {
         onSuccess: (context, posts) => PostsList(
           posts,
           onPostSelected: _navigateToPostDetails,
-          onRefresh: listBloc.refreshElements,
+          onRefresh: listBloc.refreshItems,
         ),
         onEmpty: (context) => const PostsListEmpty(),
       ),
@@ -86,7 +86,7 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   void initState() {
     super.initState();
     detailsBloc = BlocProvider.of<DetailsBloc<PostDetails, int>>(context)
-      ..loadElement(widget.postId);
+      ..loadItem(widget.postId);
   }
 
   @override
@@ -107,7 +107,7 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   }
 
   void _showSnackbarAndPopPage(BuildContext context) {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context)
           .showSnackBar(
             const SnackBar(

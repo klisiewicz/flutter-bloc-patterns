@@ -9,8 +9,8 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 ///
 /// Designed to collaborate with [ViewStateBuilder] for displaying data.
 ///
-/// Call [loadElements] to perform initial data fetch.
-/// Call [refreshElements] to perform a refresh.
+/// Call [loadItems] to perform initial data fetch.
+/// Call [refreshItems] to perform a refresh.
 ///
 /// [T] - type of list items.
 class ListBloc<T> extends FilterListBloc<T, void> {
