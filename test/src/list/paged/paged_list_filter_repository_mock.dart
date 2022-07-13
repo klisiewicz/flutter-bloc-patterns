@@ -17,8 +17,7 @@ class InMemoryPagedListFilterRepository<T, F>
 
   @override
   Future<List<T>> getBy(Page page, F filter) {
-    final itemsMatchingFilter =
-        items.where((item) => item == filter).toList();
+    final itemsMatchingFilter = items.where((item) => item == filter).toList();
     return InMemoryPagedListRepository(itemsMatchingFilter).getAll(page);
   }
 }

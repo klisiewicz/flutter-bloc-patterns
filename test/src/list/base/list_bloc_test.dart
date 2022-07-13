@@ -1,4 +1,3 @@
-@Timeout(Duration(seconds: 1))
 import 'package:flutter_bloc_patterns/src/list/base/list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/list/base/list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
@@ -46,7 +45,7 @@ void main() {
     });
 
     test('should emit [$Loading, $Success] when loading data is successful',
-            () async {
+        () async {
       given(repositoryWithItems);
       when(loadingItems);
       await then(
@@ -70,7 +69,7 @@ void main() {
   group('refreshing items', () {
     test(
         'should emit [$Loading, $Success, $Refreshing, $Success] when loading and refreshing is succeeds',
-            () async {
+        () async {
       given(repositoryWithItems);
 
       when(loadingItems);
