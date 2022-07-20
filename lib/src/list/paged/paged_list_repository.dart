@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_patterns/page.dart';
 
-/// [PagedListRepository] allows to retrieve elements using the pagination.
+/// [PagedListRepository] allows to retrieve items using the pagination.
 ///
-/// [T] - the type of returned elements.
+/// [T] - the type of returned items.
 abstract class PagedListRepository<T> {
-  /// Retrieves elements meeting the pagination restriction provided by
+  /// Retrieves items meeting the pagination restriction provided by
   /// the [page] object.
-  /// When elements are exceeded should return an empty list or throw
+  /// When items are exceeded should return an empty list or throw
   /// the [PageNotFoundException].
   Future<List<T>> getAll(Page page);
 }

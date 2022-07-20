@@ -6,6 +6,7 @@ import '../../util/bdd.dart';
 import '../../util/bloc_state_assertion.dart';
 import 'paged_list_repository_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
 void main() {
   late PagedListBloc<int> bloc;
   late PagedListRepository<int> repository;
@@ -14,13 +15,13 @@ void main() {
 
   void loadingNextPage() => bloc.loadNextPage();
 
-  group('repository without elements', () {
+  group('repository without items', () {
     setUp(() {
       repository = InMemoryPagedListRepository<int>([]);
       bloc = PagedListBloc<int>(repository);
     });
 
-    test('should emit [$Loading, $Empty] when first page contains no elements',
+    test('should emit [$Loading, $Empty] when first page contains no items',
         () {
       when(loadingFirstPage);
       then(() {
@@ -36,7 +37,7 @@ void main() {
     });
   });
 
-  group('repository with elements', () {
+  group('repository with items', () {
     const firstPage = [0, 1, 2];
     const secondPage = [3, 4, 5];
     const thirdPage = [6];
@@ -48,7 +49,7 @@ void main() {
     });
 
     test(
-        'should emit  [$Loading, $Success] with first page elements when loading first page',
+        'should emit  [$Loading, $Success] with first page items when loading first page',
         () {
       when(loadingFirstPage);
 
@@ -61,7 +62,7 @@ void main() {
     });
 
     test(
-        'should emit [$Loading, $Success, $Success] with first, first and second page elements when loading two pages',
+        'should emit [$Loading, $Success, $Success] with first, first and second page items when loading two pages',
         () {
       when(() {
         loadingFirstPage();
@@ -78,7 +79,7 @@ void main() {
     });
 
     test(
-        'should emit  [$Loading, $Success, $Success, $Success] with first, first and second and first, second and third page elements when loading three pages',
+        'should emit  [$Loading, $Success, $Success, $Success] with first, first and second and first, second and third page items when loading three pages',
         () {
       when(() {
         loadingFirstPage();

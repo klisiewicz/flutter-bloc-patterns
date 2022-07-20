@@ -52,7 +52,7 @@ class PostDetailsRepository implements DetailsRepository<PostDetails, int> {
     } else if (response.statusCode != HttpStatus.ok) {
       throw Exception('Failed to load post with id $id');
     }
-    final Map postJson = json.decode(response.body) as Map;
+    final postJson = json.decode(response.body) as Map;
     return PostDetails.fromJson(postJson);
   }
 }

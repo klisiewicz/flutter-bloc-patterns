@@ -43,7 +43,7 @@ class _PostsPageState extends State<_PostsPage> {
   void initState() {
     super.initState();
     listBloc = BlocProvider.of<FilterListBloc<Post, User>>(context)
-      ..loadElements();
+      ..loadItems();
   }
 
   @override
@@ -69,7 +69,7 @@ class _PostsPageState extends State<_PostsPage> {
     );
   }
 
-  void _refreshPosts() => listBloc.refreshElements(filter: listBloc.filter);
+  void _refreshPosts() => listBloc.refreshItems(filter: listBloc.filter);
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
@@ -91,7 +91,7 @@ class _PostsPageState extends State<_PostsPage> {
   void _updateSelectedPosts(int index) {
     final user = (index == _Posts.mine.index) ? const User(_myUserId) : null;
     if (user != listBloc.filter) {
-      listBloc.loadElements(filter: user);
+      listBloc.loadItems(filter: user);
       setState(() {
         selectedPosts = _Posts.values[index];
       });

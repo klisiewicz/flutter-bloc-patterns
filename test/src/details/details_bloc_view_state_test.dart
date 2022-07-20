@@ -35,7 +35,7 @@ void main() {
       testWidgets('then should display ready, loading and success widgets',
           (WidgetTester tester) async {
         await pumpViewStateBuilder(tester);
-        bloc.loadElement(someData);
+        bloc.loadItem(someData);
         await tester.asyncPump();
         expectLoadingWidgetIsDisplayed();
         await tester.asyncPump();
@@ -54,7 +54,7 @@ void main() {
       testWidgets('then should display ready, loading and empty widgets',
           (WidgetTester tester) async {
         await pumpViewStateBuilder(tester);
-        bloc.loadElement(someData);
+        bloc.loadItem(someData);
         await tester.asyncPump();
         expectLoadingWidgetIsDisplayed();
         await tester.asyncPump();
@@ -75,7 +75,7 @@ void main() {
       testWidgets('then should display ready, loading and error widgets',
           (WidgetTester tester) async {
         await pumpViewStateBuilder(tester);
-        bloc.loadElement(someData);
+        bloc.loadItem(someData);
         await tester.asyncPump();
         expectLoadingWidgetIsDisplayed();
         await tester.asyncPump();

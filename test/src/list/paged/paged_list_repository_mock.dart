@@ -4,20 +4,18 @@ import 'package:flutter_bloc_patterns/page.dart';
 import 'package:flutter_bloc_patterns/paged_list.dart';
 
 class InMemoryPagedListRepository<T> implements PagedListRepository<T> {
-  final List<T> elements;
+  final List<T> items;
 
-  InMemoryPagedListRepository(this.elements);
+  InMemoryPagedListRepository(this.items);
 
   @override
   Future<List<T>> getAll(Page page) async {
-    if (elements.isEmpty) return [];
-    if (page.offset >= elements.length) return [];
-
-    final pageElements = elements.sublist(
+    if (items.isEmpty) return [];
+    if (page.offset >= items.length) return [];
+    return items.sublist(
       page.offset,
-      min(page.offset + page.size, elements.length),
+      min(page.offset + page.size, items.length),
     );
-    return pageElements;
   }
 }
 

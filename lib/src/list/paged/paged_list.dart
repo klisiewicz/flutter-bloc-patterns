@@ -3,30 +3,38 @@ import 'dart:collection';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-/// List of elements with information whether there could be even more elements.
+/// List of items with information whether there could be even more items.
 ///
-/// [T] - type of list elements.
+/// [T] - type of list items.
 @immutable
 class PagedList<T> extends Equatable {
-  final List<T> elements;
+  final List<T> items;
   final bool hasReachedMax;
+
+  /// This property is deprecated, use [items] instead.
+  @Deprecated('Use [items]')
+  List<T> get elements => items;
 
   /// Creates paged list.
   ///
-  /// [elements] - list of elements, cannot be null or empty,
-  /// [hasReachedMax] - flag informing if all elements has already been fetched.
-  /// True if there are more pages, false otherwise.
+  /// [items] - list of items, cannot be null or empty,
+  /// [hasReachedMax] - flag informing if all items has already been fetched.
+  /// True if there are no more pages, false otherwise.
   PagedList(
-    List<T> elements, {
+    List<T> items, {
     this.hasReachedMax = false,
-  })  : assert(elements.isNotEmpty, 'Elements cannot be empty'),
-        elements = UnmodifiableListView(elements);
+  })  : assert(items.isNotEmpty, 'Items cannot be empty'),
+        items = UnmodifiableListView(items);
 
-  bool get hasMoreElements => !hasReachedMax;
+  bool get hasMoreItems => !hasReachedMax;
+
+  /// This property is deprecated, use [hasMoreItems] instead.
+  @Deprecated('Use [hasMoreItems]')
+  bool get hasMoreElements => hasMoreItems;
 
   @override
-  List<Object> get props => [elements, hasReachedMax];
+  List<Object> get props => [items, hasReachedMax];
 
   @override
-  String toString() => '$elements, hasReachedMax: $hasReachedMax';
+  String toString() => '$items, hasReachedMax: $hasReachedMax';
 }

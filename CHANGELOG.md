@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.10.0]
+
+* Migrating to `bloc` 8.0.x and `flutter_bloc` 8.0.x,
+
 ## [0.9.0] * Breaking Changes *
 
 * Migrating to `bloc` 7.0.0 and `flutter_bloc` 7.0.1,

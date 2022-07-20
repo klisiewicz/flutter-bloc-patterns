@@ -7,32 +7,36 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 ///
 /// Designed to collaborate with [ViewStateBuilder] for displaying data.
 ///
-/// Call [loadElement] to fetch an element with given identifier.
+/// Call [loadItem] to fetch an element with given identifier.
 ///
 /// [T] - the type of the element.
 /// [I] - the type of id.
 class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
   final DetailsRepository<T, I> _repository;
 
-  DetailsBloc(this._repository) : super(const Initial());
-
-  /// Loads an element with given [id].
-  void loadElement(I id) => add(LoadDetails(id));
-
-  @override
-  Stream<ViewState> mapEventToState(DetailsEvent event) async* {
-    if (event is LoadDetails<I>) {
-      yield* _mapLoadDetails(event.id);
-    }
+  DetailsBloc(DetailsRepository<T, I> repository)
+      : _repository = repository,
+        super(const Initial()) {
+    on<LoadDetails<I>>(_loadItemWithId);
   }
 
-  Stream<ViewState> _mapLoadDetails(I id) async* {
+  /// This method is deprecated, use [loadItem] instead.
+  @Deprecated('Use [loadItem]')
+  void loadElement(I id) => loadItem(id);
+
+  /// Loads an element with given [id].
+  void loadItem(I id) => add(LoadDetails(id));
+
+  Future<void> _loadItemWithId(
+    LoadDetails<I> event,
+    Emitter<ViewState> emit,
+  ) async {
     try {
-      yield const Loading();
-      final element = await _repository.getById(id);
-      yield element != null ? Success<T>(element) : const Empty();
+      emit(const Loading());
+      final item = await _repository.getById(event.id);
+      emit(item != null ? Success<T>(item) : const Empty());
     } catch (e) {
-      yield Failure(e);
+      emit(Failure(e));
     }
   }
 }

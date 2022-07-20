@@ -7,15 +7,15 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  cupertino_icons: ^1.0.4
+  cupertino_icons: ^1.0.5
   equatable: ^2.0.3
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.0.1
+  flutter_bloc: ^8.0.1
   flutter_bloc_patterns:
     path: ../
   http: ^0.13.4
-  infinite_widgets: ^2.0.0
+  infinite_widgets: ^2.0.1
   lint: ^1.8.2
 
 dev_dependencies:

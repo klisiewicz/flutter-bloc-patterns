@@ -3,18 +3,18 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 const _delay = Duration.zero;
 
 class InMemoryFilterRepository<T, F> extends FilterListRepository<T, F> {
-  final List<T> elements;
+  final List<T> items;
 
-  InMemoryFilterRepository([this.elements = const []]);
+  InMemoryFilterRepository([this.items = const []]);
 
   @override
-  Future<List<T>> getAll() async => Future.delayed(_delay, () => elements);
+  Future<List<T>> getAll() async => Future.delayed(_delay, () => items);
 
   @override
   Future<List<T>> getBy(F? filter) {
     return Future.delayed(
       _delay,
-      () => elements.where((item) => item == filter).toList(),
+      () => items.where((item) => item == filter).toList(),
     );
   }
 }

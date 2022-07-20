@@ -17,10 +17,10 @@ class PhotosListPaged extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InfiniteListView.separated(
-      itemBuilder: (context, index) => _PhotoGridItem(page.elements[index]),
+      itemBuilder: (context, index) => _PhotoGridItem(page.items[index]),
       separatorBuilder: (context, index) => const Divider(),
-      itemCount: page.elements.length,
-      hasNext: page.hasMoreElements,
+      itemCount: page.items.length,
+      hasNext: page.hasMoreItems,
       nextData: onLoadNextPage,
       loadingWidget: const LoadingPageIndicator(),
     );

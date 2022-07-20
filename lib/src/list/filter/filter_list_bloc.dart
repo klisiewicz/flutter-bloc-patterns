@@ -11,77 +11,91 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 ///
 /// Designed to collaborate with [ViewStateBuilder] for displaying data.
 ///
-/// Call [loadElements] to perform initial data fetch.
-/// Call [refreshElements] to perform a refresh.
+/// Call [loadItems] to perform initial data fetch.
+/// Call [refreshItems] to perform a refresh.
 ///
-/// [T] - the type of list elements.
+/// [T] - the type of list items.
 /// [F] - the type of filter.
-class FilterListBloc<T, F> extends Bloc<ListEvent, ViewState> {
+class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState> {
   final FilterListRepository<T, F> _repository;
-  F? _filter;
 
-  FilterListBloc(FilterListRepository<T, F> repository)
-      : _repository = repository,
-        super(const Initial());
+  F? _filter;
 
   F? get filter => _filter;
 
-  /// Loads elements using the given [filter].
+  bool get _isRefreshPossible => state is Success<List<T>> || state is Empty;
+
+  List<T> get _currentItems =>
+      (state is Success<List<T>>) ? (state as Success<List<T>>).data : [];
+
+  FilterListBloc(FilterListRepository<T, F> repository)
+      : _repository = repository,
+        super(const Initial()) {
+    on<LoadList<F>>(_loadList);
+    on<RefreshList<F>>(_refreshList);
+  }
+
+  /// This method is deprecated, use [loadItems] instead.
+  @Deprecated('Use [loadItems]')
+  void loadElements({F? filter}) => loadItems(filter: filter);
+
+  /// Loads items using the given [filter].
   ///
   /// It's most suitable for initial data fetch or for retry action when
   /// the first fetch fails. It can also be used when [filter] changes when a
   /// full reload is required.
-  void loadElements({F? filter}) => add(LoadList(filter));
+  void loadItems({F? filter}) => add(LoadList(filter));
 
-  /// Refreshes elements using the given [filter].
+  //// This method is deprecated, use [refreshItems] instead.
+  @Deprecated('Use [refreshItems]')
+  void refreshElements({F? filter}) => refreshItems(filter: filter);
+
+  /// Refreshes items using the given [filter].
   ///
   /// The refresh is designed for being called after the initial fetch
   /// succeeds. It can be performed when the list has already been loaded.
   ///
   /// It can be used when [filter] changes and there's no need for displaying a
   /// loading indicator.
-  void refreshElements({F? filter}) => add(RefreshList(filter));
+  void refreshItems({F? filter}) => add(RefreshList(filter));
 
-  @override
-  Stream<ViewState> mapEventToState(ListEvent event) async* {
-    if (event is LoadList<F>) {
-      yield* _mapLoadList(event.filter);
-    } else if (event is RefreshList<F> && _isRefreshPossible(event)) {
-      yield* _mapRefreshList(event.filter);
+  Future<void> _loadList(
+    LoadList<F> event,
+    Emitter<ViewState> emit,
+  ) async {
+    emit(const Loading());
+    await _loadItems(event, emit);
+  }
+
+  Future<void> _refreshList(
+    RefreshList<F> event,
+    Emitter<ViewState> emit,
+  ) async {
+    if (_isRefreshPossible) {
+      emit(Refreshing(_currentItems));
+      await _loadItems(event, emit);
     }
   }
 
-  bool _isRefreshPossible(ListEvent event) =>
-      state is Success || state is Empty;
-
-  Stream<ViewState> _mapLoadList(F? filter) async* {
-    yield const Loading();
-    yield* _getListState(filter);
-  }
-
-  Stream<ViewState> _mapRefreshList(F? filter) async* {
-    final elements = _getCurrentStateElements();
-    yield Refreshing(elements);
-    yield* _getListState(filter);
-  }
-
-  List<T> _getCurrentStateElements() =>
-      (state is Success<List<T>>) ? (state as Success<List<T>>).data : [];
-
-  Stream<ViewState> _getListState(F? filter) async* {
+  Future<void> _loadItems(
+    ListEvent<F> event,
+    Emitter<ViewState> emit,
+  ) async {
     try {
-      final List<T> elements = await _getElementsFromRepository(filter);
-      yield elements.isNotEmpty
-          ? Success<List<T>>(UnmodifiableListView(elements))
-          : const Empty();
+      final items = await _getItems(event.filter);
+      if (items.isNotEmpty) {
+        emit(Success<List<T>>(UnmodifiableListView(items)));
+      } else {
+        emit(const Empty());
+      }
     } catch (e) {
-      yield Failure(e);
+      emit(Failure(e));
     } finally {
-      _filter = filter;
+      _filter = event.filter;
     }
   }
 
-  Future<List<T>> _getElementsFromRepository(F? filter) {
+  Future<List<T>> _getItems(F? filter) {
     if (filter != null) {
       return _repository.getBy(filter);
     } else {

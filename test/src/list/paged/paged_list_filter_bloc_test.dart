@@ -8,6 +8,7 @@ import '../../util/bdd.dart';
 import '../../util/bloc_state_assertion.dart';
 import 'paged_list_filter_repository_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
 void main() {
   const filter = 1;
   const pageSize = 3;
@@ -23,13 +24,13 @@ void main() {
 
   void loadingNextPage() => bloc.loadNextPage();
 
-  group('repository without elements', () {
+  group('repository without items', () {
     setUp(() {
       repository = InMemoryPagedListFilterRepository<int, int>([]);
       bloc = PagedListFilterBloc<int, int>(repository);
     });
 
-    test('should emit [$Loading, $Empty] when first page contains no elements',
+    test('should emit [$Loading, $Empty] when first page contains no items',
         () {
       when(() => loadingFirstPage(filter: filter));
       then(
@@ -45,18 +46,18 @@ void main() {
     });
   });
 
-  group('repository with elements', () {
-    const elements = [1, 1, 0, 1, 2, 3, 1, 1, 0];
+  group('repository with items', () {
+    const items = [1, 1, 0, 1, 2, 3, 1, 1, 0];
     final firstPage = List<int>.generate(3, (i) => filter);
     final secondPage = List<int>.generate(2, (i) => filter);
 
     setUp(() {
-      repository = InMemoryPagedListFilterRepository<int, int>(elements);
+      repository = InMemoryPagedListFilterRepository<int, int>(items);
       bloc = PagedListFilterBloc<int, int>(repository);
     });
 
     test(
-        'should emit [$Loading, $Success] with elements matching the filter when loading first page',
+        'should emit [$Loading, $Success] with items matching the filter when loading first page',
         () {
       when(() => loadingFirstPage(filter: filter));
 
@@ -69,7 +70,7 @@ void main() {
     });
 
     test(
-        'should emit [$Loading, $Success, $Success] with first, first and second page elements matching filter when loading two pages',
+        'should emit [$Loading, $Success, $Success] with first, first and second page items matching filter when loading two pages',
         () {
       when(() {
         loadingFirstPage(filter: filter);
