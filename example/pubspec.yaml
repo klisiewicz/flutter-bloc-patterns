@@ -8,14 +8,14 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.5
-  equatable: ^2.0.3
+  equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.0.1
+  flutter_bloc: ^8.1.1
   flutter_bloc_patterns:
     path: ../
-  http: ^0.13.4
-  infinite_widgets: ^2.0.1
+  http: ^0.13.5
+  infinite_widgets: ^2.0.2
   lint: ^1.8.2
 
 dev_dependencies:
