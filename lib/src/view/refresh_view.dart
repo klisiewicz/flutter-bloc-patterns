@@ -16,6 +16,8 @@ class RefreshView extends StatefulWidget {
   final ScrollNotificationPredicate notificationPredicate;
   final String? semanticsLabel;
   final String? semanticsValue;
+  final double strokeWidth;
+  final RefreshIndicatorTriggerMode triggerMode;
 
   const RefreshView({
     Key? key,
@@ -27,6 +29,8 @@ class RefreshView extends StatefulWidget {
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.semanticsLabel,
     this.semanticsValue,
+    this.strokeWidth = RefreshProgressIndicator.defaultStrokeWidth,
+    this.triggerMode = RefreshIndicatorTriggerMode.onEdge,
   }) : super(key: key);
 
   @override
@@ -48,6 +52,8 @@ class _RefreshViewState extends State<RefreshView> {
       notificationPredicate: widget.notificationPredicate,
       semanticsLabel: widget.semanticsLabel,
       semanticsValue: widget.semanticsValue,
+      strokeWidth: widget.strokeWidth,
+      triggerMode: widget.triggerMode,
       onRefresh: _refresh,
       child: widget.child,
     );
