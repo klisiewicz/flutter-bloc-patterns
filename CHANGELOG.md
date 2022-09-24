@@ -3,6 +3,7 @@
 ## [0.11.0]
 
 * Migrating to `bloc` 8.1.x and `flutter_bloc` 8.1.x,
+* `ConnectionBloc` - a BLoC that exposes Internet connection state to the UI.
 
 ## [0.10.0]
 
