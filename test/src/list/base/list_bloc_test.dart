@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart' as m;
 
 import '../../util/bdd.dart';
 import '../../util/bloc_state_assertion.dart';
+import '../../util/mocktail_ext.dart';
 import 'list_repository_mock.dart';
 
 void main() {
@@ -17,11 +18,10 @@ void main() {
     bloc = ListBloc(repository);
   });
 
-  void emptyRepository() =>
-      m.when(repository.getAll).thenAnswer((_) async => []);
+  void emptyRepository() => m.when(repository.getAll).thenAnswerFutureValue([]);
 
   void repositoryWithItems() =>
-      m.when(repository.getAll).thenAnswer((_) async => _someData);
+      m.when(repository.getAll).thenAnswerFutureValue(_someData);
 
   void failingRepository() => m.when(repository.getAll).thenThrow(_exception);
 
