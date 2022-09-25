@@ -31,13 +31,10 @@ class _PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<_PostsPage> {
-  late PagedListBloc<Post> _listBloc;
-
   @override
   void initState() {
     super.initState();
-    _listBloc = BlocProvider.of<PagedListBloc<Post>>(context)
-      ..loadFirstPage(pageSize: 20);
+    context.read<PagedListBloc<Post>>().loadFirstPage(pageSize: 20);
   }
 
   @override
@@ -45,21 +42,14 @@ class _PostsPageState extends State<_PostsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
       body: ViewStateBuilder<PagedList<Post>, PagedListBloc>(
-        bloc: _listBloc,
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PostsListPaged(
           page,
-          onLoadNextPage: _listBloc.loadNextPage,
+          onLoadNextPage: context.read<PagedListBloc<Post>>().loadNextPage,
         ),
         onEmpty: (context) => const PostsListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _listBloc.close();
-    super.dispose();
   }
 }

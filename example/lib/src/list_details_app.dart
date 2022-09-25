@@ -13,6 +13,9 @@ import 'package:flutter_bloc_patterns/view.dart';
 
 void main() => runApp(ListDetailsSampleApp());
 
+typedef PostsBloc = ListBloc<Post>;
+typedef PostDetailsBloc = DetailsBloc<PostDetails, int>;
+
 class ListDetailsSampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,25 +34,22 @@ class _PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<_PostsPage> {
-  late ListBloc<Post> listBloc;
-
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadItems();
+    context.read<PostsBloc>().loadItems();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
-      body: ViewStateBuilder<List<Post>, ListBloc<Post>>(
-        bloc: listBloc,
+      body: ViewStateBuilder<List<Post>, PostsBloc>(
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, posts) => PostsList(
           posts,
           onPostSelected: _navigateToPostDetails,
-          onRefresh: listBloc.refreshItems,
+          onRefresh: context.read<PostsBloc>().refreshItems,
         ),
         onEmpty: (context) => const PostsListEmpty(),
       ),
@@ -58,12 +58,6 @@ class _PostsPageState extends State<_PostsPage> {
 
   void _navigateToPostDetails(Post post) {
     Navigator.pushNamed(context, _Route.post, arguments: post.id);
-  }
-
-  @override
-  void dispose() {
-    listBloc.close();
-    super.dispose();
   }
 }
 
@@ -80,26 +74,21 @@ class _PostDetailPage extends StatefulWidget {
 }
 
 class _PostDetailPageState extends State<_PostDetailPage> {
-  late DetailsBloc<PostDetails, int> detailsBloc;
-
   @override
   void initState() {
     super.initState();
-    detailsBloc = BlocProvider.of<DetailsBloc<PostDetails, int>>(context)
-      ..loadItem(widget.postId);
+    context.read<PostDetailsBloc>().loadItem(widget.postId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Post')),
-      body: ViewStateListener(
-        bloc: detailsBloc,
+      body: ViewStateListener<PostDetails, PostDetailsBloc>(
         onEmpty: _showSnackbarAndPopPage,
-        child: ViewStateBuilder<PostDetails, DetailsBloc<PostDetails, int>>(
-          bloc: detailsBloc,
+        child: ViewStateBuilder<PostDetails, PostDetailsBloc>(
           onLoading: (context) => const LoadingIndicator(),
-          onSuccess: (context, post) => _PostDetailsContent(post),
+          onSuccess: (context, post) => _PostDetailsView(post),
           onError: (context, error) => ErrorMessage(error: error),
         ),
       ),
@@ -107,30 +96,22 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   }
 
   void _showSnackbarAndPopPage(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-            const SnackBar(
-              content: Text('Post not found!'),
-              duration: Duration(seconds: 2),
-            ),
-          )
-          .closed
-          .then((reason) => Navigator.pop(context));
-    });
-  }
-
-  @override
-  void dispose() {
-    detailsBloc.close();
-    super.dispose();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          const SnackBar(
+            content: Text('Post not found!'),
+            duration: Duration(seconds: 2),
+          ),
+        )
+        .closed
+        .then((reason) => Navigator.pop(context));
   }
 }
 
-class _PostDetailsContent extends StatelessWidget {
+class _PostDetailsView extends StatelessWidget {
   final PostDetails post;
 
-  const _PostDetailsContent(
+  const _PostDetailsView(
     this.post, {
     Key? key,
   }) : super(key: key);
@@ -169,16 +150,14 @@ class _Router {
       case _Route.home:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => ListBloc<Post>(PostListRepository()),
+            create: (_) => PostsBloc(PostListRepository()),
             child: _PostsPage(),
           ),
         );
       case _Route.post:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => DetailsBloc<PostDetails, int>(
-              PostDetailsRepository(),
-            ),
+            create: (_) => PostDetailsBloc(PostDetailsRepository()),
             child: _PostDetailPage(settings.arguments! as int),
           ),
         );
