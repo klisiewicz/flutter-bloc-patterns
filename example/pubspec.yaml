@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
+  connectivity_plus: ^2.3.7
   cupertino_icons: ^1.0.5
   equatable: ^2.0.5
   flutter:
