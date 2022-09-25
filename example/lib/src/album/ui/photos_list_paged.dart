@@ -10,14 +10,14 @@ class PhotosListPaged extends StatelessWidget {
 
   const PhotosListPaged(
     this.page, {
-    Key? key,
+    super.key,
     required this.onLoadNextPage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return InfiniteListView.separated(
-      itemBuilder: (context, index) => _PhotoGridItem(page.items[index]),
+      itemBuilder: (context, index) => PhotoGridItem(page.items[index]),
       separatorBuilder: (context, index) => const Divider(),
       itemCount: page.items.length,
       hasNext: page.hasMoreItems,
@@ -27,13 +27,13 @@ class PhotosListPaged extends StatelessWidget {
   }
 }
 
-class _PhotoGridItem extends StatelessWidget {
+class PhotoGridItem extends StatelessWidget {
   final Photo photo;
 
-  const _PhotoGridItem(
+  const PhotoGridItem(
     this.photo, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

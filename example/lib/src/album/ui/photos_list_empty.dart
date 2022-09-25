@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PhotosListEmpty extends StatelessWidget {
-  const PhotosListEmpty({Key? key}) : super(key: key);
+  const PhotosListEmpty({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -48,14 +48,14 @@ class _PostsPageState extends State<_PostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
-      body: const _PostsViewStateBuilder(),
-      bottomNavigationBar: const _PostsBottomNavigationBar(),
+      body: const PostsViewStateBuilder(),
+      bottomNavigationBar: const PostsBottomNavigationBar(),
     );
   }
 }
 
-class _PostsViewStateBuilder extends StatelessWidget {
-  const _PostsViewStateBuilder({Key? key}) : super(key: key);
+class PostsViewStateBuilder extends StatelessWidget {
+  const PostsViewStateBuilder({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,15 +80,15 @@ class _PostsViewStateBuilder extends StatelessWidget {
   }
 }
 
-class _PostsBottomNavigationBar extends StatefulWidget {
-  const _PostsBottomNavigationBar({Key? key}) : super(key: key);
+class PostsBottomNavigationBar extends StatefulWidget {
+  const PostsBottomNavigationBar({super.key});
 
   @override
-  State<_PostsBottomNavigationBar> createState() =>
+  State<PostsBottomNavigationBar> createState() =>
       _PostsBottomNavigationBarState();
 }
 
-class _PostsBottomNavigationBarState extends State<_PostsBottomNavigationBar> {
+class _PostsBottomNavigationBarState extends State<PostsBottomNavigationBar> {
   _Posts selectedPosts = _Posts.all;
 
   @override

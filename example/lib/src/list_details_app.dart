@@ -61,19 +61,19 @@ class _PostsPageState extends State<_PostsPage> {
   }
 }
 
-class _PostDetailPage extends StatefulWidget {
+class PostDetailPage extends StatefulWidget {
   final int postId;
 
-  const _PostDetailPage(
+  const PostDetailPage(
     this.postId, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _PostDetailPageState createState() => _PostDetailPageState();
 }
 
-class _PostDetailPageState extends State<_PostDetailPage> {
+class _PostDetailPageState extends State<PostDetailPage> {
   @override
   void initState() {
     super.initState();
@@ -88,7 +88,7 @@ class _PostDetailPageState extends State<_PostDetailPage> {
         onEmpty: _showSnackbarAndPopPage,
         child: ViewStateBuilder<PostDetails, PostDetailsBloc>(
           onLoading: (context) => const LoadingIndicator(),
-          onSuccess: (context, post) => _PostDetailsView(post),
+          onSuccess: (context, post) => PostDetailsView(post),
           onError: (context, error) => ErrorMessage(error: error),
         ),
       ),
@@ -108,13 +108,13 @@ class _PostDetailPageState extends State<_PostDetailPage> {
   }
 }
 
-class _PostDetailsView extends StatelessWidget {
+class PostDetailsView extends StatelessWidget {
   final PostDetails post;
 
-  const _PostDetailsView(
+  const PostDetailsView(
     this.post, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +158,7 @@ class _Router {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => PostDetailsBloc(PostDetailsRepository()),
-            child: _PostDetailPage(settings.arguments! as int),
+            child: PostDetailPage(settings.arguments! as int),
           ),
         );
       default:

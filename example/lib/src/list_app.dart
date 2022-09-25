@@ -49,7 +49,7 @@ class _PostsPageState extends State<PostsPage> {
 }
 
 class PostsViewStateBuilder extends StatelessWidget {
-  const PostsViewStateBuilder({Key? key}) : super(key: key);
+  const PostsViewStateBuilder({super.key});
 
   @override
   Widget build(BuildContext context) {

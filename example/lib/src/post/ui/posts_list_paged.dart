@@ -11,9 +11,9 @@ class PostsListPaged extends StatelessWidget {
 
   const PostsListPaged(
     this.page, {
-    Key? key,
+    super.key,
     required this.onLoadNextPage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
