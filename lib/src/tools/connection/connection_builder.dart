@@ -7,10 +7,10 @@ import 'package:flutter_bloc_patterns/src/tools/connection/connection_bloc.dart'
 /// on the [Connection] state.
 ///
 /// It's a wrapper over the [BlocBuilder] widget so it accepts a [bloc] object
-/// and provides [WidgetBuilder] functions for available states:
+/// and provides [WidgetBuilder] functions for possible states:
 ///
-/// [onOnline] builder for the the [Connection.online] state,
-/// [onOffline] builder for the [Connection.offline] state.
+/// [onOnline] - a builder for the the [Connection.online] state,
+/// [onOffline] - a builder for the [Connection.offline] state.
 class ConnectionBuilder extends BlocBuilder<ConnectionBloc, Connection> {
   ConnectionBuilder({
     Key? key,

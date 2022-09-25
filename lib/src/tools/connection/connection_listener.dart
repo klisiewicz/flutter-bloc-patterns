@@ -16,10 +16,10 @@ typedef ConnectionCallback = void Function(BuildContext context);
 /// [ConnectionListener] is a wrapper over the [BlocListener] widget so it
 /// accepts a [bloc] object as well as a [child] widget.
 ///
-/// It also takes [WidgetBuilder] functions for available states:
+/// It also takes [ConnectionCallback] functions for possible states:
 ///
-/// [onOnline] callback for the the [Connection.online] state,
-/// [onOffline] callback for the [Connection.offline] state.
+/// [onOnline] - a callback for the the [Connection.online] state,
+/// [onOffline] - a callback for the [Connection.offline] state.
 class ConnectionListener extends BlocListener<ConnectionBloc, Connection> {
   ConnectionListener({
     Key? key,
