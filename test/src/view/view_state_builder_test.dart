@@ -1,17 +1,16 @@
-import 'package:bloc/bloc.dart';
+// ignore_for_file: prefer_const_constructors
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
 import 'view_state_builder_util.dart';
 import 'view_state_fakes.dart';
-import 'view_state_keys.dart';
+import 'view_state_matchers.dart';
 
-class MockTestBloc extends MockBloc<int, ViewState> {}
+class TestBlocMock extends MockBloc<int, ViewState> {}
 
 void main() {
-  late Bloc<int, ViewState> bloc;
+  late TestBlocMock bloc;
   const someData = 0;
   final someError = Exception();
 
@@ -21,50 +20,86 @@ void main() {
   });
 
   setUp(() {
-    bloc = MockTestBloc();
-  });
-
-  testWidgets('should display onReady widget when bloc is in initial state',
-      (WidgetTester tester) async {
-    when(() => bloc.state).thenReturn(const Initial());
-    await tester.pumpWidget(makeTestableViewStateBuilder(bloc));
-    expect(find.byKey(readyKey), findsOneWidget);
-  });
-
-  testWidgets('should display onLoading widget when bloc is in loading state',
-      (WidgetTester tester) async {
-    when(() => bloc.state).thenReturn(const Loading());
-    await tester.pumpWidget(makeTestableViewStateBuilder(bloc));
-    expect(find.byKey(loadKey), findsOneWidget);
+    bloc = TestBlocMock();
   });
 
   testWidgets(
-      'should display onRefreshing widget when bloc is in refreshing state',
-      (WidgetTester tester) async {
-    when(() => bloc.state).thenReturn(const Refreshing(someData));
-    await tester.pumpWidget(makeTestableViewStateBuilder(bloc));
-    expect(find.byKey(refreshKey), findsOneWidget);
+      'GIVEN Bloc in initial state '
+      'AND NO state changes occur '
+      'WHEN pumping ViewStateBuilder '
+      'THEN should display onReady widget', (WidgetTester tester) async {
+    whenListen(bloc, Stream<ViewState>.empty(), initialState: Initial());
+    await tester.pumpViewStateBuilder(bloc);
+    verifyReadyWidgetIsDisplayed();
   });
 
-  testWidgets('should display onEmpty widget when bloc is in empty state',
-      (WidgetTester tester) async {
-    when(() => bloc.state).thenReturn(const Empty());
-    await tester.pumpWidget(makeTestableViewStateBuilder(bloc));
-    expect(find.byKey(emptyKey), findsOneWidget);
+  testWidgets(
+      'GIVEN Bloc in initial state '
+      'AND then in loading state '
+      'WHEN pumping ViewStateBuilder '
+      'THEN should display onReady widget '
+      'AND onLoading widget afterwards', (WidgetTester tester) async {
+    whenListen(bloc, Stream.value(Loading()), initialState: Initial());
+    await tester.pumpViewStateBuilder(bloc);
+    verifyReadyWidgetIsDisplayed();
+    await tester.pump();
+    verifyLoadingWidgetIsDisplayed();
   });
 
-  testWidgets('should display onSuccess widget when bloc is in success state',
-      (WidgetTester tester) async {
-    when(() => bloc.state).thenReturn(const Success(someData));
-    await tester.pumpWidget(makeTestableViewStateBuilder(bloc));
-    expect(find.byKey(successKey), findsOneWidget);
+  testWidgets(
+      'GIVEN Bloc in success state '
+      'AND then in refreshing state '
+      'WHEN pumping ViewStateBuilder '
+      'THEN should display onReady widget '
+      'AND onRefreshing widget afterwards', (WidgetTester tester) async {
+    whenListen(
+      bloc,
+      Stream.value(Refreshing(someData)),
+      initialState: Success(someData),
+    );
+    await tester.pumpViewStateBuilder(bloc);
+    verifySuccessWidgetIsDisplayed();
+    await tester.pump();
+    verifyRefreshWidgetIsDisplayed();
   });
 
-  testWidgets('should display onError widget when bloc is in failure state',
-      (WidgetTester tester) async {
-    when(() => bloc.state).thenReturn(Failure(someError));
-    await tester.pumpWidget(makeTestableViewStateBuilder(bloc));
-    expect(find.byKey(errorKey), findsOneWidget);
+  testWidgets(
+      'GIVEN Bloc in loading state '
+      'AND then in empty state '
+      'WHEN pumping ViewStateBuilder '
+      'THEN should display onLoading widget '
+      'AND onEmpty widget afterwards', (WidgetTester tester) async {
+    whenListen(bloc, Stream.value(Empty()), initialState: Loading());
+    await tester.pumpViewStateBuilder(bloc);
+    verifyLoadingWidgetIsDisplayed();
+    await tester.pump();
+    verifyEmptyWidgetIsDisplayed();
+  });
+
+  testWidgets(
+      'GIVEN Bloc in loading state '
+      'AND then in success state '
+      'WHEN pumping ViewStateBuilder '
+      'THEN should display onLoading widget '
+      'AND onSuccess widget afterwards', (WidgetTester tester) async {
+    whenListen(bloc, Stream.value(Success(someData)), initialState: Loading());
+    await tester.pumpViewStateBuilder(bloc);
+    verifyLoadingWidgetIsDisplayed();
+    await tester.pump();
+    verifySuccessWidgetIsDisplayed();
+  });
+
+  testWidgets(
+      'GIVEN Bloc in loading state '
+      'AND then in error state '
+      'WHEN pumping ViewStateBuilder '
+      'THEN should display onLoading widget '
+      'AND onError widget afterwards', (WidgetTester tester) async {
+    whenListen(bloc, Stream.value(Failure(someError)), initialState: Loading());
+    await tester.pumpViewStateBuilder(bloc);
+    verifyLoadingWidgetIsDisplayed();
+    await tester.pump();
+    verifyErrorWidgetIsDisplayed();
   });
 
   tearDown(() {

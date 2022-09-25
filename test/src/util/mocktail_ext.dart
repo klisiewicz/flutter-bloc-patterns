@@ -40,15 +40,25 @@ extension WhenStreamExt<T> on When<Stream<T>> {
 }
 
 extension WhenFutureExt<T> on When<Future<T>> {
-  void thenAnswerFutureValue(T value) => thenAnswer((_) async => value);
+  void thenAnswerFutureValue(T value) {
+    thenAnswerDelayedValue(value, delay: Duration.zero);
+  }
 
-  void thenAnswerDelayedValue(T value, {required Duration delay}) {
+  void thenAnswerDelayedValue(
+    T value, {
+    required Duration delay,
+  }) {
     thenAnswer((_) async => Future.delayed(delay, () => value));
   }
 
-  void thenAnswerError(Object error) => thenAnswer((_) async => throw error);
+  void thenAnswerError(Object error) {
+    thenAnswerDelayedError(error, delay: Duration.zero);
+  }
 
-  void thenThrowDelayedError(Object error, {required Duration delay}) {
+  void thenAnswerDelayedError(
+    Object error, {
+    required Duration delay,
+  }) {
     thenAnswer((_) async => Future.delayed(delay, () => throw error));
   }
 }
