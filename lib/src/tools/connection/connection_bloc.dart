@@ -6,7 +6,7 @@ import 'package:flutter_bloc_patterns/src/tools/connection/connection_builder.da
 import 'package:flutter_bloc_patterns/src/tools/connection/connection_listener.dart';
 import 'package:flutter_bloc_patterns/src/tools/connection/connection_repository.dart';
 
-/// A BLoC that exposes Internet connection state to the UI.
+/// A BLoC that exposes the Internet connection state to the UI.
 ///
 /// [ConnectionBloc] automatically starts observing connection changes
 /// provided by [ConnectionRepository] so no action is required.

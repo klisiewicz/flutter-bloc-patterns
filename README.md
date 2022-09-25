@@ -32,7 +32,6 @@ A `Repository` to handles data operations. It knows where to get the data from a
 * `onEmpty` - informs the presentation layer that the loading is completed, but `null` or empty data was retrieved,
 * `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
 
-
 ## Features
 
 ### ListBloc
@@ -117,6 +116,7 @@ Where:
 [Paged List BLoC Sample App](example/lib/src/list_paged_filter_app.dart)
 
 ### DetailsBloc
+
 A BLoC that allows to fetch a single item with given identifier.
 
 #### DetailsRepository
@@ -131,6 +131,62 @@ Where:
 #### Usage:
 
 [List/Details BLoC Sample App](example/lib/src/list_details_app.dart)
+
+### ConnectionBloc
+
+A BLoC that exposes the Internet connection state to the UI.
+
+#### Connection
+
+The Internet connection state. It can be either `online` or `offline`.
+
+#### ConnectionRepository
+
+`ConnectionRepository` notifies about connection state changes, such as going online or offline. 
+
+Please notice, that this is only a contract and a developer needs to provide an implementation. This can be done using one of many popular packages, like:
+
+* [connectivity_plus](https://pub.dev/packages/connectivity_plus)
+* [internet_connection_checker](https://pub.dev/packages/internet_connection_checker)
+
+Or whatever works for you. A sample implementation using `connectivity_plus` may look as follows:
+
+```dart
+class ConnectivityPlusRepository implements ConnectionRepository {
+  @override
+  Stream<Connection> observe() {
+    return connectivity.onConnectivityChanged.map(
+      (ConnectivityResult result) => result != ConnectivityResult.none
+          ? Connection.online
+          : Connection.offline,
+    );
+  }
+}
+```
+
+#### ConnectionBuilder
+
+`ConnectionBuilder` is responsible for building the UI based `Connection` state.
+
+It's a wrapper over the `BlocBuilder` widget so it accepts a `bloc` object and provides `WidgetBuilder` functions for possible states:
+
+* `onOnline` - a builder for the the `Connection.online` state,
+* `onOffline` - a builder for the the `Connection.offline` state,
+
+#### ConnectionListener
+
+`ConnectionListener` is responsible for performing a one-time action based on the `Connection` state change.
+
+It should be used for functionality that needs to occur only once in response to the `Connection` state change such as navigation, `SnackBar`, showing a `Dialog`, etc.
+
+`ConnectionListener` is a wrapper over the `BlocListener` widget so it accepts a `bloc` object as well as a `child` widget. It also takes `ConnectionCallback` functions for possible states:
+
+* `onOnline` - a callback for the the `Connection.online` state,
+* `onOffline` - a callback for the `Connection.offline` state.
+
+#### Usage:
+
+[Connection Sample App](example/lib/src/connection_app.dart)
 
 ## Dart version
 
