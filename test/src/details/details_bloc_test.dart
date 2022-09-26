@@ -63,8 +63,8 @@ void main() {
   });
 
   group('failing repository', () {
-    final _exception = Exception('Oh no!');
-    final _error = Error();
+    final exception = Exception('Oh no!');
+    final error = Error();
 
     void givenFailingRepository(Object error) =>
         detailsBloc = DetailsBloc(FailingDetailsRepository(error));
@@ -72,20 +72,20 @@ void main() {
     void whenLoadingElement() => detailsBloc.loadItem(0);
 
     test('should emit [$Loading, $Failure] when fetching element fails', () {
-      givenFailingRepository(_exception);
+      givenFailingRepository(exception);
       whenLoadingElement();
       thenExpectStates([
         const Loading(),
-        Failure(_exception),
+        Failure(exception),
       ]);
     });
 
     test('should emit [$Loading, $Failure] when an error is thrown', () {
-      givenFailingRepository(_error);
+      givenFailingRepository(error);
       whenLoadingElement();
       thenExpectStates([
         const Loading(),
-        Failure(_error),
+        Failure(error),
       ]);
     });
 
