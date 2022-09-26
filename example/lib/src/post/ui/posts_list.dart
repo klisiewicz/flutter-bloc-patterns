@@ -9,10 +9,10 @@ class PostsList extends StatelessWidget {
 
   const PostsList(
     this.posts, {
-    Key? key,
+    super.key,
     this.onRefresh,
     this.onPostSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +37,8 @@ class PostListItem extends StatelessWidget {
   const PostListItem(
     this.post, {
     this.onPostSelected,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) => ListTile(

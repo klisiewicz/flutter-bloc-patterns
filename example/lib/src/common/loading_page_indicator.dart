@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoadingPageIndicator extends StatelessWidget {
-  const LoadingPageIndicator({Key? key}) : super(key: key);
+  const LoadingPageIndicator({super.key});
 
   @override
   Widget build(BuildContext context) {

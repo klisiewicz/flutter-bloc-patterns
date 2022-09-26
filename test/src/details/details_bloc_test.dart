@@ -16,22 +16,22 @@ void main() {
   }
 
   group('repository with items', () {
-    const _existingId = 1;
-    const _noneExistingId = -1;
-    const _someData = 'Hello Word';
+    const existingId = 1;
+    const noneExistingId = -1;
+    const someData = 'Hello Word';
 
     setUp(() {
       detailsBloc = DetailsBloc(
         InMemoryDetailsRepository<String, int>({
-          _existingId: _someData,
+          existingId: someData,
         }),
       );
     });
 
-    void whenLoadingExistingElement() => detailsBloc.loadItem(_existingId);
+    void whenLoadingExistingElement() => detailsBloc.loadItem(existingId);
 
     void whenLoadingNoneExistingElement() =>
-        detailsBloc.loadItem(_noneExistingId);
+        detailsBloc.loadItem(noneExistingId);
 
     test('should be initialized in $Initial state', () {
       expect(detailsBloc.state, equals(const Initial()));
@@ -53,7 +53,7 @@ void main() {
       whenLoadingExistingElement();
       thenExpectStates(const [
         Loading(),
-        Success(_someData),
+        Success(someData),
       ]);
     });
 
@@ -63,8 +63,8 @@ void main() {
   });
 
   group('failing repository', () {
-    final _exception = Exception('Oh no!');
-    final _error = Error();
+    final exception = Exception('Oh no!');
+    final error = Error();
 
     void givenFailingRepository(Object error) =>
         detailsBloc = DetailsBloc(FailingDetailsRepository(error));
@@ -72,20 +72,20 @@ void main() {
     void whenLoadingElement() => detailsBloc.loadItem(0);
 
     test('should emit [$Loading, $Failure] when fetching element fails', () {
-      givenFailingRepository(_exception);
+      givenFailingRepository(exception);
       whenLoadingElement();
       thenExpectStates([
         const Loading(),
-        Failure(_exception),
+        Failure(exception),
       ]);
     });
 
     test('should emit [$Loading, $Failure] when an error is thrown', () {
-      givenFailingRepository(_error);
+      givenFailingRepository(error);
       whenLoadingElement();
       thenExpectStates([
         const Loading(),
-        Failure(_error),
+        Failure(error),
       ]);
     });
 

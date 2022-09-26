@@ -2,20 +2,20 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'view_state_keys.dart';
 
-void expectReadyWidgetIsDisplayed() =>
+void verifyReadyWidgetIsDisplayed() =>
     expect(find.byKey(readyKey), findsOneWidget);
 
-void expectLoadingWidgetIsDisplayed() =>
+void verifyLoadingWidgetIsDisplayed() =>
     expect(find.byKey(loadKey), findsOneWidget);
 
-void expectRefreshWidgetIsDisplayed() =>
+void verifyRefreshWidgetIsDisplayed() =>
     expect(find.byKey(refreshKey), findsOneWidget);
 
-void expectEmptyWidgetIsDisplayed() =>
+void verifyEmptyWidgetIsDisplayed() =>
     expect(find.byKey(emptyKey), findsOneWidget);
 
-void expectSuccessWidgetIsDisplayed() =>
+void verifySuccessWidgetIsDisplayed() =>
     expect(find.byKey(successKey), findsOneWidget);
 
-void expectErrorWidgetIsDisplayed() =>
+void verifyErrorWidgetIsDisplayed() =>
     expect(find.byKey(errorKey), findsOneWidget);

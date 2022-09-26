@@ -11,6 +11,8 @@ import 'package:flutter_bloc_patterns/view.dart';
 
 void main() => runApp(ListSampleApp());
 
+typedef PostsBloc = ListBloc<Post>;
+
 class ListSampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,30 +33,38 @@ class PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<PostsPage> {
-  late ListBloc<Post> listBloc;
-
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<ListBloc<Post>>(context)..loadItems();
+    context.read<PostsBloc>().loadItems();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
-      body: ViewStateBuilder<List<Post>, ListBloc<Post>>(
-        bloc: listBloc,
-        onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, posts) =>
-            PostsList(posts, onRefresh: _refreshPosts),
-        onRefreshing: (context, posts) =>
-            PostsList(posts, onRefresh: _refreshPosts),
-        onEmpty: (context) => const PostsListEmpty(),
-        onError: (context, error) => ErrorMessage(error: error),
-      ),
+      body: const PostsViewStateBuilder(),
+    );
+  }
+}
+
+class PostsViewStateBuilder extends StatelessWidget {
+  const PostsViewStateBuilder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewStateBuilder<List<Post>, PostsBloc>(
+      onLoading: (context) => const LoadingIndicator(),
+      onSuccess: (context, posts) =>
+          PostsList(posts, onRefresh: () => _refreshPosts(context)),
+      onRefreshing: (context, posts) =>
+          PostsList(posts, onRefresh: () => _refreshPosts(context)),
+      onEmpty: (context) => const PostsListEmpty(),
+      onError: (context, error) => ErrorMessage(error: error),
     );
   }
 
-  void _refreshPosts() => listBloc.refreshItems();
+  void _refreshPosts(BuildContext context) {
+    context.read<PostsBloc>().refreshItems();
+  }
 }

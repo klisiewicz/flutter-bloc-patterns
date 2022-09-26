@@ -49,7 +49,7 @@ void main() {
     });
 
     test(
-        'should emit  [$Loading, $Success] with first page items when loading first page',
+        'should emit [$Loading, $Success] with first page items when loading first page',
         () {
       when(loadingFirstPage);
 
@@ -79,7 +79,7 @@ void main() {
     });
 
     test(
-        'should emit  [$Loading, $Success, $Success, $Success] with first, first and second and first, second and third page items when loading three pages',
+        'should emit [$Loading, $Success, $Success, $Success] with first, first and second and first, second and third page items when loading three pages',
         () {
       when(() {
         loadingFirstPage();
@@ -134,7 +134,7 @@ void main() {
 
   group('failing repository', () {
     group('repository failing with exception', () {
-      final exception = Exception('Ooopsi!');
+      final exception = Exception('Oops!');
       setUp(() {
         repository = FailingPagedRepository(exception);
         bloc = PagedListBloc<int>(repository);

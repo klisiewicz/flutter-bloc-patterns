@@ -1,1 +1,7 @@
 include: package:lint/analysis_options.yaml
+lintner:
+  rules:
+    always_specify_types: true
+    avoid_classes_with_only_static_members: true
+    lines_longer_than_80_chars: true
+    prefer_single_quotes: true

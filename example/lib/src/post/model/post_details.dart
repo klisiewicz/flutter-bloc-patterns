@@ -4,10 +4,10 @@ class PostDetails extends Post {
   final String body;
 
   PostDetails({
-    required int id,
-    required String title,
+    required super.id,
+    required super.title,
     required this.body,
-  }) : super(id: id, title: title);
+  });
 
   factory PostDetails.fromJson(Map json) {
     return PostDetails(

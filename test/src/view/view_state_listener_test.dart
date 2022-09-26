@@ -153,4 +153,8 @@ void main() {
     verifyNever(() => emptyCallback.call(any()));
     verify(() => errorCallback.call(any(), _someException));
   });
+
+  tearDown(() {
+    bloc.close();
+  });
 }

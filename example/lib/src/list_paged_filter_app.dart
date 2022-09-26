@@ -12,6 +12,8 @@ import 'package:flutter_bloc_patterns/view.dart';
 
 void main() => runApp(PagedFilterListSampleApp());
 
+typedef PhotosBloc = PagedListFilterBloc<Photo, Album>;
+
 class PagedFilterListSampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,9 +21,7 @@ class PagedFilterListSampleApp extends StatelessWidget {
       title: 'Paged Filter List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        create: (_) => PagedListFilterBloc<Photo, Album>(
-          PagedFilterPhotoRepository(),
-        ),
+        create: (_) => PhotosBloc(PagedFilterPhotoRepository()),
         child: _PhotosPage(),
       ),
     );
@@ -35,35 +35,26 @@ class _PhotosPage extends StatefulWidget {
 
 class _PhotosPageState extends State<_PhotosPage> {
   final _myAlbum = const Album(id: 1);
-  late PagedListFilterBloc<Photo, Album> _photosBloc;
 
   @override
   void initState() {
     super.initState();
-    _photosBloc = BlocProvider.of<PagedListFilterBloc<Photo, Album>>(context)
-      ..loadFirstPage(pageSize: 12, filter: _myAlbum);
+    context.read<PhotosBloc>().loadFirstPage(pageSize: 12, filter: _myAlbum);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Photos')),
-      body: ViewStateBuilder<PagedList<Photo>, PagedListFilterBloc>(
-        bloc: _photosBloc,
+      body: ViewStateBuilder<PagedList<Photo>, PhotosBloc>(
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PhotosListPaged(
           page,
-          onLoadNextPage: _photosBloc.loadNextPage,
+          onLoadNextPage: context.read<PhotosBloc>().loadNextPage,
         ),
         onEmpty: (context) => const PhotosListEmpty(),
         onError: (context, error) => ErrorMessage(error: error),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _photosBloc.close();
-    super.dispose();
   }
 }

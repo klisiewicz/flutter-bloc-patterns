@@ -13,15 +13,11 @@ void main() {
     bloc = ListBloc(InMemoryFilterRepository());
   });
 
-  Future<void> pumpViewStateBuilder(WidgetTester tester) {
-    return tester.pumpWidget(makeTestableViewStateBuilder(bloc));
-  }
-
   testWidgets(
       'should display onReady widget when no action has been performed by the bloc',
       (WidgetTester tester) async {
-    await pumpViewStateBuilder(tester);
-    expectReadyWidgetIsDisplayed();
+    await tester.pumpViewStateBuilder(bloc);
+    verifyReadyWidgetIsDisplayed();
   });
 
   group(
@@ -33,13 +29,13 @@ void main() {
 
       testWidgets('then should display ready, loading and success widgets',
           (WidgetTester tester) async {
-        await pumpViewStateBuilder(tester);
-        expectReadyWidgetIsDisplayed();
+        await tester.pumpViewStateBuilder(bloc);
+        verifyReadyWidgetIsDisplayed();
         bloc.loadItems();
         await tester.asyncPump();
-        expectLoadingWidgetIsDisplayed();
+        verifyLoadingWidgetIsDisplayed();
         await tester.asyncPump();
-        expectSuccessWidgetIsDisplayed();
+        verifySuccessWidgetIsDisplayed();
       });
     },
   );
@@ -53,13 +49,13 @@ void main() {
 
       testWidgets('then should display ready, loading and empty widgets',
           (WidgetTester tester) async {
-        await pumpViewStateBuilder(tester);
-        expectReadyWidgetIsDisplayed();
+        await tester.pumpViewStateBuilder(bloc);
+        verifyReadyWidgetIsDisplayed();
         bloc.loadItems();
         await tester.asyncPump();
-        expectLoadingWidgetIsDisplayed();
+        verifyLoadingWidgetIsDisplayed();
         await tester.asyncPump();
-        expectEmptyWidgetIsDisplayed();
+        verifyEmptyWidgetIsDisplayed();
       });
     },
   );
@@ -75,13 +71,13 @@ void main() {
 
       testWidgets('then should display ready, loading and error widgets',
           (WidgetTester tester) async {
-        await pumpViewStateBuilder(tester);
-        expectReadyWidgetIsDisplayed();
+        await tester.pumpViewStateBuilder(bloc);
+        verifyReadyWidgetIsDisplayed();
         bloc.loadItems();
         await tester.asyncPump();
-        expectLoadingWidgetIsDisplayed();
+        verifyLoadingWidgetIsDisplayed();
         await tester.asyncPump();
-        expectErrorWidgetIsDisplayed();
+        verifyErrorWidgetIsDisplayed();
       });
     },
   );

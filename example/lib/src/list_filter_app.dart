@@ -30,48 +30,69 @@ class FilterListSampleApp extends StatelessWidget {
   }
 }
 
+enum _Posts { all, mine }
+
 class _PostsPage extends StatefulWidget {
   @override
   _PostsPageState createState() => _PostsPageState();
 }
 
 class _PostsPageState extends State<_PostsPage> {
-  late FilterListBloc<Post, User> listBloc;
-  _Posts selectedPosts = _Posts.all;
-
   @override
   void initState() {
     super.initState();
-    listBloc = BlocProvider.of<FilterListBloc<Post, User>>(context)
-      ..loadItems();
+    context.read<FilterListBloc<Post, User>>().loadItems();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      appBar: AppBar(title: const Text('Posts')),
+      body: const PostsViewStateBuilder(),
+      bottomNavigationBar: const PostsBottomNavigationBar(),
     );
   }
+}
 
-  AppBar _buildAppBar() => AppBar(title: const Text('Posts'));
+class PostsViewStateBuilder extends StatelessWidget {
+  const PostsViewStateBuilder({super.key});
 
-  Widget _buildBody() {
+  @override
+  Widget build(BuildContext context) {
     return ViewStateBuilder<List<Post>, FilterListBloc<Post, User>>(
-      bloc: listBloc,
       onLoading: (context) => const LoadingIndicator(),
-      onSuccess: (context, posts) => PostsList(posts, onRefresh: _refreshPosts),
-      onRefreshing: (context, posts) =>
-          PostsList(posts, onRefresh: _refreshPosts),
+      onSuccess: (context, posts) => PostsList(
+        posts,
+        onRefresh: () => _refreshPosts(context),
+      ),
+      onRefreshing: (context, posts) => PostsList(
+        posts,
+        onRefresh: () => _refreshPosts(context),
+      ),
       onEmpty: (context) => const PostsListEmpty(),
       onError: (context, error) => ErrorMessage(error: error),
     );
   }
 
-  void _refreshPosts() => listBloc.refreshItems(filter: listBloc.filter);
+  void _refreshPosts(BuildContext context) {
+    final postsBloc = context.read<FilterListBloc<Post, User>>();
+    postsBloc.refreshItems(filter: postsBloc.filter);
+  }
+}
 
-  BottomNavigationBar _buildBottomNavigationBar() {
+class PostsBottomNavigationBar extends StatefulWidget {
+  const PostsBottomNavigationBar({super.key});
+
+  @override
+  State<PostsBottomNavigationBar> createState() =>
+      _PostsBottomNavigationBarState();
+}
+
+class _PostsBottomNavigationBarState extends State<PostsBottomNavigationBar> {
+  _Posts selectedPosts = _Posts.all;
+
+  @override
+  Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: selectedPosts.index,
       items: const [
@@ -89,14 +110,13 @@ class _PostsPageState extends State<_PostsPage> {
   }
 
   void _updateSelectedPosts(int index) {
-    final user = (index == _Posts.mine.index) ? const User(_myUserId) : null;
-    if (user != listBloc.filter) {
-      listBloc.loadItems(filter: user);
+    final user = index == _Posts.mine.index ? const User(_myUserId) : null;
+    final postsBloc = context.read<FilterListBloc<Post, User>>();
+    if (user != postsBloc.filter) {
+      postsBloc.loadItems(filter: user);
       setState(() {
         selectedPosts = _Posts.values[index];
       });
     }
   }
 }
-
-enum _Posts { all, mine }
