@@ -11,10 +11,6 @@ class PagedList<T> extends Equatable {
   final List<T> items;
   final bool hasReachedMax;
 
-  /// This property is deprecated, use [items] instead.
-  @Deprecated('Use [items]')
-  List<T> get elements => items;
-
   /// Creates paged list.
   ///
   /// [items] - list of items, cannot be null or empty,
@@ -27,10 +23,6 @@ class PagedList<T> extends Equatable {
         items = UnmodifiableListView(items);
 
   bool get hasMoreItems => !hasReachedMax;
-
-  /// This property is deprecated, use [hasMoreItems] instead.
-  @Deprecated('Use [hasMoreItems]')
-  bool get hasMoreElements => hasMoreItems;
 
   @override
   List<Object> get props => [items, hasReachedMax];

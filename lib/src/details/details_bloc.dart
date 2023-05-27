@@ -20,10 +20,6 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
     on<LoadDetails<I>>(_loadItemWithId);
   }
 
-  /// This method is deprecated, use [loadItem] instead.
-  @Deprecated('Use [loadItem]')
-  void loadElement(I id) => loadItem(id);
-
   /// Loads an element with given [id].
   void loadItem(I id) => add(LoadDetails(id));
 

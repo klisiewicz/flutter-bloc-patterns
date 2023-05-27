@@ -1,9 +1,9 @@
 # Changelog
 
-## [0.12.0]
+## [0.12.0] * Breaking Changes *
 
-* Migration to `dart` 3.0
-* 
+* Migrated to `dart` 3.0
+* Removed deprecated methods
 
 ## [0.11.0]
 

@@ -35,20 +35,12 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState> {
     on<RefreshList<F>>(_refreshList);
   }
 
-  /// This method is deprecated, use [loadItems] instead.
-  @Deprecated('Use [loadItems]')
-  void loadElements({F? filter}) => loadItems(filter: filter);
-
   /// Loads items using the given [filter].
   ///
   /// It's most suitable for initial data fetch or for retry action when
   /// the first fetch fails. It can also be used when [filter] changes when a
   /// full reload is required.
   void loadItems({F? filter}) => add(LoadList(filter));
-
-  //// This method is deprecated, use [refreshItems] instead.
-  @Deprecated('Use [refreshItems]')
-  void refreshElements({F? filter}) => refreshItems(filter: filter);
 
   /// Refreshes items using the given [filter].
   ///
