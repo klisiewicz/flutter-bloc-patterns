@@ -33,8 +33,8 @@ void main() {
     return makeTestableWidget(
       child: ConnectionListener(
         bloc: connection,
-        onOnline: onOnline,
-        onOffline: onOffline,
+        onOnline: onOnline.call,
+        onOffline: onOffline.call,
         child: const SizedBox(),
       ),
     );

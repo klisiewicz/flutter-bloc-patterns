@@ -48,11 +48,11 @@ void main() {
 
   setUp(() {
     bloc = MockTestBloc();
-    loadingCallback = LoadingMock();
-    successCallback = SuccessMock();
-    refreshCallback = RefreshMock();
-    emptyCallback = EmptyMock();
-    errorCallback = ErrorMock();
+    loadingCallback = LoadingMock().call;
+    successCallback = SuccessMock().call;
+    refreshCallback = RefreshMock().call;
+    emptyCallback = EmptyMock().call;
+    errorCallback = ErrorMock().call;
   });
 
   Widget makeTestableViewStateListener() {
