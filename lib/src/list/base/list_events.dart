@@ -15,7 +15,7 @@ abstract class ListEvent<F> extends Equatable {
 ///
 /// [F] - the filter type.
 class LoadList<F> extends ListEvent<F> {
-  const LoadList([F? filter]) : super(filter);
+  const LoadList([super.filter]);
 
   @override
   List<Object?> get props => [filter];
@@ -28,7 +28,7 @@ class LoadList<F> extends ListEvent<F> {
 ///
 /// [F] - the filter type.
 class RefreshList<F> extends ListEvent<F> {
-  const RefreshList([F? filter]) : super(filter);
+  const RefreshList([super.filter]);
 
   @override
   List<Object?> get props => [filter];

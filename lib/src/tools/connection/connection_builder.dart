@@ -13,13 +13,11 @@ import 'package:flutter_bloc_patterns/src/tools/connection/connection_bloc.dart'
 /// [onOffline] - a builder for the [Connection.offline] state.
 class ConnectionBuilder extends BlocBuilder<ConnectionBloc, Connection> {
   ConnectionBuilder({
-    Key? key,
-    ConnectionBloc? bloc,
+    super.key,
+    super.bloc,
     WidgetBuilder? onOnline,
     WidgetBuilder? onOffline,
   }) : super(
-          key: key,
-          bloc: bloc,
           builder: (BuildContext context, Connection state) {
             switch (state) {
               case Connection.online:

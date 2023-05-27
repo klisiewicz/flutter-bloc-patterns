@@ -50,19 +50,16 @@ typedef ViewStateBuilderCondition = bool Function(
 class ViewStateBuilder<T, B extends BlocBase<ViewState>>
     extends BlocBuilder<B, ViewState> {
   ViewStateBuilder({
-    Key? key,
-    B? bloc,
+    super.key,
+    super.bloc,
     InitialBuilder? onReady,
     LoadingBuilder? onLoading,
     RefreshingBuilder<T>? onRefreshing,
     SuccessBuilder<T>? onSuccess,
     EmptyBuilder? onEmpty,
     ErrorBuilder? onError,
-    ViewStateBuilderCondition? buildWhen,
+    super.buildWhen,
   }) : super(
-          key: key,
-          bloc: bloc,
-          buildWhen: buildWhen,
           builder: (BuildContext context, ViewState state) {
             if (state is Initial) {
               return onReady?.call(context) ?? const SizedBox.shrink();
