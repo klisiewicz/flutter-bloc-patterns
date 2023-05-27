@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.12.0]
+
+* Migration to `dart` 3.0
+* 
+
 ## [0.11.0]
 
 * Migrating to `bloc` 8.1.x and `flutter_bloc` 8.1.x,
