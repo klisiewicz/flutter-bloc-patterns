@@ -124,11 +124,11 @@ class PostDetailsView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(post.title, style: Theme.of(context).textTheme.headline6),
+            Text(post.title, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               post.body,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.justify,
             ),
           ],
