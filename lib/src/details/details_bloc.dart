@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/details.dart';
+import 'package:flutter_bloc_patterns/src/details/details_events.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 
@@ -11,18 +12,14 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 ///
 /// [T] - the type of the element.
 /// [I] - the type of id.
-class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
+class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState<T>> {
   final DetailsRepository<T, I> _repository;
 
   DetailsBloc(DetailsRepository<T, I> repository)
       : _repository = repository,
-        super(const Initial()) {
+        super(Initial<T>()) {
     on<LoadDetails<I>>(_loadItemWithId);
   }
-
-  /// This method is deprecated, use [loadItem] instead.
-  @Deprecated('Use [loadItem]')
-  void loadElement(I id) => loadItem(id);
 
   /// Loads an element with given [id].
   void loadItem(I id) => add(LoadDetails(id));
@@ -32,11 +29,11 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState> {
     Emitter<ViewState> emit,
   ) async {
     try {
-      emit(const Loading());
+      emit(Loading<T>());
       final item = await _repository.getById(event.id);
-      emit(item != null ? Success<T>(item) : const Empty());
+      emit(item != null ? Success<T>(item) : Empty<T>());
     } catch (e) {
-      emit(Failure(e));
+      emit(Failure<T>(e));
     }
   }
 }

@@ -47,41 +47,32 @@ typedef ViewStateBuilderCondition = bool Function(
 ///
 /// [T] - the type of items,
 /// [B] - the type of bloc.
-class ViewStateBuilder<T, B extends BlocBase<ViewState>>
-    extends BlocBuilder<B, ViewState> {
+class ViewStateBuilder<T, B extends BlocBase<ViewState<T>>>
+    extends BlocBuilder<B, ViewState<T>> {
   ViewStateBuilder({
-    Key? key,
-    B? bloc,
+    super.key,
+    super.bloc,
     InitialBuilder? onReady,
     LoadingBuilder? onLoading,
     RefreshingBuilder<T>? onRefreshing,
     SuccessBuilder<T>? onSuccess,
     EmptyBuilder? onEmpty,
     ErrorBuilder? onError,
-    ViewStateBuilderCondition? buildWhen,
+    super.buildWhen,
   }) : super(
-          key: key,
-          bloc: bloc,
-          buildWhen: buildWhen,
-          builder: (BuildContext context, ViewState state) {
-            if (state is Initial) {
-              return onReady?.call(context) ?? const SizedBox.shrink();
-            } else if (state is Loading) {
-              return onLoading?.call(context) ?? const SizedBox.shrink();
-            } else if (state is Refreshing<T>) {
-              return onRefreshing?.call(context, state.data) ??
-                  const SizedBox.shrink();
-            } else if (state is Success<T>) {
-              return onSuccess?.call(context, state.data) ??
-                  const SizedBox.shrink();
-            } else if (state is Empty) {
-              return onEmpty?.call(context) ?? const SizedBox.shrink();
-            } else if (state is Failure) {
-              return onError?.call(context, state.error) ??
-                  const SizedBox.shrink();
-            } else {
-              throw ArgumentError.value(state, 'state');
-            }
+          builder: (BuildContext context, ViewState<T> state) {
+            const empty = SizedBox.shrink();
+            return switch (state) {
+              Initial() => onReady?.call(context) ?? empty,
+              Loading() => onLoading?.call(context) ?? empty,
+              Refreshing<T>(data: final data) =>
+                onRefreshing?.call(context, data) ?? empty,
+              Success<T>(data: final data) =>
+                onSuccess?.call(context, data) ?? empty,
+              Empty() => onEmpty?.call(context) ?? empty,
+              Failure(error: final error) =>
+                onError?.call(context, error) ?? empty,
+            };
           },
         );
 }

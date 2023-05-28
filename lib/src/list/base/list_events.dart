@@ -5,20 +5,20 @@ import 'package:flutter/foundation.dart';
 ///
 /// [F] - the filter type.
 @immutable
-abstract class ListEvent<F> extends Equatable {
+sealed class ListEvent<F> with EquatableMixin {
   final F? filter;
 
   const ListEvent([this.filter]);
+
+  @override
+  List<Object?> get props => [filter];
 }
 
 /// Event for indicating that initial list load needs to be performed.
 ///
 /// [F] - the filter type.
-class LoadList<F> extends ListEvent<F> {
-  const LoadList([F? filter]) : super(filter);
-
-  @override
-  List<Object?> get props => [filter];
+final class LoadList<F> extends ListEvent<F> {
+  const LoadList([super.filter]);
 
   @override
   String toString() => 'LoadList: $filter';
@@ -27,11 +27,8 @@ class LoadList<F> extends ListEvent<F> {
 /// Event for indicating that list needs to be refreshed.
 ///
 /// [F] - the filter type.
-class RefreshList<F> extends ListEvent<F> {
-  const RefreshList([F? filter]) : super(filter);
-
-  @override
-  List<Object?> get props => [filter];
+final class RefreshList<F> extends ListEvent<F> {
+  const RefreshList([super.filter]);
 
   @override
   String toString() => 'RefreshList: $filter';

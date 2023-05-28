@@ -4,14 +4,14 @@ import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 
 /// Base class for paged list events.
 @immutable
-abstract class PagedListEvent extends Equatable {
+sealed class PagedListEvent with EquatableMixin {
   const PagedListEvent();
 }
 
 /// Event indicating that a page needs to be loaded.
 ///
 /// [F] - the filter type.
-class LoadPage<F> extends PagedListEvent {
+final class LoadPage<F> extends PagedListEvent {
   final Page page;
   final F? filter;
 

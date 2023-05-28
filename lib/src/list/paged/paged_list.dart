@@ -7,13 +7,9 @@ import 'package:flutter/foundation.dart';
 ///
 /// [T] - type of list items.
 @immutable
-class PagedList<T> extends Equatable {
+final class PagedList<T> extends Equatable {
   final List<T> items;
   final bool hasReachedMax;
-
-  /// This property is deprecated, use [items] instead.
-  @Deprecated('Use [items]')
-  List<T> get elements => items;
 
   /// Creates paged list.
   ///
@@ -27,10 +23,6 @@ class PagedList<T> extends Equatable {
         items = UnmodifiableListView(items);
 
   bool get hasMoreItems => !hasReachedMax;
-
-  /// This property is deprecated, use [hasMoreItems] instead.
-  @Deprecated('Use [hasMoreItems]')
-  bool get hasMoreElements => hasMoreItems;
 
   @override
   List<Object> get props => [items, hasReachedMax];

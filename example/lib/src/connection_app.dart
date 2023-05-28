@@ -96,7 +96,7 @@ class OfflineView extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'You are offline. Check your Internet connection.',
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
       ),

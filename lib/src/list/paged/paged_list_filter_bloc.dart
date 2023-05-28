@@ -17,7 +17,8 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 ///
 /// [T] - the type of list items.
 /// [F] - the type of filter.
-class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
+class PagedListFilterBloc<T, F>
+    extends Bloc<PagedListEvent, ViewState<PagedList<T>>> {
   static const defaultPageSize = 10;
 
   final PagedListFilterRepository<T, F> _repository;
@@ -34,7 +35,7 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
 
   PagedListFilterBloc(PagedListFilterRepository<T, F> repository)
       : _repository = repository,
-        super(const Initial()) {
+        super(Initial<PagedList<T>>()) {
     on<LoadPage<F>>(_loadPage);
   }
 
@@ -59,7 +60,10 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
     add(LoadPage(_page!, filter: _filter));
   }
 
-  Future<void> _loadPage(LoadPage<F> event, Emitter<ViewState> emit) async {
+  Future<void> _loadPage(
+    LoadPage<F> event,
+    Emitter<ViewState<PagedList<T>>> emit,
+  ) async {
     final page = event.page;
     try {
       _emitLoadingWhenFirstPage(page, emit);
@@ -70,39 +74,41 @@ class PagedListFilterBloc<T, F> extends Bloc<PagedListEvent, ViewState> {
     } on PageNotFoundException catch (_) {
       _emitEmptyPageLoaded(page, emit);
     } catch (e) {
-      emit(Failure(e));
+      emit(Failure<PagedList<T>>(e));
     }
   }
 
   void _emitLoadingWhenFirstPage(
     Page page,
-    Emitter<ViewState> emit,
+    Emitter<ViewState<PagedList<T>>> emit,
   ) {
     if (page.isFirst) {
-      emit(const Loading());
+      emit(Loading<PagedList<T>>());
     }
   }
 
   void _emitEmptyPageLoaded(
     Page page,
-    Emitter<ViewState> emit,
+    Emitter<ViewState<PagedList<T>>> emit,
   ) {
     emit(
       page.isFirst
-          ? const Empty()
-          : Success(PagedList<T>(_currentItems, hasReachedMax: true)),
+          ? Empty<PagedList<T>>()
+          : Success<PagedList<T>>(
+              PagedList(_currentItems, hasReachedMax: true),
+            ),
     );
   }
 
   void _emitNextPageLoaded(
     Page page,
     List<T> pageItems,
-    Emitter<ViewState> emit,
+    Emitter<ViewState<PagedList<T>>> emit,
   ) {
     final allItems = _currentItems + pageItems;
     emit(
-      Success(
-        PagedList<T>(allItems, hasReachedMax: page.size > pageItems.length),
+      Success<PagedList<T>>(
+        PagedList(allItems, hasReachedMax: page.size > pageItems.length),
       ),
     );
   }

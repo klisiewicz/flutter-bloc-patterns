@@ -20,7 +20,7 @@ class RefreshView extends StatefulWidget {
   final RefreshIndicatorTriggerMode triggerMode;
 
   const RefreshView({
-    Key? key,
+    super.key,
     required this.child,
     this.onRefresh,
     this.backgroundColor,
@@ -31,7 +31,7 @@ class RefreshView extends StatefulWidget {
     this.semanticsValue,
     this.strokeWidth = RefreshProgressIndicator.defaultStrokeWidth,
     this.triggerMode = RefreshIndicatorTriggerMode.onEdge,
-  }) : super(key: key);
+  });
 
   @override
   _RefreshViewState createState() => _RefreshViewState();

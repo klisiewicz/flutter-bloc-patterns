@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 /// Base class for states.
 @immutable
-abstract class ViewState extends Equatable {
+sealed class ViewState<T> with EquatableMixin {
   const ViewState();
 
   @override
@@ -11,7 +11,7 @@ abstract class ViewState extends Equatable {
 }
 
 /// The initial view state.
-class Initial extends ViewState {
+final class Initial<T> extends ViewState<T> {
   const Initial();
 
   @override
@@ -19,7 +19,7 @@ class Initial extends ViewState {
 }
 
 /// State indicating that data is being loaded.
-class Loading extends ViewState {
+final class Loading<T> extends ViewState<T> {
   const Loading();
 
   @override
@@ -29,7 +29,7 @@ class Loading extends ViewState {
 /// State indicating that data is being refreshed. It can occur only after
 /// initial loading ends with [Success] or [Empty] result. It may contain
 /// the data that has already been loaded.
-class Refreshing<T> extends ViewState {
+final class Refreshing<T> extends ViewState<T> {
   final T data;
 
   const Refreshing(this.data);
@@ -42,7 +42,7 @@ class Refreshing<T> extends ViewState {
 }
 
 /// State indicating that data was loaded successfully, but was null or empty.
-class Empty extends ViewState {
+final class Empty<T> extends ViewState<T> {
   const Empty();
 
   @override
@@ -51,7 +51,7 @@ class Empty extends ViewState {
 
 /// State indicating that data was loaded successfully and is not null nor empty.
 /// [T] - list element type.
-class Success<T> extends ViewState {
+final class Success<T> extends ViewState<T> {
   final T data;
 
   const Success(this.data) : assert(data != null);
@@ -65,7 +65,7 @@ class Success<T> extends ViewState {
 
 /// State indicating that loading or refreshing has failed. It contains an
 /// exact [error] that has occurred.
-class Failure extends ViewState {
+final class Failure<T> extends ViewState<T> {
   final Object error;
 
   const Failure(this.error);

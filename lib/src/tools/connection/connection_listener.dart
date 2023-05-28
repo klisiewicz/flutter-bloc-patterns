@@ -22,14 +22,12 @@ typedef ConnectionCallback = void Function(BuildContext context);
 /// [onOffline] - a callback for the [Connection.offline] state.
 class ConnectionListener extends BlocListener<ConnectionBloc, Connection> {
   ConnectionListener({
-    Key? key,
-    ConnectionBloc? bloc,
-    Widget? child,
+    super.key,
+    super.bloc,
+    super.child,
     ConnectionCallback? onOnline,
     ConnectionCallback? onOffline,
   }) : super(
-          key: key,
-          bloc: bloc,
           listenWhen: (Connection previous, Connection current) =>
               previous != current,
           listener: (BuildContext context, Connection state) {
@@ -40,6 +38,5 @@ class ConnectionListener extends BlocListener<ConnectionBloc, Connection> {
                 return onOffline?.call(context);
             }
           },
-          child: child,
         );
 }

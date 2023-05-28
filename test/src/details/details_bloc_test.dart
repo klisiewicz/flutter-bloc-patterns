@@ -3,17 +3,12 @@ import 'package:flutter_bloc_patterns/src/details/details_bloc.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../util/bdd.dart';
+import '../util/bloc_state_assertion.dart';
 import 'details_repository_mock.dart';
 
 void main() {
   late DetailsBloc<String, int> detailsBloc;
-
-  Future<void> thenExpectStates(Iterable<ViewState> states) async {
-    expect(
-      detailsBloc.stream,
-      emitsInOrder(states),
-    );
-  }
 
   group('repository with items', () {
     const existingId = 1;
@@ -28,33 +23,34 @@ void main() {
       );
     });
 
-    void whenLoadingExistingElement() => detailsBloc.loadItem(existingId);
+    void loadingExistingElement() => detailsBloc.loadItem(existingId);
 
-    void whenLoadingNoneExistingElement() =>
-        detailsBloc.loadItem(noneExistingId);
+    void loadingNoneExistingElement() => detailsBloc.loadItem(noneExistingId);
 
-    test('should be initialized in $Initial state', () {
-      expect(detailsBloc.state, equals(const Initial()));
+    test('should be initialized in Initial state', () {
+      expect(detailsBloc.state, equals(const Initial<String>()));
     });
 
     test(
         'should emit [$Loading, $Empty] when there is no element with given id',
         () {
-      whenLoadingNoneExistingElement();
-      thenExpectStates(const [
-        Loading(),
-        Empty(),
-      ]);
+      when(loadingNoneExistingElement);
+      then(() {
+        withBloc(detailsBloc).expectStates(
+          const [Loading(), Empty()],
+        );
+      });
     });
 
     test(
         'should emit [$Loading, $Success] when there is an element with given id',
         () {
-      whenLoadingExistingElement();
-      thenExpectStates(const [
-        Loading(),
-        Success(someData),
-      ]);
+      when(loadingExistingElement);
+      then(() {
+        withBloc(detailsBloc).expectStates(
+          const [Loading(), Success(someData)],
+        );
+      });
     });
 
     tearDown(() {
@@ -66,27 +62,29 @@ void main() {
     final exception = Exception('Oh no!');
     final error = Error();
 
-    void givenFailingRepository(Object error) =>
+    void failingRepository(Object error) =>
         detailsBloc = DetailsBloc(FailingDetailsRepository(error));
 
-    void whenLoadingElement() => detailsBloc.loadItem(0);
+    void loadingElement() => detailsBloc.loadItem(0);
 
     test('should emit [$Loading, $Failure] when fetching element fails', () {
-      givenFailingRepository(exception);
-      whenLoadingElement();
-      thenExpectStates([
-        const Loading(),
-        Failure(exception),
-      ]);
+      given(() => failingRepository(exception));
+      when(loadingElement);
+      then(() {
+        withBloc(detailsBloc).expectStates(
+          [const Loading(), Failure(exception)],
+        );
+      });
     });
 
     test('should emit [$Loading, $Failure] when an error is thrown', () {
-      givenFailingRepository(error);
-      whenLoadingElement();
-      thenExpectStates([
-        const Loading(),
-        Failure(error),
-      ]);
+      given(() => failingRepository(error));
+      when(loadingElement);
+      then(() {
+        withBloc(detailsBloc).expectStates(
+          [const Loading(), Failure(error)],
+        );
+      });
     });
 
     tearDown(() {

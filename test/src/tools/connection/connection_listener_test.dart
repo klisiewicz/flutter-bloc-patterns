@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_patterns/src/tools/connection/connection_bloc.dart';
 import 'package:flutter_bloc_patterns/src/tools/connection/connection_listener.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -33,17 +32,16 @@ void main() {
     return makeTestableWidget(
       child: ConnectionListener(
         bloc: connection,
-        onOnline: onOnline,
-        onOffline: onOffline,
+        onOnline: onOnline.call,
+        onOffline: onOffline.call,
         child: const SizedBox(),
       ),
     );
   }
 
   testWidgets(
-    'GIVEN $ConnectionBloc without any state changes '
-    'WHEN pumping $ConnectionListener '
-    'THEN should NOT invoke any callbacks',
+    'should NOT invoke any callbacks '
+    'when ConnectionBloc does not change state ',
     (WidgetTester tester) async {
       whenListen(connection, noChanges, initialState: online);
       await tester.pumpWidget(makeTestableConnectionListener());
@@ -53,9 +51,8 @@ void main() {
   );
 
   testWidgets(
-    'GIVEN $ConnectionBloc emitting $offline state '
-    'WHEN pumping $ConnectionListener '
-    'THEN should invoke onOffline callback',
+    'should invoke onOffline callback '
+    'when ConnectionBloc emits [$offline] state',
     (WidgetTester tester) async {
       whenListen(connection, Stream.value(offline), initialState: online);
       await tester.pumpWidget(makeTestableConnectionListener());
@@ -65,9 +62,8 @@ void main() {
   );
 
   testWidgets(
-    'GIVEN $ConnectionBloc emitting $online state '
-    'WHEN pumping $ConnectionListener '
-    'THEN should NOT invoke any callbacks',
+    'should NOT invoke any callbacks '
+    'when ConnectionBloc emits [$online] state ',
     (WidgetTester tester) async {
       whenListen(connection, Stream.value(online), initialState: online);
       await tester.pumpWidget(makeTestableConnectionListener());
@@ -77,10 +73,8 @@ void main() {
   );
 
   testWidgets(
-    'GIVEN $ConnectionBloc emitting $offline '
-    'AND then $online '
-    'WHEN pumping $ConnectionListener '
-    'THEN should invoke onOffline and onOnline callbacks',
+    'should invoke onOffline and onOnline callbacks '
+    'when ConnectionBloc emits [$offline, $online] states',
     (WidgetTester tester) async {
       whenListen(
         connection,
