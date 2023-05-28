@@ -9,7 +9,7 @@ import 'details_repository_mock.dart';
 
 void main() {
   late DetailsBloc<String, int> detailsBloc;
-  
+
   group('repository with items', () {
     const existingId = 1;
     const noneExistingId = -1;
