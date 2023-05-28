@@ -2,7 +2,7 @@
 /// from and what API calls to make when data is updated.
 ///
 /// [T] - the type of returned items.
-abstract class ListRepository<T> {
+abstract interface class ListRepository<T> {
   /// Retrieves all items.
   Future<List<T>> getAll();
 }

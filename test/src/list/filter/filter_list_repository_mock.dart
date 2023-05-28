@@ -2,7 +2,7 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_repository.dar
 
 const _delay = Duration.zero;
 
-class InMemoryFilterRepository<T, F> extends FilterListRepository<T, F> {
+class InMemoryFilterRepository<T, F> implements FilterListRepository<T, F> {
   final List<T> items;
 
   InMemoryFilterRepository([this.items = const []]);
@@ -19,7 +19,7 @@ class InMemoryFilterRepository<T, F> extends FilterListRepository<T, F> {
   }
 }
 
-class FailingFilterRepository<T, F> extends FilterListRepository<T, F> {
+class FailingFilterRepository<T, F> implements FilterListRepository<T, F> {
   final Object error;
 
   FailingFilterRepository(this.error);

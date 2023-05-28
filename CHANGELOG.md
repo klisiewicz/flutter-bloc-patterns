@@ -4,7 +4,8 @@
 
 * Migrated to `dart` 3.0,
 * Removed: `@Deprecated` methods,
-* Removed: export of `ListEvent`, `DetailsEvent` and `PagedListEvent`.
+* Removed: export of `ListEvent`, `DetailsEvent` and `PagedListEvent`,
+* Changed: Repositories to `interface` classes.
 
 ## [0.11.0]
 
@@ -34,8 +35,10 @@
 
 ## [0.5.0] * Breaking Changes *
 
-* Changed: `RefreshView`, `ViewState` and `ViewStateBuilder` should be imported via `package:flutter_bloc_patterns/view.dart`,
-* Changed: `ViewStateListener` for handling features that need to occur once per state change such as navigation, showing a `SnackBar`, showing a `Dialog`, etc,
+* Changed: `RefreshView`, `ViewState` and `ViewStateBuilder` should be imported
+  via `package:flutter_bloc_patterns/view.dart`,
+* Changed: `ViewStateListener` for handling features that need to occur once per state change such
+  as navigation, showing a `SnackBar`, showing a `Dialog`, etc,
 * Added: `const` constructors for `ViewState`.
 
 ## [0.4.0]

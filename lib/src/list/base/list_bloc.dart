@@ -18,7 +18,7 @@ class ListBloc<T> extends FilterListBloc<T, void> {
       : super(_FilterRepositoryAdapter(repository));
 }
 
-class _FilterRepositoryAdapter<T> extends FilterListRepository<T, void> {
+class _FilterRepositoryAdapter<T> implements FilterListRepository<T, void> {
   final ListRepository<T> listRepository;
 
   _FilterRepositoryAdapter(this.listRepository);

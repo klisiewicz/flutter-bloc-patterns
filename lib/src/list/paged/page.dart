@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 /// Pagination information.
 @immutable
-class Page extends Equatable {
+final class Page extends Equatable {
   final int number;
   final int size;
 
@@ -18,7 +18,9 @@ class Page extends Equatable {
 
   /// Creates first page.
   /// [size] - the size of the page to be returned.
-  const Page.first({required int size}) : this(number: 0, size: size);
+  const Page.first({
+    required int size,
+  }) : this(number: 0, size: size);
 
   /// Returns the offset to be taken according to page and page size.
   int get offset => size * number;

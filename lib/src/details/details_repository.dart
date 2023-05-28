@@ -2,7 +2,7 @@
 ///
 /// [T] - the element type.
 /// [I] - the element's id type.
-abstract class DetailsRepository<T, I> {
+abstract interface class DetailsRepository<T, I> {
   /// Retrieves an element with given id. When there's no element matching the
   /// given [id] `null` should be returned.
   Future<T?> getById(I id);

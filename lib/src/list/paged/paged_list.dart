@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 ///
 /// [T] - type of list items.
 @immutable
-class PagedList<T> extends Equatable {
+final class PagedList<T> extends Equatable {
   final List<T> items;
   final bool hasReachedMax;
 
