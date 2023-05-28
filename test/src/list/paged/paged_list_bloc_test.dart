@@ -21,14 +21,14 @@ void main() {
       bloc = PagedListBloc<int>(repository);
     });
 
-    test('should emit [$Loading, $Empty] when first page contains no items',
-        () {
+    test(
+        'should emit [Loading, Empty] '
+        'when first page contains no items', () {
       when(loadingFirstPage);
       then(() {
-        withBloc(bloc).expectStates(const [
-          Loading(),
-          Empty(),
-        ]);
+        withBloc(bloc).expectStates(
+          const [Loading(), Empty()],
+        );
       });
     });
 
@@ -49,8 +49,8 @@ void main() {
     });
 
     test(
-        'should emit [$Loading, $Success] with first page items when loading first page',
-        () {
+        'should emit [Loading, Success] with '
+        'first page items when loading first page', () {
       when(loadingFirstPage);
 
       then(() {
@@ -62,8 +62,10 @@ void main() {
     });
 
     test(
-        'should emit [$Loading, $Success, $Success] with first, first and second page items when loading two pages',
-        () {
+        'should emit [Loading, Success, Success] with '
+        'first,'
+        'first and second page items '
+        'when loading two pages', () {
       when(() {
         loadingFirstPage();
         loadingNextPage();
@@ -79,8 +81,11 @@ void main() {
     });
 
     test(
-        'should emit [$Loading, $Success, $Success, $Success] with first, first and second and first, second and third page items when loading three pages',
-        () {
+        'should emit [Loading, Success, Success, Success] with '
+        'first,'
+        'first and second, '
+        'first, second and third page items '
+        'when loading three pages', () {
       when(() {
         loadingFirstPage();
         loadingNextPage();
@@ -103,8 +108,8 @@ void main() {
     });
 
     test(
-        'should emit  [$Loading, $Success, $Success, $Success] with hasReachedMax when there are no more pages',
-        () {
+        'should emit  [Loading, Success, Success, Success] with hasReachedMax '
+        'when there are no more pages', () {
       when(() {
         loadingFirstPage();
         loadingNextPage();
@@ -140,13 +145,14 @@ void main() {
         bloc = PagedListBloc<int>(repository);
       });
 
-      test('should emit [$Loading, $Failure] when exception occurs', () {
+      test(
+          'should emit [Loading, Failure] '
+          'when exception occurs', () {
         when(loadingFirstPage);
         then(() {
-          withBloc(bloc).expectStates([
-            const Loading(),
-            Failure(exception),
-          ]);
+          withBloc(bloc).expectStates(
+            [const Loading(), Failure(exception)],
+          );
         });
       });
 
@@ -162,13 +168,14 @@ void main() {
         bloc = PagedListBloc<int>(repository);
       });
 
-      test('should emit [$Loading, $Failure] when error occurs', () {
+      test(
+          'should emit [Loading, Failure] '
+          'when error occurs', () {
         when(loadingFirstPage);
         then(() {
-          withBloc(bloc).expectStates([
-            const Loading(),
-            Failure(error),
-          ]);
+          withBloc(bloc).expectStates(
+            [const Loading(), Failure(error)],
+          );
         });
       });
 
@@ -184,13 +191,14 @@ void main() {
         bloc = PagedListBloc<int>(repository);
       });
 
-      test('should emit [$Loading, $Empty] when first page was not found', () {
+      test(
+          'should emit [Loading, Empty] '
+          'when first page was not found', () {
         when(loadingFirstPage);
         then(() {
-          withBloc(bloc).expectStates(const [
-            Loading(),
-            Empty(),
-          ]);
+          withBloc(bloc).expectStates(
+            const [Loading(), Empty()],
+          );
         });
       });
 

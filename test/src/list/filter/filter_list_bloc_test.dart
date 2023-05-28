@@ -23,25 +23,26 @@ void main() {
       bloc = FilterListBloc(InMemoryFilterRepository());
     });
 
-    test('should emit [$Loading, $Empty] state when no filter is set',
-        () async {
+    test(
+        'should emit [Loading, Empty] state '
+        'when no filter is set', () async {
       when(loadingItems);
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           const [Loading(), Empty()],
-        ),
-      );
+        );
+      });
     });
 
     test(
-        'should emit[$Loading, $Empty] when filter that matches no items is set',
-        () async {
+        'should emit[Loading, Empty] '
+        'when filter that matches no items is set', () async {
       when(() => loadingItems(filter: notMatchingFilter));
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           const [Loading(), Empty()],
-        ),
-      );
+        );
+      });
     });
 
     tearDown(() {
@@ -57,72 +58,72 @@ void main() {
     });
 
     test(
-        'should emit [$Loading, $Success] with all items when no filter is set',
-        () async {
+        'should emit [Loading, Success] with all items '
+        'when no filter is set', () async {
       when(loadingItems);
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           const [Loading(), Success(someData)],
-        ),
-      );
+        );
+      });
     });
 
     test('should emit [$Loading, $Success] with items matching the filter',
         () async {
       when(() => loadingItems(filter: matchingFilter));
-      await then(
-        () async => withBloc(bloc).expectStates(
-          const [
-            Loading(),
-            Success(matchingItems),
-          ],
-        ),
-      );
-    });
-
-    test('should emit [$Loading, $Empty] when no items matches the filter',
-        () async {
-      when(() => loadingItems(filter: notMatchingFilter));
-      await then(
-        () => withBloc(bloc).expectStates(
-          const [Loading(), Empty()],
-        ),
-      );
+      then(() {
+        withBloc(bloc).expectStates(
+          const [Loading(), Success(matchingItems)],
+        );
+      });
     });
 
     test(
-        'should emit [$Loading, $Empty, $Refreshing, $Success] when refreshing with matching filter',
-        () async {
+        'should emit [Loading, Empty] '
+        'when no items matches the filter', () async {
       when(() => loadingItems(filter: notMatchingFilter));
-      await then(
-        () async => withBloc(bloc).expectStates(const [Loading(), Empty()]),
-      );
+      await then(() {
+        withBloc(bloc).expectStates(
+          const [Loading(), Empty()],
+        );
+      });
+    });
+
+    test(
+        'should emit [Loading, Empty, Refreshing, Success] '
+        'when refreshing with matching filter', () async {
+      when(() => loadingItems(filter: notMatchingFilter));
+      await then(() async {
+        await withBloc(bloc).expectStates(
+          const [Loading(), Empty()],
+        );
+      });
 
       when(() => refreshingItems(filter: matchingFilter));
-      await then(
-        () async => withBloc(bloc).expectStates(const [
+      await then(() async {
+        await withBloc(bloc).expectStates(const [
           Refreshing<List<int>>([]),
           Success<List<int>>(matchingItems),
-        ]),
-      );
+        ]);
+      });
     });
 
     test('should include loaded items when refreshing', () async {
       when(() => loadingItems(filter: matchingFilter));
-      await then(
-        () async => withBloc(bloc).expectStates(const [
+      await then(() async {
+        await withBloc(bloc).expectStates(const [
           Loading(),
           Success(matchingItems),
-        ]),
-      );
+        ]);
+      });
 
       when(() => refreshingItems(filter: notMatchingFilter));
-      await then(
-        () async => withBloc(bloc).expectStates(const [
+      await then(() async {
+        await withBloc(bloc).expectStates(const [
           Refreshing(matchingItems),
           Empty(),
-        ]),
-      );
+        ]);
+      });
     });
 
     tearDown(() {
@@ -137,22 +138,26 @@ void main() {
       bloc = FilterListBloc(FailingFilterRepository(exception));
     });
 
-    test('should emit [$Loading, $Failure] when no filter is set', () async {
+    test(
+        'should emit [Loading, Failure] '
+        'when no filter is set', () async {
       when(loadingItems);
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           [const Loading(), Failure(exception)],
-        ),
-      );
+        );
+      });
     });
 
-    test('should emit [$Loading, $Failure] when filter is set', () async {
+    test(
+        'should emit [Loading, Failure] '
+        'when filter is set', () async {
       when(() => loadingItems(filter: notMatchingFilter));
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           [const Loading(), Failure(exception)],
-        ),
-      );
+        );
+      });
     });
 
     tearDown(() {
@@ -167,13 +172,15 @@ void main() {
       bloc = FilterListBloc(FailingFilterRepository(error));
     });
 
-    test('should emit [$Loading, $Failure] when error occurs', () async {
+    test(
+        'should emit [Loading, Failure] '
+        'when error occurs', () async {
       when(() => loadingItems());
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           [const Loading(), Failure(error)],
-        ),
-      );
+        );
+      });
     });
 
     tearDown(() {

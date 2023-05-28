@@ -16,7 +16,7 @@ import 'package:flutter_bloc_patterns/src/view/view_state_builder.dart';
 ///
 /// [T] - the type of list items.
 /// [F] - the type of filter.
-class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState> {
+class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState<List<T>>> {
   final FilterListRepository<T, F> _repository;
 
   F? _filter;
@@ -30,7 +30,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState> {
 
   FilterListBloc(FilterListRepository<T, F> repository)
       : _repository = repository,
-        super(const Initial()) {
+        super(Initial<List<T>>()) {
     on<LoadList<F>>(_loadList);
     on<RefreshList<F>>(_refreshList);
   }
@@ -53,9 +53,9 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState> {
 
   Future<void> _loadList(
     LoadList<F> event,
-    Emitter<ViewState> emit,
+    Emitter<ViewState<List<T>>> emit,
   ) async {
-    emit(const Loading());
+    emit(Loading<List<T>>());
     await _loadItems(event, emit);
   }
 
@@ -64,7 +64,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState> {
     Emitter<ViewState> emit,
   ) async {
     if (_isRefreshPossible) {
-      emit(Refreshing(_currentItems));
+      emit(Refreshing<List<T>>(_currentItems));
       await _loadItems(event, emit);
     }
   }
@@ -78,10 +78,10 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState> {
       if (items.isNotEmpty) {
         emit(Success<List<T>>(UnmodifiableListView(items)));
       } else {
-        emit(const Empty());
+        emit(Empty<List<T>>());
       }
     } catch (e) {
-      emit(Failure(e));
+      emit(Failure<List<T>>(e));
     } finally {
       _filter = event.filter;
     }

@@ -19,9 +19,9 @@ void main() {
   });
 
   test(
-      'WHEN $ConnectionRepository emits NO values '
-      'THEN $ConnectionBloc should be initialized in $online state '
-      'AND should NOT emit NO values', () async {
+      'should be initialized in $online state '
+      'and emit NO values '
+      'when ConnectionRepository emits NO values ', () async {
     when(connectionRepository.observe).thenAnswerStreamValues([]);
     connection = ConnectionBloc(connectionRepository);
     expect(connection.state, equals(Connection.online));
@@ -29,8 +29,8 @@ void main() {
   });
 
   test(
-      'WHEN $ConnectionRepository emits distinct values '
-      'THEN $ConnectionBloc should emit all values', () async {
+      'should emit all values '
+      'when ConnectionRepository emits distinct values ', () async {
     final connections = [offline, online, offline];
     when(connectionRepository.observe).thenAnswerStreamValues(connections);
     connection = ConnectionBloc(connectionRepository);
@@ -38,8 +38,8 @@ void main() {
   });
 
   test(
-      'WHEN $ConnectionRepository emits indistinct values '
-      'THEN $ConnectionBloc should emit only distinct values', () async {
+      'should emit only distinct values '
+      'when ConnectionRepository emits indistinct values ', () async {
     when(connectionRepository.observe)
         .thenAnswerStreamValues([offline, offline, online]);
     connection = ConnectionBloc(connectionRepository);
@@ -47,8 +47,8 @@ void main() {
   });
 
   test(
-      'WHEN closing $ConnectionBloc '
-      'THEN should NOT emit any more values', () async {
+      'should NOT emit any more values '
+      'when closing bloc ', () async {
     final connections = [offline, online, offline, online];
     const emitDelay = Duration(milliseconds: 50);
     when(connectionRepository.observe)

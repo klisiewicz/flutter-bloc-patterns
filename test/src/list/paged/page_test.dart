@@ -6,21 +6,18 @@ void main() {
 
   test('should create page with number and size', () {
     const page = Page(number: 1, size: size);
-
     expect(page.number, 1);
     expect(page.size, size);
   });
 
   test('should create first page with given size', () {
     const firstPage = Page.first(size: size);
-
     expect(firstPage.number, 0);
     expect(firstPage.size, size);
   });
 
   test('should return offset', () {
     const thirdPage = Page(number: 2, size: size);
-
     expect(thirdPage.offset, 2 * size);
   });
 

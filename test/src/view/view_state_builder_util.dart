@@ -8,12 +8,16 @@ import '../util/view_test_util.dart';
 import 'view_state_keys.dart';
 
 extension WidgetTesterViewStateExt on WidgetTester {
-  Future<void> pumpViewStateBuilder<T, B extends BlocBase<ViewState>>(B bloc) {
+  Future<void> pumpViewStateBuilder<T, B extends BlocBase<ViewState<T>>>(
+    B bloc,
+  ) {
     return pumpWidget(makeTestableViewStateBuilder(bloc));
   }
 }
 
-Widget makeTestableViewStateBuilder<T, B extends BlocBase<ViewState>>(B bloc) {
+Widget makeTestableViewStateBuilder<T, B extends BlocBase<ViewState<T>>>(
+  B bloc,
+) {
   return makeTestableWidget(
     child: ViewStateBuilder<T, B>(
       bloc: bloc,

@@ -41,7 +41,7 @@ class _PostsPageState extends State<_PostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
-      body: ViewStateBuilder<PagedList<Post>, PagedListBloc>(
+      body: ViewStateBuilder<PagedList<Post>, PagedListBloc<Post>>(
         onLoading: (context) => const LoadingIndicator(),
         onSuccess: (context, page) => PostsListPaged(
           page,

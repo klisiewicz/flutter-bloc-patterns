@@ -30,62 +30,65 @@ void main() {
   void refreshingItems() => bloc.refreshItems();
 
   test('should be initialized in initial state', () {
-    expect(bloc.state, equals(const Initial()));
+    expect(bloc.state, equals(const Initial<List<int>>()));
   });
 
   group('loading items', () {
-    test('should emit [$Loading, $Empty] when there is no data', () async {
+    test(
+        'should emit [Loading, Empty] '
+        'when there is no data', () async {
       given(emptyRepository);
       when(loadingItems);
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           const [Loading(), Empty()],
-        ),
-      );
+        );
+      });
     });
 
-    test('should emit [$Loading, $Success] when loading data is successful',
-        () async {
+    test(
+        'should emit [Loading, Success] '
+        'when loading data is successful', () async {
       given(repositoryWithItems);
       when(loadingItems);
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           const [Loading(), Success(_someData)],
-        ),
-      );
+        );
+      });
     });
 
-    test('should emit [$Loading, $Failure] when loading data fails', () async {
+    test(
+        'should emit [Loading, Failure] '
+        'when loading data fails', () async {
       given(failingRepository);
       when(loadingItems);
-      await then(
-        () async => withBloc(bloc).expectStates(
+      then(() {
+        withBloc(bloc).expectStates(
           [const Loading(), Failure(_exception)],
-        ),
-      );
+        );
+      });
     });
   });
 
   group('refreshing items', () {
     test(
-        'should emit [$Loading, $Success, $Refreshing, $Success] when loading and refreshing is succeeds',
-        () async {
+        'should emit [Loading, Success, Refreshing, Success] '
+        'when loading and refreshing is succeeds', () async {
       given(repositoryWithItems);
-
       when(loadingItems);
-
-      await then(
-        () async => withBloc(bloc).expectStates(
+      await then(() async {
+        await withBloc(bloc).expectStates(
           const [Loading(), Success(_someData)],
-        ),
-      );
+        );
+      });
 
       when(refreshingItems);
-      await then(
-        () async => withBloc(bloc).expectStates(
+      await then(() async {
+        await withBloc(bloc).expectStates(
           const [Refreshing(_someData), Success(_someData)],
-        ),
-      );
+        );
+      });
     });
   });
 

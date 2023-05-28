@@ -42,7 +42,6 @@ void main() {
   late ErrorCallback errorCallback;
 
   setUpAll(() {
-    registerVieStateFallbackValue();
     registerBuildContextFallbackValue();
   });
 
