@@ -57,8 +57,8 @@ class _ConnectionPageState extends State<ConnectionPage> {
         onOnline: _showOnlineSnackbar,
         onOffline: _showOfflineSnackbar,
         child: ConnectionBuilder(
-          onOnline: (context) => const PostsViewStateBuilder(),
-          onOffline: (context) => const OfflineView(),
+          online: (context) => const PostsViewStateBuilder(),
+          offline: (context) => const OfflineView(),
         ),
       ),
     );

@@ -47,13 +47,13 @@ class _PhotosPageState extends State<_PhotosPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Photos')),
       body: ViewStateBuilder<PagedList<Photo>, PhotosBloc>(
-        onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, page) => PhotosListPaged(
+        loading: (context) => const LoadingIndicator(),
+        data: (context, page) => PhotosListPaged(
           page,
           onLoadNextPage: context.read<PhotosBloc>().loadNextPage,
         ),
-        onEmpty: (context) => const PhotosListEmpty(),
-        onError: (context, error) => ErrorMessage(error: error),
+        empty: (context) => const PhotosListEmpty(),
+        error: (context, error) => ErrorMessage(error: error),
       ),
     );
   }

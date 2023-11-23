@@ -7,6 +7,16 @@
 
 * Removed the direct export `page.dart`. It's now included in `paged_list.dart` and `paged_filter_list.dart`,
 * Removed export of `view_state`,
+* Replaced `ViewStateBuilder` builders:
+  * `onReady` -> `initial`
+  * `onLoading` -> `loading`
+  * `onRefreshing` -> `refreshing`
+  * `onSuccess` -> `data`
+  * `onEmpty` -> `empty`
+  * `onError` -> `error`
+* Replaced `ConnectionBuilder` builders:
+  * `onOnline` -> `online`
+  * `onOffline` -> `offline`
 
 ## [0.12.0]
 

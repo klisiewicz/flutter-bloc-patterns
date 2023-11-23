@@ -21,12 +21,12 @@ Widget makeTestableViewStateBuilder<T, B extends BlocBase<ViewState<T>>>(
   return makeTestableWidget(
     child: ViewStateBuilder<T, B>(
       bloc: bloc,
-      onReady: (context) => const SizedBox.shrink(key: readyKey),
-      onLoading: (context) => const SizedBox.shrink(key: loadKey),
-      onRefreshing: (context, data) => const SizedBox.shrink(key: refreshKey),
-      onEmpty: (context) => const SizedBox.shrink(key: emptyKey),
-      onSuccess: (context, data) => const SizedBox.shrink(key: successKey),
-      onError: (context, error) => const SizedBox.shrink(key: errorKey),
+      initial: (context) => const SizedBox.shrink(key: readyKey),
+      loading: (context) => const SizedBox.shrink(key: loadKey),
+      refreshing: (context, data) => const SizedBox.shrink(key: refreshKey),
+      empty: (context) => const SizedBox.shrink(key: emptyKey),
+      data: (context, data) => const SizedBox.shrink(key: successKey),
+      error: (context, error) => const SizedBox.shrink(key: errorKey),
     ),
   );
 }

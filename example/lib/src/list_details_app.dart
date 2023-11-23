@@ -45,13 +45,13 @@ class _PostsPageState extends State<_PostsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
       body: ViewStateBuilder<List<Post>, PostsBloc>(
-        onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, posts) => PostsList(
+        loading: (context) => const LoadingIndicator(),
+        data: (context, posts) => PostsList(
           posts,
           onPostSelected: _navigateToPostDetails,
           onRefresh: context.read<PostsBloc>().refreshItems,
         ),
-        onEmpty: (context) => const PostsListEmpty(),
+        empty: (context) => const PostsListEmpty(),
       ),
     );
   }
@@ -87,9 +87,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
       body: ViewStateListener<PostDetails, PostDetailsBloc>(
         onEmpty: _showSnackbarAndPopPage,
         child: ViewStateBuilder<PostDetails, PostDetailsBloc>(
-          onLoading: (context) => const LoadingIndicator(),
-          onSuccess: (context, post) => PostDetailsView(post),
-          onError: (context, error) => ErrorMessage(error: error),
+          loading: (context) => const LoadingIndicator(),
+          data: (context, post) => PostDetailsView(post),
+          error: (context, error) => ErrorMessage(error: error),
         ),
       ),
     );

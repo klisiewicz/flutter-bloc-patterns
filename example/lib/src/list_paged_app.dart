@@ -42,13 +42,13 @@ class _PostsPageState extends State<_PostsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
       body: ViewStateBuilder<PagedList<Post>, PagedListBloc<Post>>(
-        onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, page) => PostsListPaged(
+        loading: (context) => const LoadingIndicator(),
+        data: (context, page) => PostsListPaged(
           page,
           onLoadNextPage: context.read<PagedListBloc<Post>>().loadNextPage,
         ),
-        onEmpty: (context) => const PostsListEmpty(),
-        onError: (context, error) => ErrorMessage(error: error),
+        empty: (context) => const PostsListEmpty(),
+        error: (context, error) => ErrorMessage(error: error),
       ),
     );
   }

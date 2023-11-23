@@ -60,17 +60,17 @@ class PostsViewStateBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewStateBuilder<List<Post>, FilterListBloc<Post, User>>(
-      onLoading: (context) => const LoadingIndicator(),
-      onSuccess: (context, posts) => PostsList(
+      loading: (context) => const LoadingIndicator(),
+      data: (context, posts) => PostsList(
         posts,
         onRefresh: () => _refreshPosts(context),
       ),
-      onRefreshing: (context, posts) => PostsList(
+      refreshing: (context, posts) => PostsList(
         posts,
         onRefresh: () => _refreshPosts(context),
       ),
-      onEmpty: (context) => const PostsListEmpty(),
-      onError: (context, error) => ErrorMessage(error: error),
+      empty: (context) => const PostsListEmpty(),
+      error: (context, error) => ErrorMessage(error: error),
     );
   }
 

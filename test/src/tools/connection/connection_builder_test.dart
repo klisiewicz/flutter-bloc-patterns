@@ -44,8 +44,8 @@ extension on WidgetTester {
       makeTestableWidget(
         child: ConnectionBuilder(
           bloc: bloc,
-          onOnline: (context) => const Text('Online'),
-          onOffline: (context) => const Text('Offline'),
+          online: (context) => const Text('Online'),
+          offline: (context) => const Text('Offline'),
         ),
       ),
     );
