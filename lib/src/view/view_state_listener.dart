@@ -45,7 +45,7 @@ typedef ViewStateListenerCondition = bool Function(
 /// corresponding to a given state:
 /// [onLoading] callback for the data loading state,
 /// [onRefreshing] callback for the data refreshing state,
-/// [onSuccess] callback for the data success state,
+/// [onData] callback for the data success state,
 /// [onEmpty] callback for for no result state,
 /// [onError] callback function for an error state.
 ///

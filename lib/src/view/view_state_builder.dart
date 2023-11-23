@@ -44,11 +44,11 @@ typedef ViewStateBuilderCondition<T> = bool Function(
 /// It's a wrapper over the [BlocBuilder] widget so it accepts a [bloc] object and
 /// a set of handy callbacks, which corresponds to each possible state:
 /// [initial] builder for the the initial state,
-/// [onLoading] builder for the data loading state,
-/// [onRefreshing] builder for the data refreshing state,
-/// [onSuccess] builder for the data success state,
-/// [onEmpty] builder for for no result state,
-/// [onError] builder function for an error state.
+/// [loading] builder for the data loading state,
+/// [refreshing] builder for the data refreshing state,
+/// [data] builder for the data success state,
+/// [empty] builder for for no result state,
+/// [error] builder function for an error state.
 /// [buildWhen] a condition to determine whether to rebuild the `view` with the current `state`
 ///
 /// [T] - the type of items,
