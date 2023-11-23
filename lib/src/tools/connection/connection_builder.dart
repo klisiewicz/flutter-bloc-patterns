@@ -32,14 +32,12 @@ class ConnectionBuilder extends BlocBuilder<ConnectionBloc, Connection> {
         super(
           builder: (BuildContext context, Connection state) {
             const none = SizedBox.shrink();
-            switch (state) {
-              case Connection.online:
-                return (online?.call(context) ?? onOnline?.call(context)) ??
-                    none;
-              case Connection.offline:
-                return (offline?.call(context) ?? onOffline?.call(context)) ??
-                    none;
-            }
+            return switch (state) {
+              Connection.online =>
+                (online?.call(context) ?? onOnline?.call(context)) ?? none,
+              Connection.offline =>
+                (offline?.call(context) ?? onOffline?.call(context)) ?? none,
+            };
           },
         );
 }
