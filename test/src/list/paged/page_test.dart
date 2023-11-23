@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_patterns/page.dart';
+import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

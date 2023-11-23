@@ -1,5 +1,4 @@
 import 'package:flutter_bloc_patterns/paged_list.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 
 /// [PagedListFilterRepository] extends [PagedListRepository] with filtering
 /// capabilities.

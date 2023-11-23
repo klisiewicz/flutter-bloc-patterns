@@ -3,6 +3,10 @@
 
 ## [0.13.0]
 
+**Breaking Changes!**
+
+* Removed the direct export `page.dart`. It's now included in `paged_list.dart` and `paged_filter_list.dart`,
+
 ## [0.12.0]
 
 **Breaking Changes!**
