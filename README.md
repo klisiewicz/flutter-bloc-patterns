@@ -190,7 +190,7 @@ It should be used for functionality that needs to occur only once in response to
 
 ## Dart version
 
-- Dart 2: >= 2.12.0
+- Dart 3: >= 3.0.0
 
 ## Author
 - [Karol Lisiewicz](https://github.com/klisiewicz)
