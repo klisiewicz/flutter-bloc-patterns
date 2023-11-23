@@ -52,7 +52,11 @@ void main() {
   testWidgets(
     'should invoke onOffline callback when ConnectionBloc moves from $online to $offline state',
     (WidgetTester tester) async {
-      whenListen<Connection>(connection, Stream.value(offline), initialState: online);
+      whenListen<Connection>(
+        connection,
+        Stream.value(offline),
+        initialState: online,
+      );
       await tester.pumpWidget(makeTestableConnectionListener());
       onOnline.verifyNotCalled();
       onOffline.verifyCalled();
@@ -62,7 +66,11 @@ void main() {
   testWidgets(
     'should NOT invoke any callbacks when ConnectionBloc moves from $online to $online state ',
     (WidgetTester tester) async {
-      whenListen<Connection>(connection, Stream.value(online), initialState: online);
+      whenListen<Connection>(
+        connection,
+        Stream.value(online),
+        initialState: online,
+      );
       await tester.pumpWidget(makeTestableConnectionListener());
       onOnline.verifyNotCalled();
       onOffline.verifyNotCalled();
