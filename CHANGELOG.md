@@ -6,6 +6,7 @@
 **Breaking Changes!**
 
 * Removed the direct export `page.dart`. It's now included in `paged_list.dart` and `paged_filter_list.dart`,
+* Removed export of `view_state`,
 
 ## [0.12.0]
 
