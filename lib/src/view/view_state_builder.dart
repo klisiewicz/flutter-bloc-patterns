@@ -105,9 +105,9 @@ class ViewStateBuilder<T, B extends BlocBase<ViewState<T>>>
           builder: (BuildContext context, ViewState<T> state) {
             const none = SizedBox.shrink();
             return switch (state) {
-              Initial() =>
+              Initial<T>() =>
                 (initial?.call(context) ?? onReady?.call(context)) ?? none,
-              Loading() =>
+              Loading<T>() =>
                 (loading?.call(context) ?? onLoading?.call(context)) ?? none,
               Refreshing<T>(data: final data) =>
                 (refreshing?.call(context, data) ??
@@ -116,9 +116,9 @@ class ViewStateBuilder<T, B extends BlocBase<ViewState<T>>>
               Success<T>(data: final value) => (data?.call(context, value) ??
                       onSuccess?.call(context, value)) ??
                   none,
-              Empty() =>
+              Empty<T>() =>
                 (empty?.call(context) ?? onEmpty?.call(context)) ?? none,
-              Failure(error: final value) => (error?.call(context, value) ??
+              Failure<T>(error: final value) => (error?.call(context, value) ??
                       onError?.call(context, value)) ??
                   none,
             };

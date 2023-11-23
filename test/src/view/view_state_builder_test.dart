@@ -7,11 +7,13 @@ import 'view_state_builder_util.dart';
 import 'view_state_fakes.dart';
 import 'view_state_matchers.dart';
 
-class TestBlocMock extends MockBloc<int, ViewState> {}
+class TestMockBloc extends MockBloc<int, TestState> {}
+
+typedef TestState = ViewState<String>;
 
 void main() {
-  late TestBlocMock bloc;
-  const someData = 0;
+  late TestMockBloc bloc;
+  const someData = 'Hello';
   final someError = Exception();
 
   setUpAll(() {
@@ -19,22 +21,25 @@ void main() {
   });
 
   setUp(() {
-    bloc = TestBlocMock();
+    bloc = TestMockBloc();
   });
 
   testWidgets(
-      'should display onReady widget '
-      'when Bloc in initial state '
-      'and NO state changes occurs', (WidgetTester tester) async {
-    whenListen(bloc, Stream<ViewState>.empty(), initialState: Initial());
+      'should display initial widget when created Bloc does NOT emit any states',
+      (WidgetTester tester) async {
+    whenListen<TestState>(bloc, Stream.empty(), initialState: Initial());
     await tester.pumpViewStateBuilder(bloc);
     verifyReadyWidgetIsDisplayed();
   });
 
   testWidgets(
-      'should display ready and loading widgets '
-      'when Bloc emits [Initial, Loading] states', (WidgetTester tester) async {
-    whenListen(bloc, Stream.value(Loading()), initialState: Initial());
+      'should display initial and loading widgets when Bloc emits [Initial, Loading] states',
+      (WidgetTester tester) async {
+    whenListen<TestState>(
+      bloc,
+      Stream.value(Loading()),
+      initialState: Initial(),
+    );
     await tester.pumpViewStateBuilder(bloc);
     verifyReadyWidgetIsDisplayed();
     await tester.pump();
@@ -42,10 +47,9 @@ void main() {
   });
 
   testWidgets(
-      'should display success and refreshing widgets '
-      'when Bloc emits [Success, Refreshing] states',
+      'should display data and refreshing widgets when Bloc emits [Data, Refreshing] states',
       (WidgetTester tester) async {
-    whenListen(
+    whenListen<TestState>(
       bloc,
       Stream.value(Refreshing(someData)),
       initialState: Success(someData),
@@ -57,9 +61,9 @@ void main() {
   });
 
   testWidgets(
-      'should display loading and empty widgets '
-      'when Bloc emits [Loading, Empty] states', (WidgetTester tester) async {
-    whenListen(bloc, Stream.value(Empty()), initialState: Loading());
+      'should display loading and empty widgets when Bloc emits [Loading, Empty] states',
+      (WidgetTester tester) async {
+    whenListen<TestState>(bloc, Stream.value(Empty()), initialState: Loading());
     await tester.pumpViewStateBuilder(bloc);
     verifyLoadingWidgetIsDisplayed();
     await tester.pump();
@@ -67,9 +71,13 @@ void main() {
   });
 
   testWidgets(
-      'should display loading and success widgets '
-      'when Bloc emits [Loading, Success] states', (WidgetTester tester) async {
-    whenListen(bloc, Stream.value(Success(someData)), initialState: Loading());
+      'should display loading and data widgets when Bloc emits [Loading, Success] states',
+      (WidgetTester tester) async {
+    whenListen<TestState>(
+      bloc,
+      Stream.value(Success(someData)),
+      initialState: Loading(),
+    );
     await tester.pumpViewStateBuilder(bloc);
     verifyLoadingWidgetIsDisplayed();
     await tester.pump();
@@ -77,9 +85,13 @@ void main() {
   });
 
   testWidgets(
-      'should display loading and error widgets '
-      'when Bloc emits [Loading, Failure] states', (WidgetTester tester) async {
-    whenListen(bloc, Stream.value(Failure(someError)), initialState: Loading());
+      'should display loading and error widgets when Bloc emits [Loading, Failure] states',
+      (WidgetTester tester) async {
+    whenListen<TestState>(
+      bloc,
+      Stream.value(Failure(someError)),
+      initialState: Loading(),
+    );
     await tester.pumpViewStateBuilder(bloc);
     verifyLoadingWidgetIsDisplayed();
     await tester.pump();

@@ -51,8 +51,8 @@ typedef ViewStateListenerCondition = bool Function(
 ///
 /// [T] - the type of items,
 /// [B] - the type of bloc.
-class ViewStateListener<T, B extends BlocBase<ViewState>>
-    extends BlocListener<B, ViewState> {
+class ViewStateListener<T, B extends BlocBase<ViewState<T>>>
+    extends BlocListener<B, ViewState<T>> {
   ViewStateListener({
     super.key,
     super.bloc,
@@ -70,17 +70,17 @@ class ViewStateListener<T, B extends BlocBase<ViewState>>
           'The onSuccess and onData callbacks should NOT be used together. The onSuccess callback is deprecated and can be safely removed.',
         ),
         super(
-          listener: (BuildContext context, ViewState state) {
-            if (state is Loading) {
+          listener: (BuildContext context, ViewState<T> state) {
+            if (state is Loading<T>) {
               onLoading?.call(context);
             } else if (state is Refreshing<T>) {
               onRefreshing?.call(context, state.data);
             } else if (state is Success<T>) {
               final callback = onData ?? onSuccess;
               callback?.call(context, state.data);
-            } else if (state is Empty) {
+            } else if (state is Empty<T>) {
               onEmpty?.call(context);
-            } else if (state is Failure) {
+            } else if (state is Failure<T>) {
               onError?.call(context, state.error);
             }
           },

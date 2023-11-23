@@ -11,7 +11,9 @@ extension WidgetTesterViewStateExt on WidgetTester {
   Future<void> pumpViewStateBuilder<T, B extends BlocBase<ViewState<T>>>(
     B bloc,
   ) {
-    return pumpWidget(makeTestableViewStateBuilder(bloc));
+    return pumpWidget(
+      makeTestableViewStateBuilder<T, B>(bloc),
+    );
   }
 }
 
