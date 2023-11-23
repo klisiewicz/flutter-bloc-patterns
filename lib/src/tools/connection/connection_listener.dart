@@ -31,12 +31,10 @@ class ConnectionListener extends BlocListener<ConnectionBloc, Connection> {
           listenWhen: (Connection previous, Connection current) =>
               previous != current,
           listener: (BuildContext context, Connection state) {
-            switch (state) {
-              case Connection.online:
-                return onOnline?.call(context);
-              case Connection.offline:
-                return onOffline?.call(context);
-            }
+            return switch (state) {
+              Connection.online => onOnline?.call(context),
+              Connection.offline => onOffline?.call(context),
+            };
           },
         );
 }
