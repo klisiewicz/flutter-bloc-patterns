@@ -1,8 +1,11 @@
+
 # Changelog
 
 ## [0.13.0]
 
-## [0.12.0] * Breaking Changes *
+## [0.12.0]
+
+**Breaking Changes!**
 
 * Migrated to `dart` 3.0,
 * Removed: `@Deprecated` methods,
@@ -18,28 +21,38 @@
 
 * Migrated to `bloc` 8.0.x and `flutter_bloc` 8.0.x,
 
-## [0.9.0] * Breaking Changes *
+## [0.9.0]
+
+**Breaking Changes!**
 
 * Migrated to `bloc` 7.0.0 and `flutter_bloc` 7.0.1,
 * Migrated to `null-safety`.
 
-## [0.8.0] * Breaking Changes *
+## [0.8.0]
+
+**Breaking Changes!**
 
 * Migrated to `bloc` 6.1.1 and `flutter_bloc` 6.1.1.
 
-## [0.7.0] * Breaking Changes *
+## [0.7.0]
+
+**Breaking Changes!**
 
 * Migrated to `bloc` 5.0.1 and `flutter_bloc` 5.0.1.
 
-## [0.6.0] * Breaking Changes *
+## [0.6.0]
+
+**Breaking Changes!**
 
 * Changed `Page` should be imported via `package:flutter_bloc_patterns/page.dart`.
 
-## [0.5.0] * Breaking Changes *
+## [0.5.0]
 
-* Changed: `RefreshView`, `ViewState` and `ViewStateBuilder` should be imported
+**Breaking Changes!**
+
+* Changed: `RefreshView`, `ViewState` and `ViewStateBuilder` should be imported  
   via `package:flutter_bloc_patterns/view.dart`,
-* Changed: `ViewStateListener` for handling features that need to occur once per state change such
+* Changed: `ViewStateListener` for handling features that need to occur once per state change such  
   as navigation, showing a `SnackBar`, showing a `Dialog`, etc,
 * Added: `const` constructors for `ViewState`.
 
