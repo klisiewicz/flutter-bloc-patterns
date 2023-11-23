@@ -37,7 +37,7 @@ final _someException = Exception('Damn, I have failed...');
 void main() {
   late Bloc<int, ViewState> bloc;
   late LoadingCallback loadingCallback;
-  late SuccessCallback<int> successCallback;
+  late DataCallback<int> dataCallback;
   late RefreshingCallback<int> refreshCallback;
   late EmptyCallback emptyCallback;
   late ErrorCallback errorCallback;
@@ -49,7 +49,7 @@ void main() {
   setUp(() {
     bloc = MockTestBloc();
     loadingCallback = LoadingMock().call;
-    successCallback = SuccessMock().call;
+    dataCallback = SuccessMock().call;
     refreshCallback = RefreshMock().call;
     emptyCallback = EmptyMock().call;
     errorCallback = ErrorMock().call;
@@ -61,7 +61,7 @@ void main() {
         bloc: bloc,
         onLoading: loadingCallback,
         onRefreshing: refreshCallback,
-        onSuccess: successCallback,
+        onData: dataCallback,
         onEmpty: emptyCallback,
         onError: errorCallback,
         child: const SizedBox(),
@@ -80,7 +80,7 @@ void main() {
     await tester.pumpWidget(makeTestableViewStateListener());
 
     verify(() => loadingCallback.call(any<BuildContext>()));
-    verifyNever(() => successCallback.call(any<BuildContext>(), any<int>()));
+    verifyNever(() => dataCallback.call(any<BuildContext>(), any<int>()));
     verifyNever(() => refreshCallback.call(any<BuildContext>(), any<int>()));
     verifyNever(() => emptyCallback.call(any<BuildContext>()));
     verifyNever(() => errorCallback.call(any<BuildContext>(), any<Object>()));
@@ -97,7 +97,7 @@ void main() {
     await tester.pumpWidget(makeTestableViewStateListener());
 
     verifyNever(() => loadingCallback.call(any()));
-    verify(() => successCallback.call(any(), _someData));
+    verify(() => dataCallback.call(any(), _someData));
     verifyNever(() => refreshCallback.call(any(), any()));
     verifyNever(() => emptyCallback.call(any()));
     verifyNever(() => errorCallback.call(any(), any()));
@@ -114,7 +114,7 @@ void main() {
     await tester.pumpWidget(makeTestableViewStateListener());
 
     verifyNever(() => loadingCallback.call(any()));
-    verifyNever(() => successCallback.call(any(), any()));
+    verifyNever(() => dataCallback.call(any(), any()));
     verify(() => refreshCallback.call(any(), _someData));
     verifyNever(() => emptyCallback.call(any()));
     verifyNever(() => errorCallback.call(any(), any()));
@@ -131,7 +131,7 @@ void main() {
     await tester.pumpWidget(makeTestableViewStateListener());
 
     verifyNever(() => loadingCallback.call(any()));
-    verifyNever(() => successCallback.call(any(), any()));
+    verifyNever(() => dataCallback.call(any(), any()));
     verifyNever(() => refreshCallback.call(any(), any()));
     verify(() => emptyCallback.call(any()));
     verifyNever(() => errorCallback.call(any(), any()));
@@ -148,7 +148,7 @@ void main() {
     await tester.pumpWidget(makeTestableViewStateListener());
 
     verifyNever(() => loadingCallback.call(any()));
-    verifyNever(() => successCallback.call(any(), any()));
+    verifyNever(() => dataCallback.call(any(), any()));
     verifyNever(() => refreshCallback.call(any(), any()));
     verifyNever(() => emptyCallback.call(any()));
     verify(() => errorCallback.call(any(), _someException));

@@ -17,6 +17,8 @@
 * Replaced `ConnectionBuilder` builders:
   * `onOnline` -> `online`
   * `onOffline` -> `offline`
+* Replaced `ViewStateListener` callbacks:
+  * `onSuccess` -> `onData` 
 
 ## [0.12.0]
 
