@@ -71,18 +71,16 @@ class ViewStateListener<T, B extends BlocBase<ViewState<T>>>
         ),
         super(
           listener: (BuildContext context, ViewState<T> state) {
-            if (state is Loading<T>) {
-              onLoading?.call(context);
-            } else if (state is Refreshing<T>) {
-              onRefreshing?.call(context, state.data);
-            } else if (state is Success<T>) {
-              final callback = onData ?? onSuccess;
-              callback?.call(context, state.data);
-            } else if (state is Empty<T>) {
-              onEmpty?.call(context);
-            } else if (state is Failure<T>) {
-              onError?.call(context, state.error);
-            }
+            return switch (state) {
+              Initial<T>() => () {},
+              Loading<T>() => onLoading?.call(context),
+              Refreshing<T>(data: final value) =>
+                onRefreshing?.call(context, value),
+              Success<T>(data: final value) =>
+                (onData ?? onSuccess)?.call(context, value),
+              Empty<T>() => onEmpty?.call(context),
+              Failure<T>(error: final value) => onError?.call(context, value)
+            };
           },
         );
 }
