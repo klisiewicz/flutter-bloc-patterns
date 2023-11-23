@@ -113,7 +113,7 @@ class ViewStateBuilder<T, B extends BlocBase<ViewState<T>>>
                 (refreshing?.call(context, data) ??
                         onRefreshing?.call(context, data)) ??
                     none,
-              Success<T>(data: final value) => (data?.call(context, value) ??
+              Data<T>(value: final value) => (data?.call(context, value) ??
                       onSuccess?.call(context, value)) ??
                   none,
               Empty<T>() =>

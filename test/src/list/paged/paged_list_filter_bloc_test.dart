@@ -64,7 +64,7 @@ void main() {
       then(() {
         withBloc(bloc).expectStates([
           const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
+          Data(PagedList(firstPage, hasReachedMax: false)),
         ]);
       });
     });
@@ -82,8 +82,8 @@ void main() {
       then(() {
         withBloc(bloc).expectStates([
           const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
-          Success(PagedList(firstPage + secondPage, hasReachedMax: true)),
+          Data(PagedList(firstPage, hasReachedMax: false)),
+          Data(PagedList(firstPage + secondPage, hasReachedMax: true)),
         ]);
       });
     });

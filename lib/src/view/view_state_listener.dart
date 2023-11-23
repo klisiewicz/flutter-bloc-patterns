@@ -76,7 +76,7 @@ class ViewStateListener<T, B extends BlocBase<ViewState<T>>>
               Loading<T>() => onLoading?.call(context),
               Refreshing<T>(data: final value) =>
                 onRefreshing?.call(context, value),
-              Success<T>(data: final value) =>
+              Data<T>(value: final value) =>
                 (onData ?? onSuccess)?.call(context, value),
               Empty<T>() => onEmpty?.call(context),
               Failure<T>(error: final value) => onError?.call(context, value)

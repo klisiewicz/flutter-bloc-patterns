@@ -53,7 +53,7 @@ void main() {
       when(loadingItems);
       then(() {
         withBloc(bloc).expectStates(
-          const [Loading(), Success(_someData)],
+          const [Loading(), Data(_someData)],
         );
       });
     });
@@ -79,14 +79,14 @@ void main() {
       when(loadingItems);
       await then(() async {
         await withBloc(bloc).expectStates(
-          const [Loading(), Success(_someData)],
+          const [Loading(), Data(_someData)],
         );
       });
 
       when(refreshingItems);
       await then(() async {
         await withBloc(bloc).expectStates(
-          const [Refreshing(_someData), Success(_someData)],
+          const [Refreshing(_someData), Data(_someData)],
         );
       });
     });

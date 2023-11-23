@@ -63,17 +63,17 @@ void main() {
       when(loadingItems);
       then(() {
         withBloc(bloc).expectStates(
-          const [Loading(), Success(someData)],
+          const [Loading(), Data(someData)],
         );
       });
     });
 
-    test('should emit [$Loading, $Success] with items matching the filter',
+    test('should emit [$Loading, $Data] with items matching the filter',
         () async {
       when(() => loadingItems(filter: matchingFilter));
       then(() {
         withBloc(bloc).expectStates(
-          const [Loading(), Success(matchingItems)],
+          const [Loading(), Data(matchingItems)],
         );
       });
     });
@@ -103,7 +103,7 @@ void main() {
       await then(() async {
         await withBloc(bloc).expectStates(const [
           Refreshing<List<int>>([]),
-          Success<List<int>>(matchingItems),
+          Data<List<int>>(matchingItems),
         ]);
       });
     });
@@ -113,7 +113,7 @@ void main() {
       await then(() async {
         await withBloc(bloc).expectStates(const [
           Loading(),
-          Success(matchingItems),
+          Data(matchingItems),
         ]);
       });
 

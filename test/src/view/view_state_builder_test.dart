@@ -52,7 +52,7 @@ void main() {
     whenListen<TestState>(
       bloc,
       Stream.value(Refreshing(someData)),
-      initialState: Success(someData),
+      initialState: Data(someData),
     );
     await tester.pumpViewStateBuilder(bloc);
     verifySuccessWidgetIsDisplayed();
@@ -75,7 +75,7 @@ void main() {
       (WidgetTester tester) async {
     whenListen<TestState>(
       bloc,
-      Stream.value(Success(someData)),
+      Stream.value(Data(someData)),
       initialState: Loading(),
     );
     await tester.pumpViewStateBuilder(bloc);

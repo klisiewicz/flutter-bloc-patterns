@@ -43,12 +43,12 @@ void main() {
     });
 
     test(
-        'should emit [$Loading, $Success] when there is an element with given id',
+        'should emit [$Loading, $Data] when there is an element with given id',
         () {
       when(loadingExistingElement);
       then(() {
         withBloc(detailsBloc).expectStates(
-          const [Loading(), Success(someData)],
+          const [Loading(), Data(someData)],
         );
       });
     });

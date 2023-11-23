@@ -92,7 +92,7 @@ void main() {
       (WidgetTester tester) async {
     whenListen<TestState>(
       bloc,
-      Stream.value(const Success(_someData)),
+      Stream.value(const Data(_someData)),
       initialState: const Loading(),
     );
 
@@ -110,7 +110,7 @@ void main() {
     whenListen<TestState>(
       bloc,
       Stream.value(const Refreshing(_someData)),
-      initialState: const Success(_someData),
+      initialState: const Data(_someData),
     );
 
     await tester.pumpWidget(makeTestableViewStateListener());
