@@ -28,17 +28,8 @@ class ListDetailsSampleApp extends StatelessWidget {
   }
 }
 
-class _PostsPage extends StatefulWidget {
-  @override
-  _PostsPageState createState() => _PostsPageState();
-}
-
-class _PostsPageState extends State<_PostsPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PostsBloc>().loadItems();
-  }
+class _PostsPage extends StatelessWidget {
+  const _PostsPage();
 
   @override
   Widget build(BuildContext context) {
@@ -48,37 +39,21 @@ class _PostsPageState extends State<_PostsPage> {
         loading: (context) => const LoadingIndicator(),
         data: (context, posts) => PostsList(
           posts,
-          onPostSelected: _navigateToPostDetails,
+          onPostSelected: (post) {
+            Navigator.pushNamed(context, _Route.post, arguments: post.id);
+          },
           onRefresh: context.read<PostsBloc>().refreshItems,
         ),
         empty: (context) => const PostsListEmpty(),
       ),
     );
   }
-
-  void _navigateToPostDetails(Post post) {
-    Navigator.pushNamed(context, _Route.post, arguments: post.id);
-  }
 }
 
-class PostDetailPage extends StatefulWidget {
-  final int postId;
-
-  const PostDetailPage(
-    this.postId, {
+class PostDetailPage extends StatelessWidget {
+  const PostDetailPage({
     super.key,
   });
-
-  @override
-  _PostDetailPageState createState() => _PostDetailPageState();
-}
-
-class _PostDetailPageState extends State<PostDetailPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PostDetailsBloc>().loadItem(widget.postId);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +99,10 @@ class PostDetailsView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(post.title, style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              post.title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 8),
             Text(
               post.body,
@@ -150,15 +128,19 @@ class _Router {
       case _Route.home:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => PostsBloc(PostListRepository()),
-            child: _PostsPage(),
+            create: (_) => PostsBloc(
+              PostListRepository(),
+            )..loadItems(),
+            child: const _PostsPage(),
           ),
         );
       case _Route.post:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => PostDetailsBloc(PostDetailsRepository()),
-            child: PostDetailPage(settings.arguments! as int),
+            create: (_) => PostDetailsBloc(
+              PostDetailsRepository(),
+            )..loadItem(settings.arguments! as int),
+            child: const PostDetailPage(),
           ),
         );
       default:
