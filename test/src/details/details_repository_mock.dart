@@ -1,14 +1,16 @@
 import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
 
-const _delay = Duration.zero;
-
 class InMemoryDetailsRepository<T, I> implements DetailsRepository<T, I> {
   final Map<I, T> items;
 
-  InMemoryDetailsRepository([this.items = const {}]);
+  InMemoryDetailsRepository({
+    required this.items,
+  });
 
   @override
-  Future<T?> getById(I id) => Future.delayed(_delay, () => items[id]);
+  Future<T?> getById(I id) {
+    return Future.delayed(Duration.zero, () => items[id]);
+  }
 }
 
 class FailingDetailsRepository<T, I> implements DetailsRepository<T, I> {
@@ -17,5 +19,7 @@ class FailingDetailsRepository<T, I> implements DetailsRepository<T, I> {
   FailingDetailsRepository(this.error);
 
   @override
-  Future<T?> getById(I id) async => Future.delayed(_delay, () => throw error);
+  Future<T?> getById(I id) async {
+    return Future.delayed(Duration.zero, () => throw error);
+  }
 }

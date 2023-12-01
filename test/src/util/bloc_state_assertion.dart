@@ -9,6 +9,10 @@ class BlocStateAssertion<S> {
 
   BlocStateAssertion._internal(this._bloc);
 
+  void expectState(S state) {
+    expect(_bloc.state, equals(state));
+  }
+
   Future<void> expectStates(Iterable<S> states) {
     return expectLater(
       _bloc.stream,
