@@ -19,7 +19,10 @@ final class PagedList<T> extends Equatable {
   PagedList(
     List<T> items, {
     this.hasReachedMax = false,
-  })  : assert(items.isNotEmpty, 'Items cannot be empty'),
+  })  : assert(
+          !(items.isEmpty && !hasReachedMax),
+          'Items cannot be empty while has not reached max',
+        ),
         items = UnmodifiableListView(items);
 
   bool get hasMoreItems => !hasReachedMax;
