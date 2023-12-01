@@ -30,15 +30,15 @@ final class Loading<T> extends ViewState<T> {
 /// initial loading ends with [Data] or [Empty] result. It may contain
 /// the data that has already been loaded.
 final class Refreshing<T> extends ViewState<T> {
-  final T data;
+  final T value;
 
-  const Refreshing(this.data);
-
-  @override
-  List<Object?> get props => [data];
+  const Refreshing(this.value);
 
   @override
-  String toString() => 'Refreshing: $data';
+  List<Object?> get props => [value];
+
+  @override
+  String toString() => 'Refreshing: $value';
 }
 
 /// State indicating that data was loaded successfully, but was null or empty.

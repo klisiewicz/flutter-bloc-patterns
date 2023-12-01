@@ -46,7 +46,7 @@ typedef ViewStateBuilderCondition<T> = bool Function(
 /// [initial] builder for the the initial state,
 /// [loading] builder for the data loading state,
 /// [refreshing] builder for the data refreshing state,
-/// [data] builder for the data success state,
+/// [data] builder for the data state,
 /// [empty] builder for for no result state,
 /// [error] builder function for an error state.
 /// [buildWhen] a condition to determine whether to rebuild the `view` with the current `state`
@@ -109,9 +109,9 @@ class ViewStateBuilder<T, B extends BlocBase<ViewState<T>>>
                 (initial?.call(context) ?? onReady?.call(context)) ?? none,
               Loading<T>() =>
                 (loading?.call(context) ?? onLoading?.call(context)) ?? none,
-              Refreshing<T>(data: final data) =>
-                (refreshing?.call(context, data) ??
-                        onRefreshing?.call(context, data)) ??
+              Refreshing<T>(value: final value) =>
+                (refreshing?.call(context, value) ??
+                        onRefreshing?.call(context, value)) ??
                     none,
               Data<T>(value: final value) => (data?.call(context, value) ??
                       onSuccess?.call(context, value)) ??
