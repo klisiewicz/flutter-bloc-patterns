@@ -15,4 +15,8 @@ class ConnectivityPlusRepository implements ConnectionRepository {
           : Connection.offline,
     );
   }
+
+  @override
+  Future<ConnectivityResult> get currentConnectivityResult =>
+      _connectivity.checkConnectivity();
 }

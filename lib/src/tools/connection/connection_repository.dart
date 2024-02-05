@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc_patterns/src/tools/connection/connection.dart';
 import 'package:meta/meta.dart';
 
@@ -6,4 +7,7 @@ import 'package:meta/meta.dart';
 abstract interface class ConnectionRepository {
   /// Notifies about connection state changes, such as going online or offline.
   Stream<Connection> observe();
+
+  /// Getting what is the current connection status
+  Future<ConnectivityResult> get currentConnectivityResult;
 }

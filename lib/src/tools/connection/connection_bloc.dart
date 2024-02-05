@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc_patterns/src/tools/connection/connection.dart';
 import 'package:flutter_bloc_patterns/src/tools/connection/connection_builder.dart';
 import 'package:flutter_bloc_patterns/src/tools/connection/connection_listener.dart';
@@ -25,6 +26,21 @@ class ConnectionBloc extends Cubit<Connection> {
   ConnectionBloc(ConnectionRepository connectionRepository)
       : _connectionRepository = connectionRepository,
         super(Connection.online) {
+    _init();
+
+    /// To check current connection status. Otherwise if device is offline it will never show any toast message
+  }
+
+  Future<void> _init() async {
+    final connectivityResult =
+        await _connectionRepository.currentConnectivityResult;
+
+    emit(
+      connectivityResult != ConnectivityResult.none
+          ? Connection.online
+          : Connection.offline,
+    );
+
     _subscription = _connectionRepository.observe().distinct().listen(emit);
   }
 
