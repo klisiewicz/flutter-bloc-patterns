@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc_patterns/connection.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ConnectivityPlusRepository implements ConnectionRepository {
   final Connectivity _connectivity;
@@ -9,7 +10,11 @@ class ConnectivityPlusRepository implements ConnectionRepository {
 
   @override
   Stream<Connection> observe() {
-    return _connectivity.onConnectivityChanged.map(
+    // Required due to https://github.com/fluttercommunity/plus_plugins/issues/2527
+    return MergeStream([
+      Stream.fromFuture(_connectivity.checkConnectivity()),
+      _connectivity.onConnectivityChanged,
+    ]).map(
       (ConnectivityResult result) => result != ConnectivityResult.none
           ? Connection.online
           : Connection.offline,
