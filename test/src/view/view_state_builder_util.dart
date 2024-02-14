@@ -23,11 +23,11 @@ Widget makeTestableViewStateBuilder<T, B extends BlocBase<ViewState<T>>>(
   return makeTestableWidget(
     child: ViewStateBuilder<T, B>(
       bloc: bloc,
-      initial: (context) => const SizedBox.shrink(key: readyKey),
+      initial: (context) => const SizedBox.shrink(key: initialKey),
       loading: (context) => const SizedBox.shrink(key: loadKey),
       refreshing: (context, data) => const SizedBox.shrink(key: refreshKey),
       empty: (context) => const SizedBox.shrink(key: emptyKey),
-      data: (context, data) => const SizedBox.shrink(key: successKey),
+      data: (context, data) => const SizedBox.shrink(key: dataKey),
       error: (context, error) => const SizedBox.shrink(key: errorKey),
     ),
   );

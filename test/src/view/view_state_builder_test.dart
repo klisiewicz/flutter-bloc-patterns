@@ -29,7 +29,7 @@ void main() {
       (WidgetTester tester) async {
     whenListen<TestState>(bloc, Stream.empty(), initialState: Initial());
     await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
+    verifyInitialWidgetIsDisplayed();
   });
 
   testWidgets(
@@ -41,7 +41,7 @@ void main() {
       initialState: Initial(),
     );
     await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
+    verifyInitialWidgetIsDisplayed();
     await tester.pump();
     verifyLoadingWidgetIsDisplayed();
   });
@@ -55,7 +55,7 @@ void main() {
       initialState: Data(someData),
     );
     await tester.pumpViewStateBuilder(bloc);
-    verifySuccessWidgetIsDisplayed();
+    verifyDataWidgetIsDisplayed();
     await tester.pump();
     verifyRefreshWidgetIsDisplayed();
   });
@@ -81,7 +81,7 @@ void main() {
     await tester.pumpViewStateBuilder(bloc);
     verifyLoadingWidgetIsDisplayed();
     await tester.pump();
-    verifySuccessWidgetIsDisplayed();
+    verifyDataWidgetIsDisplayed();
   });
 
   testWidgets(

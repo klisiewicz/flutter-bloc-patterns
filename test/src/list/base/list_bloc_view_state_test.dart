@@ -17,7 +17,7 @@ void main() {
       (WidgetTester tester) async {
     bloc = ListBloc(InMemoryFilterRepository());
     await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
+    verifyInitialWidgetIsDisplayed();
   });
 
   testWidgets(
@@ -25,12 +25,12 @@ void main() {
       'when loading list succeeds', (WidgetTester tester) async {
     bloc = ListBloc(InMemoryFilterRepository([1, 2, 3]));
     await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
+    verifyInitialWidgetIsDisplayed();
     bloc.loadItems();
     await tester.pump();
     verifyLoadingWidgetIsDisplayed();
     await tester.asyncPump();
-    verifySuccessWidgetIsDisplayed();
+    verifyDataWidgetIsDisplayed();
   });
 
   testWidgets(
@@ -38,7 +38,7 @@ void main() {
       'when list is empty', (WidgetTester tester) async {
     bloc = ListBloc(InMemoryFilterRepository());
     await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
+    verifyInitialWidgetIsDisplayed();
     bloc.loadItems();
     await tester.pump();
     verifyLoadingWidgetIsDisplayed();
@@ -51,7 +51,7 @@ void main() {
       'when loading list fails', (WidgetTester tester) async {
     bloc = ListBloc(FailingFilterRepository(Exception()));
     await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
+    verifyInitialWidgetIsDisplayed();
     bloc.loadItems();
     await tester.pump();
     verifyLoadingWidgetIsDisplayed();
