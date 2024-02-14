@@ -7,7 +7,7 @@ import '../view/view_state_matchers.dart';
 import 'details_repository_mock.dart';
 
 void main() {
-  testWidgets('should display initial widget when item has NOT been loaded',
+  testWidgets('should display initial widget when item has NOT been loaded yet',
       (tester) async {
     final detailsBloc = DetailsBloc(
       InMemoryDetailsRepository(items: {1: 'Hello'}),
@@ -18,7 +18,7 @@ void main() {
   });
 
   testWidgets(
-      'should display ready, loading and data widgets when loading item succeeds',
+      'should display loading and data widgets when loading item succeeds',
       (tester) async {
     final detailsBloc = DetailsBloc(
       InMemoryDetailsRepository(items: {1: 'Hello'}),
@@ -27,15 +27,14 @@ void main() {
 
     detailsBloc.loadItem(1);
     await tester.pump();
-
     verifyLoadingWidgetIsDisplayed();
-    await tester.asyncPump();
 
+    await tester.asyncPump();
     verifyDataWidgetIsDisplayed();
   });
 
   testWidgets(
-      'should display ready, loading and empty widgets when loading none-existing item',
+      'should display loading and empty widgets when loading none-existing item',
       (tester) async {
     final detailsBloc = DetailsBloc(
       InMemoryDetailsRepository(items: {1: 'Hello'}),
@@ -44,15 +43,14 @@ void main() {
 
     detailsBloc.loadItem(2);
     await tester.pump();
-
     verifyLoadingWidgetIsDisplayed();
-    await tester.asyncPump();
 
+    await tester.asyncPump();
     verifyEmptyWidgetIsDisplayed();
   });
 
   testWidgets(
-      'should display ready, loading and error widgets when loading item fails',
+      'should display loading and error widgets when loading item fails',
       (WidgetTester tester) async {
     final detailsBloc = DetailsBloc(
       FailingDetailsRepository(Exception()),
@@ -61,10 +59,9 @@ void main() {
 
     detailsBloc.loadItem(1);
     await tester.pump();
-
     verifyLoadingWidgetIsDisplayed();
-    await tester.asyncPump();
 
+    await tester.asyncPump();
     verifyErrorWidgetIsDisplayed();
   });
 }
