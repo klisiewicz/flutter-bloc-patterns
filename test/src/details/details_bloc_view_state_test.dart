@@ -51,7 +51,7 @@ void main() {
 
   testWidgets(
       'should display loading and error widgets when loading item fails',
-      (WidgetTester tester) async {
+      (tester) async {
     final detailsBloc = DetailsBloc(
       FailingDetailsRepository(Exception()),
     );

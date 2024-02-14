@@ -19,7 +19,7 @@ void main() {
 
   testWidgets(
       'should display loading and data widgets when loading items succeeds',
-      (WidgetTester tester) async {
+      (tester) async {
     final listBloc = ListBloc(InMemoryFilterRepository(['Hello']));
     await tester.pumpViewStateBuilder(listBloc);
 
@@ -32,7 +32,7 @@ void main() {
   });
 
   testWidgets('should display loading and empty widgets when list is empty',
-      (WidgetTester tester) async {
+      (tester) async {
     final listBloc = ListBloc(
       InMemoryFilterRepository(<String>[]),
     );
@@ -48,7 +48,7 @@ void main() {
 
   testWidgets(
       'should display loading and error widgets when loading items fails',
-      (WidgetTester tester) async {
+      (tester) async {
     final listBloc = ListBloc(
       FailingFilterRepository<String, String>(Exception()),
     );

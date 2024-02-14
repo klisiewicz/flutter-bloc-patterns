@@ -44,5 +44,4 @@ class _PostsPage extends StatelessWidget {
       ),
     );
   }
-
 }

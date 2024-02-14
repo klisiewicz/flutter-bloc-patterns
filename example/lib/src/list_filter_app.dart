@@ -47,7 +47,6 @@ class _PostsPage extends StatelessWidget {
       bottomNavigationBar: const PostsBottomNavigationBar(),
     );
   }
-
 }
 
 class PostsViewStateBuilder extends StatelessWidget {

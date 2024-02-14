@@ -47,5 +47,4 @@ class _PhotosPage extends StatelessWidget {
       ),
     );
   }
-
 }

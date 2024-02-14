@@ -72,7 +72,7 @@ void main() {
   }
 
   testWidgets('should invoke onLoading callback when loading',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(const Loading()),
@@ -89,7 +89,7 @@ void main() {
   });
 
   testWidgets('should invoke onData callback when loaded',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(const Data(_someData)),
@@ -106,7 +106,7 @@ void main() {
   });
 
   testWidgets('should invoke onRefreshing callback when refreshing',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(const Refreshing(_someData)),
@@ -123,7 +123,7 @@ void main() {
   });
 
   testWidgets('should invoke onEmpty callback when empty',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(const Empty()),
@@ -140,7 +140,7 @@ void main() {
   });
 
   testWidgets('should invoke onError callback when error',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(Failure(_someException)),

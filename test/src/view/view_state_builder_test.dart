@@ -54,7 +54,7 @@ void main() {
 
   testWidgets(
       'should display data and refreshing widgets when Bloc emits [Data, Refreshing] states',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(Refreshing('Hello')),
@@ -70,7 +70,7 @@ void main() {
 
   testWidgets(
       'should display loading and empty widgets when Bloc emits [Loading, Empty] states',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(Empty()),
@@ -86,7 +86,7 @@ void main() {
 
   testWidgets(
       'should display loading and data widgets when Bloc emits [Loading, Data] states',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(Data('Hello')),
@@ -102,7 +102,7 @@ void main() {
 
   testWidgets(
       'should display loading and error widgets when Bloc emits [Loading, Failure] states',
-      (WidgetTester tester) async {
+      (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(Failure(Exception('What happened?'))),
