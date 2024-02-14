@@ -39,7 +39,7 @@ class PagedFilterPhotoRepository
       queryParameters: {
         '_start': '${page.offset}',
         '_limit': '${page.size}',
-        if (album != null) 'albumId': '${album.id}'
+        if (album != null) 'albumId': '${album.id}',
       },
     );
   }

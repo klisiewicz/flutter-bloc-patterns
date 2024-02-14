@@ -84,7 +84,7 @@ class _OfflineView extends StatelessWidget {
           Text(
             'You are offline. Check your Internet connection.',
             style: Theme.of(context).textTheme.bodyMedium,
-          )
+          ),
         ],
       ),
     );
