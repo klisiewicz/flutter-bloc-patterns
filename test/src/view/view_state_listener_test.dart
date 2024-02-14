@@ -71,8 +71,7 @@ void main() {
     );
   }
 
-  testWidgets('should invoke onLoading callback when loading',
-      (tester) async {
+  testWidgets('should invoke onLoading callback when loading', (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(const Loading()),
@@ -88,8 +87,7 @@ void main() {
     verifyNever(() => onError.call(any<BuildContext>(), any<Object>()));
   });
 
-  testWidgets('should invoke onData callback when loaded',
-      (tester) async {
+  testWidgets('should invoke onData callback when loaded', (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(const Data(_someData)),
@@ -122,8 +120,7 @@ void main() {
     verifyNever(() => onError.call(any<BuildContext>(), any<Object>()));
   });
 
-  testWidgets('should invoke onEmpty callback when empty',
-      (tester) async {
+  testWidgets('should invoke onEmpty callback when empty', (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(const Empty()),
@@ -139,8 +136,7 @@ void main() {
     verifyNever(() => onError.call(any<BuildContext>(), any<Object>()));
   });
 
-  testWidgets('should invoke onError callback when error',
-      (tester) async {
+  testWidgets('should invoke onError callback when error', (tester) async {
     whenListen<TestState>(
       bloc,
       Stream.value(Failure(_someException)),
