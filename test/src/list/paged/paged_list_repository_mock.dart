@@ -4,7 +4,9 @@ import 'package:flutter_bloc_patterns/paged_list.dart';
 class InMemoryPagedListRepository<T> implements PagedListRepository<T> {
   final List<T> items;
 
-  InMemoryPagedListRepository(this.items);
+  InMemoryPagedListRepository([
+    this.items = const [],
+  ]);
 
   @override
   Future<List<T>> getAll(Page page) async {
