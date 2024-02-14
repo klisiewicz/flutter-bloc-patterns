@@ -176,8 +176,12 @@ Or whatever works for you. A sample implementation using `connectivity_plus` may
 class ConnectivityPlusRepository implements ConnectionRepository {
   @override
   Stream<Connection> observe() {
-    return connectivity.onConnectivityChanged.map(
-      (ConnectivityResult result) => result != ConnectivityResult.none
+    // Required due to https://github.com/fluttercommunity/plus_plugins/issues/2527
+    return MergeStream([
+      Stream.fromFuture(_connectivity.checkConnectivity()),
+      _connectivity.onConnectivityChanged,
+    ]).map(
+          (ConnectivityResult result) => result != ConnectivityResult.none
           ? Connection.online
           : Connection.offline,
     );
