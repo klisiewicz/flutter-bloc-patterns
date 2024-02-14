@@ -1,77 +1,67 @@
 import 'package:flutter_bloc_patterns/src/details/details_bloc.dart';
-import 'package:flutter_bloc_patterns/src/details/details_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
-import '../util/mocktail_ext.dart';
 import '../util/widget_tester_ext.dart';
 import '../view/view_state_builder_util.dart';
 import '../view/view_state_matchers.dart';
-
-class DetailsRepositoryMock extends Mock
-    implements DetailsRepository<int, int> {}
+import 'details_repository_mock.dart';
 
 void main() {
-  const someData = 0;
-  late DetailsRepositoryMock repository;
-  late DetailsBloc<int, int> bloc;
+  testWidgets('should display initial widget when item has NOT been loaded yet',
+      (tester) async {
+    final detailsBloc = DetailsBloc(
+      InMemoryDetailsRepository(items: {1: 'Hello'}),
+    );
+    await tester.pumpViewStateBuilder(detailsBloc);
 
-  setUp(() {
-    repository = DetailsRepositoryMock();
-    bloc = DetailsBloc(repository);
+    verifyInitialWidgetIsDisplayed();
   });
 
   testWidgets(
-      'GIVEN Bloc in initial state '
-      'WHEN no actions have been executed '
-      'THEN should display onReady widget ', (WidgetTester tester) async {
-    await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
-  });
+      'should display loading and data widgets when loading item succeeds',
+      (tester) async {
+    final detailsBloc = DetailsBloc(
+      InMemoryDetailsRepository(items: {1: 'Hello'}),
+    );
+    await tester.pumpViewStateBuilder(detailsBloc);
 
-  testWidgets(
-      'GIVEN an item '
-      'WHEN loading item '
-      'THEN should display ready, loading and success widgets',
-      (WidgetTester tester) async {
-    when(() => repository.getById(someData)).thenAnswerFutureValue(someData);
-    await tester.pumpViewStateBuilder(bloc);
-    bloc.loadItem(someData);
-    await tester.asyncPump();
+    detailsBloc.loadItem(1);
+    await tester.pump();
     verifyLoadingWidgetIsDisplayed();
+
     await tester.asyncPump();
-    verifySuccessWidgetIsDisplayed();
+    verifyDataWidgetIsDisplayed();
   });
 
   testWidgets(
-      'GIVEN NO item '
-      'WHEN loading item '
-      'THEN should display ready, loading and empty widgets',
-      (WidgetTester tester) async {
-    when(() => repository.getById(someData)).thenAnswerFutureValue(null);
-    await tester.pumpViewStateBuilder(bloc);
-    bloc.loadItem(someData);
-    await tester.asyncPump();
+      'should display loading and empty widgets when loading none-existing item',
+      (tester) async {
+    final detailsBloc = DetailsBloc(
+      InMemoryDetailsRepository(items: {1: 'Hello'}),
+    );
+    await tester.pumpViewStateBuilder(detailsBloc);
+
+    detailsBloc.loadItem(2);
+    await tester.pump();
     verifyLoadingWidgetIsDisplayed();
+
     await tester.asyncPump();
     verifyEmptyWidgetIsDisplayed();
   });
 
   testWidgets(
-      'GIVEN an error '
-      'WHEN loading item '
-      'THEN should display ready, loading and error widgets',
-      (WidgetTester tester) async {
-    when(() => repository.getById(someData)).thenAnswerError(Exception());
-    await tester.pumpViewStateBuilder(bloc);
-    bloc.loadItem(someData);
-    await tester.asyncPump();
+      'should display loading and error widgets when loading item fails',
+      (tester) async {
+    final detailsBloc = DetailsBloc(
+      FailingDetailsRepository(Exception()),
+    );
+    await tester.pumpViewStateBuilder(detailsBloc);
+
+    detailsBloc.loadItem(1);
+    await tester.pump();
     verifyLoadingWidgetIsDisplayed();
+
     await tester.asyncPump();
     verifyErrorWidgetIsDisplayed();
-  });
-
-  tearDown(() {
-    bloc.close();
   });
 }

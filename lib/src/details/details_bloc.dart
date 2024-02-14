@@ -31,7 +31,7 @@ class DetailsBloc<T, I> extends Bloc<DetailsEvent, ViewState<T>> {
     try {
       emit(Loading<T>());
       final item = await _repository.getById(event.id);
-      emit(item != null ? Success<T>(item) : Empty<T>());
+      emit(item != null ? Data<T>(item) : Empty<T>());
     } catch (e) {
       emit(Failure<T>(e));
     }

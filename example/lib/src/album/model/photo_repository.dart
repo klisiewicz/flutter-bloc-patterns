@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:example/src/album/model/album.dart';
 import 'package:example/src/album/model/photo.dart';
-import 'package:flutter_bloc_patterns/page.dart';
 import 'package:flutter_bloc_patterns/paged_filter_list.dart';
 import 'package:http/http.dart' as http;
 
@@ -40,7 +39,7 @@ class PagedFilterPhotoRepository
       queryParameters: {
         '_start': '${page.offset}',
         '_limit': '${page.size}',
-        if (album != null) 'albumId': '${album.id}'
+        if (album != null) 'albumId': '${album.id}',
       },
     );
   }

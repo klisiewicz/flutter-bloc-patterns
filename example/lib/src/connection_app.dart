@@ -1,16 +1,12 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:example/src/list_app.dart';
-import 'package:example/src/post/model/post.dart';
-import 'package:example/src/post/model/post_repository.dart';
+import 'package:example/src/list_details_app.dart';
+import 'package:example/src/post/model/post_details.dart';
 import 'package:example/src/tools/connection/connectivity_plus_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/connection.dart';
 
 void main() => runApp(ConnectionApp());
-
-typedef PostsBloc = ListBloc<Post>;
 
 class ConnectionApp extends StatelessWidget {
   @override
@@ -18,47 +14,38 @@ class ConnectionApp extends StatelessWidget {
     return MaterialApp(
       title: 'Connection App',
       theme: ThemeData(primarySwatch: Colors.green),
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (_) => ListBloc<Post>(PostListRepository()),
+      home: BlocProvider(
+        create: (_) => ConnectionBloc(
+          ConnectivityPlusRepository(
+            Connectivity(),
           ),
-          BlocProvider(
-            create: (_) => ConnectionBloc(
-              ConnectivityPlusRepository(Connectivity()),
-            ),
-          ),
-        ],
+        ),
         child: const ConnectionPage(),
       ),
     );
   }
 }
 
-class ConnectionPage extends StatefulWidget {
+class ConnectionPage extends StatelessWidget {
   const ConnectionPage({super.key});
-
-  @override
-  State<ConnectionPage> createState() => _ConnectionPageState();
-}
-
-class _ConnectionPageState extends State<ConnectionPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PostsBloc>().loadItems();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Posts')),
+      appBar: AppBar(title: const Text('Post')),
       body: ConnectionListener(
         onOnline: _showOnlineSnackbar,
         onOffline: _showOfflineSnackbar,
         child: ConnectionBuilder(
-          onOnline: (context) => const PostsViewStateBuilder(),
-          onOffline: (context) => const OfflineView(),
+          online: (context) => PostDetailsView(
+            PostDetails(
+              id: 1,
+              title: 'Lorem Ipsum',
+              body:
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+            ),
+          ),
+          offline: (context) => const _OfflineView(),
         ),
       ),
     );
@@ -83,8 +70,8 @@ class _ConnectionPageState extends State<ConnectionPage> {
   }
 }
 
-class OfflineView extends StatelessWidget {
-  const OfflineView({super.key});
+class _OfflineView extends StatelessWidget {
+  const _OfflineView();
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +84,7 @@ class OfflineView extends StatelessWidget {
           Text(
             'You are offline. Check your Internet connection.',
             style: Theme.of(context).textTheme.bodyMedium,
-          )
+          ),
         ],
       ),
     );

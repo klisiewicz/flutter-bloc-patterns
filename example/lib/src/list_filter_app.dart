@@ -14,6 +14,8 @@ void main() => runApp(FilterListSampleApp());
 
 const _myUserId = '3';
 
+typedef PostsBloc = FilterListBloc<Post, User>;
+
 class FilterListSampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,10 @@ class FilterListSampleApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: BlocProvider(
-        create: (_) => FilterListBloc<Post, User>(FilterPostRepository()),
-        child: _PostsPage(),
+        create: (_) => PostsBloc(
+          FilterPostRepository(),
+        )..loadItems(),
+        child: const _PostsPage(),
       ),
     );
   }
@@ -32,17 +36,8 @@ class FilterListSampleApp extends StatelessWidget {
 
 enum _Posts { all, mine }
 
-class _PostsPage extends StatefulWidget {
-  @override
-  _PostsPageState createState() => _PostsPageState();
-}
-
-class _PostsPageState extends State<_PostsPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<FilterListBloc<Post, User>>().loadItems();
-  }
+class _PostsPage extends StatelessWidget {
+  const _PostsPage();
 
   @override
   Widget build(BuildContext context) {
@@ -59,23 +54,23 @@ class PostsViewStateBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewStateBuilder<List<Post>, FilterListBloc<Post, User>>(
-      onLoading: (context) => const LoadingIndicator(),
-      onSuccess: (context, posts) => PostsList(
+    return ViewStateBuilder<List<Post>, PostsBloc>(
+      loading: (context) => const LoadingIndicator(),
+      data: (context, posts) => PostsList(
         posts,
         onRefresh: () => _refreshPosts(context),
       ),
-      onRefreshing: (context, posts) => PostsList(
+      refreshing: (context, posts) => PostsList(
         posts,
         onRefresh: () => _refreshPosts(context),
       ),
-      onEmpty: (context) => const PostsListEmpty(),
-      onError: (context, error) => ErrorMessage(error: error),
+      empty: (context) => const PostsListEmpty(),
+      error: (context, error) => ErrorMessage(error: error),
     );
   }
 
   void _refreshPosts(BuildContext context) {
-    final postsBloc = context.read<FilterListBloc<Post, User>>();
+    final postsBloc = context.read<PostsBloc>();
     postsBloc.refreshItems(filter: postsBloc.filter);
   }
 }
@@ -111,7 +106,7 @@ class _PostsBottomNavigationBarState extends State<PostsBottomNavigationBar> {
 
   void _updateSelectedPosts(int index) {
     final user = index == _Posts.mine.index ? const User(_myUserId) : null;
-    final postsBloc = context.read<FilterListBloc<Post, User>>();
+    final postsBloc = context.read<PostsBloc>();
     if (user != postsBloc.filter) {
       postsBloc.loadItems(filter: user);
       setState(() {

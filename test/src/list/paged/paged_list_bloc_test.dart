@@ -2,209 +2,126 @@ import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../util/bdd.dart';
 import '../../util/bloc_state_assertion.dart';
 import 'paged_list_repository_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 void main() {
-  late PagedListBloc<int> bloc;
-  late PagedListRepository<int> repository;
+  test('should emit [Loading, Empty] when first page contains no items',
+      () async {
+    final pagedListBloc = PagedListBloc(
+      InMemoryPagedListRepository(<String>[]),
+    );
 
-  void loadingFirstPage() => bloc.loadFirstPage(pageSize: 3);
+    pagedListBloc.loadFirstPage(pageSize: 2);
 
-  void loadingNextPage() => bloc.loadNextPage();
-
-  group('repository without items', () {
-    setUp(() {
-      repository = InMemoryPagedListRepository<int>([]);
-      bloc = PagedListBloc<int>(repository);
-    });
-
-    test(
-        'should emit [Loading, Empty] '
-        'when first page contains no items', () {
-      when(loadingFirstPage);
-      then(() {
-        withBloc(bloc).expectStates(
-          const [Loading(), Empty()],
-        );
-      });
-    });
-
-    tearDown(() {
-      bloc.close();
-    });
+    await withBloc(pagedListBloc).expectStates(const [
+      Loading(),
+      Empty(),
+    ]);
   });
 
-  group('repository with items', () {
-    const firstPage = [0, 1, 2];
-    const secondPage = [3, 4, 5];
-    const thirdPage = [6];
-    final someData = firstPage + secondPage + thirdPage;
+  test(
+      'should emit [Loading, Data] with first page items when loading first page',
+      () async {
+    final pagedListBloc = PagedListBloc(
+      InMemoryPagedListRepository(
+        ['Hey', 'Hi', 'Hello', 'Word'],
+      ),
+    );
 
-    setUp(() {
-      repository = InMemoryPagedListRepository<int>(someData);
-      bloc = PagedListBloc<int>(repository);
-    });
+    pagedListBloc.loadFirstPage(pageSize: 2);
 
-    test(
-        'should emit [Loading, Success] with '
-        'first page items when loading first page', () {
-      when(loadingFirstPage);
-
-      then(() {
-        withBloc(bloc).expectStates([
-          const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
-        ]);
-      });
-    });
-
-    test(
-        'should emit [Loading, Success, Success] with '
-        'first,'
-        'first and second page items '
-        'when loading two pages', () {
-      when(() {
-        loadingFirstPage();
-        loadingNextPage();
-      });
-
-      then(() {
-        withBloc(bloc).expectStates([
-          const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
-          Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
-        ]);
-      });
-    });
-
-    test(
-        'should emit [Loading, Success, Success, Success] with '
-        'first,'
-        'first and second, '
-        'first, second and third page items '
-        'when loading three pages', () {
-      when(() {
-        loadingFirstPage();
-        loadingNextPage();
-        loadingNextPage();
-      });
-
-      then(() {
-        withBloc(bloc).expectStates([
-          const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
-          Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
-          Success(
-            PagedList(
-              firstPage + secondPage + thirdPage,
-              hasReachedMax: true,
-            ),
-          ),
-        ]);
-      });
-    });
-
-    test(
-        'should emit  [Loading, Success, Success, Success] with hasReachedMax '
-        'when there are no more pages', () {
-      when(() {
-        loadingFirstPage();
-        loadingNextPage();
-        loadingNextPage();
-        loadingNextPage();
-      });
-
-      then(() {
-        withBloc(bloc).expectStates([
-          const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
-          Success(PagedList(firstPage + secondPage, hasReachedMax: false)),
-          Success(
-            PagedList(
-              firstPage + secondPage + thirdPage,
-              hasReachedMax: true,
-            ),
-          ),
-        ]);
-      });
-    });
-
-    tearDown(() {
-      bloc.close();
-    });
+    await withBloc(pagedListBloc).expectStates([
+      const Loading(),
+      Data(PagedList(const ['Hey', 'Hi'], hasReachedMax: false)),
+    ]);
   });
 
-  group('failing repository', () {
-    group('repository failing with exception', () {
-      final exception = Exception('Oops!');
-      setUp(() {
-        repository = FailingPagedRepository(exception);
-        bloc = PagedListBloc<int>(repository);
-      });
+  test('should emit [Loading, Data, Data] when loading two pages', () async {
+    final pagedListBloc = PagedListBloc(
+      InMemoryPagedListRepository(
+        ['Hey', 'Hi', 'Hello', 'Greetings', 'Word'],
+      ),
+    );
 
-      test(
-          'should emit [Loading, Failure] '
-          'when exception occurs', () {
-        when(loadingFirstPage);
-        then(() {
-          withBloc(bloc).expectStates(
-            [const Loading(), Failure(exception)],
-          );
-        });
-      });
+    pagedListBloc.loadFirstPage(pageSize: 2);
+    pagedListBloc.loadNextPage();
 
-      tearDown(() {
-        bloc.close();
-      });
-    });
+    await withBloc(pagedListBloc).expectStates([
+      const Loading(),
+      Data(PagedList(const ['Hey', 'Hi'], hasReachedMax: false)),
+      Data(
+        PagedList(
+          const ['Hey', 'Hi', 'Hello', 'Greetings'],
+          hasReachedMax: false,
+        ),
+      ),
+    ]);
+  });
 
-    group('repository failing with error', () {
-      final error = AssertionError();
-      setUp(() {
-        repository = FailingPagedRepository(error);
-        bloc = PagedListBloc<int>(repository);
-      });
+  test(
+      'should emit [Loading, Data, Data, Data] with hasReachedMax when there are no more pages',
+      () async {
+    final pagedListBloc = PagedListBloc(
+      InMemoryPagedListRepository(
+        ['Hey', 'Hi', 'Hello', 'Greetings', 'Word'],
+      ),
+    );
 
-      test(
-          'should emit [Loading, Failure] '
-          'when error occurs', () {
-        when(loadingFirstPage);
-        then(() {
-          withBloc(bloc).expectStates(
-            [const Loading(), Failure(error)],
-          );
-        });
-      });
+    pagedListBloc.loadFirstPage(pageSize: 2);
+    pagedListBloc.loadNextPage();
+    pagedListBloc.loadNextPage();
 
-      tearDown(() {
-        bloc.close();
-      });
-    });
+    await withBloc(pagedListBloc).expectStates([
+      const Loading(),
+      Data(PagedList(const ['Hey', 'Hi'], hasReachedMax: false)),
+      Data(
+        PagedList(
+          const ['Hey', 'Hi', 'Hello', 'Greetings'],
+          hasReachedMax: false,
+        ),
+      ),
+      Data(
+        PagedList(
+          const ['Hey', 'Hi', 'Hello', 'Greetings', 'Word'],
+          hasReachedMax: true,
+        ),
+      ),
+    ]);
+  });
 
-    group('repository unable to find page', () {
-      const pageNotFound = PageNotFoundException(0);
-      setUp(() {
-        repository = FailingPagedRepository(pageNotFound);
-        bloc = PagedListBloc<int>(repository);
-      });
+  test(
+      'should emit [Loading, Data, Data] when loading more pages than available',
+      () async {
+    final pagedListBloc = PagedListBloc(
+      InMemoryPagedListRepository(
+        ['Hey', 'Hi', 'Hello'],
+      ),
+    );
 
-      test(
-          'should emit [Loading, Empty] '
-          'when first page was not found', () {
-        when(loadingFirstPage);
-        then(() {
-          withBloc(bloc).expectStates(
-            const [Loading(), Empty()],
-          );
-        });
-      });
+    pagedListBloc.loadFirstPage(pageSize: 2);
+    pagedListBloc.loadNextPage();
+    pagedListBloc.loadNextPage();
 
-      tearDown(() {
-        bloc.close();
-      });
-    });
+    await withBloc(pagedListBloc).expectStates([
+      const Loading(),
+      Data(PagedList(const ['Hey', 'Hi'], hasReachedMax: false)),
+      Data(PagedList(const ['Hey', 'Hi', 'Hello'], hasReachedMax: true)),
+    ]);
+  });
+
+  test('should emit [Loading, Failure] when loading fails', () async {
+    final exception = Exception('What the heck?');
+    final pagedListBloc = PagedListBloc(
+      FailingPagedRepository<String>(exception),
+    );
+
+    pagedListBloc.loadFirstPage(pageSize: 2);
+
+    await withBloc(pagedListBloc).expectStates([
+      const Loading(),
+      Failure(exception),
+    ]);
   });
 }

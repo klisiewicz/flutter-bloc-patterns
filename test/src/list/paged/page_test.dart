@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_patterns/page.dart';
+import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -17,8 +17,8 @@ void main() {
   });
 
   test('should return offset', () {
-    const thirdPage = Page(number: 2, size: size);
-    expect(thirdPage.offset, 2 * size);
+    const thirdPage = Page(number: 2, size: 20);
+    expect(thirdPage.offset, 40);
   });
 
   test('should return next page', () {
@@ -35,7 +35,7 @@ void main() {
     expect(firstPage.size, size);
   });
 
-  test('should not return previous page for the first page', () {
+  test('should NOT return previous page for the first page', () {
     const firstPage = Page.first(size: size);
     final previousPage = firstPage.previous();
     expect(previousPage.number, 0);

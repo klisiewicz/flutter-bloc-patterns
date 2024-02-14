@@ -7,7 +7,12 @@ typedef LoadingCallback = void Function(BuildContext context);
 
 /// Callback function for a success. The data was fetched and nonnull
 /// element was returned.
+@Deprecated('This type will be removed. Use the "DataCallback" instead.')
 typedef SuccessCallback<T> = void Function(BuildContext context, T data);
+
+/// Callback function for a success. The data was fetched and nonnull
+/// element was returned.
+typedef DataCallback<T> = void Function(BuildContext context, T data);
 
 /// Callback function for the data refreshing state
 typedef RefreshingCallback<T> = void Function(BuildContext context, T data);
@@ -40,37 +45,42 @@ typedef ViewStateListenerCondition = bool Function(
 /// corresponding to a given state:
 /// [onLoading] callback for the data loading state,
 /// [onRefreshing] callback for the data refreshing state,
-/// [onSuccess] callback for the data success state,
+/// [onData] callback for the data success state,
 /// [onEmpty] callback for for no result state,
 /// [onError] callback function for an error state.
 ///
 /// [T] - the type of items,
 /// [B] - the type of bloc.
-class ViewStateListener<T, B extends BlocBase<ViewState>>
-    extends BlocListener<B, ViewState> {
+class ViewStateListener<T, B extends BlocBase<ViewState<T>>>
+    extends BlocListener<B, ViewState<T>> {
   ViewStateListener({
     super.key,
     super.bloc,
     super.listenWhen,
     LoadingCallback? onLoading,
     RefreshingCallback<T>? onRefreshing,
+    @Deprecated('This callback will removed. Use "onData" instead.')
     SuccessCallback<T>? onSuccess,
+    DataCallback<T>? onData,
     EmptyCallback? onEmpty,
     ErrorCallback? onError,
     super.child,
-  }) : super(
-          listener: (BuildContext context, ViewState state) {
-            if (state is Loading) {
-              onLoading?.call(context);
-            } else if (state is Refreshing<T>) {
-              onRefreshing?.call(context, state.data);
-            } else if (state is Success<T>) {
-              onSuccess?.call(context, state.data);
-            } else if (state is Empty) {
-              onEmpty?.call(context);
-            } else if (state is Failure) {
-              onError?.call(context, state.error);
-            }
+  })  : assert(
+          !(onSuccess != null && onData != null),
+          'The onSuccess and onData callbacks should NOT be used together. The onSuccess callback is deprecated and can be safely removed.',
+        ),
+        super(
+          listener: (BuildContext context, ViewState<T> state) {
+            return switch (state) {
+              Initial<T>() => () {},
+              Loading<T>() => onLoading?.call(context),
+              Refreshing<T>(value: final value) =>
+                onRefreshing?.call(context, value),
+              Data<T>(value: final value) =>
+                (onData ?? onSuccess)?.call(context, value),
+              Empty<T>() => onEmpty?.call(context),
+              Failure<T>(error: final value) => onError?.call(context, value)
+            };
           },
         );
 }

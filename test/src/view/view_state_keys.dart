@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-const readyKey = Key('ready');
+const initialKey = Key('initial');
 const loadKey = Key('loading');
 const refreshKey = Key('refreshing');
 const emptyKey = Key('empty');
-const successKey = Key('success');
+const dataKey = Key('data');
 const errorKey = Key('errorKey');

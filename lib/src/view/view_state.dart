@@ -27,18 +27,18 @@ final class Loading<T> extends ViewState<T> {
 }
 
 /// State indicating that data is being refreshed. It can occur only after
-/// initial loading ends with [Success] or [Empty] result. It may contain
+/// initial loading ends with [Data] or [Empty] result. It may contain
 /// the data that has already been loaded.
 final class Refreshing<T> extends ViewState<T> {
-  final T data;
+  final T value;
 
-  const Refreshing(this.data);
-
-  @override
-  List<Object?> get props => [data];
+  const Refreshing(this.value);
 
   @override
-  String toString() => 'Refreshing: $data';
+  List<Object?> get props => [value];
+
+  @override
+  String toString() => 'Refreshing: $value';
 }
 
 /// State indicating that data was loaded successfully, but was null or empty.
@@ -51,16 +51,16 @@ final class Empty<T> extends ViewState<T> {
 
 /// State indicating that data was loaded successfully and is not null nor empty.
 /// [T] - list element type.
-final class Success<T> extends ViewState<T> {
-  final T data;
+final class Data<T> extends ViewState<T> {
+  final T value;
 
-  const Success(this.data) : assert(data != null);
-
-  @override
-  List<Object?> get props => [data];
+  const Data(this.value) : assert(value != null);
 
   @override
-  String toString() => 'Success: $data';
+  List<Object?> get props => [value];
+
+  @override
+  String toString() => 'Data: $value';
 }
 
 /// State indicating that loading or refreshing has failed. It contains an

@@ -3,92 +3,74 @@ import 'package:flutter_bloc_patterns/src/details/details_bloc.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../util/bdd.dart';
 import '../util/bloc_state_assertion.dart';
 import 'details_repository_mock.dart';
 
 void main() {
-  late DetailsBloc<String, int> detailsBloc;
+  test('should be initialized in Initial state', () {
+    final detailsBloc = DetailsBloc(
+      InMemoryDetailsRepository<String, int>(items: {}),
+    );
 
-  group('repository with items', () {
-    const existingId = 1;
-    const noneExistingId = -1;
-    const someData = 'Hello Word';
-
-    setUp(() {
-      detailsBloc = DetailsBloc(
-        InMemoryDetailsRepository<String, int>({
-          existingId: someData,
-        }),
-      );
-    });
-
-    void loadingExistingElement() => detailsBloc.loadItem(existingId);
-
-    void loadingNoneExistingElement() => detailsBloc.loadItem(noneExistingId);
-
-    test('should be initialized in Initial state', () {
-      expect(detailsBloc.state, equals(const Initial<String>()));
-    });
-
-    test(
-        'should emit [$Loading, $Empty] when there is no element with given id',
-        () {
-      when(loadingNoneExistingElement);
-      then(() {
-        withBloc(detailsBloc).expectStates(
-          const [Loading(), Empty()],
-        );
-      });
-    });
-
-    test(
-        'should emit [$Loading, $Success] when there is an element with given id',
-        () {
-      when(loadingExistingElement);
-      then(() {
-        withBloc(detailsBloc).expectStates(
-          const [Loading(), Success(someData)],
-        );
-      });
-    });
-
-    tearDown(() {
-      detailsBloc.close();
-    });
+    withBloc(detailsBloc).expectState(const Initial());
   });
 
-  group('failing repository', () {
+  test('should emit [Loading, Data] when there is an element with given id',
+      () {
+    final detailsBloc = DetailsBloc(
+      InMemoryDetailsRepository(items: {1: 'Hello'}),
+    );
+
+    detailsBloc.loadItem(1);
+
+    withBloc(detailsBloc).expectStates(const [
+      Loading(),
+      Data('Hello'),
+    ]);
+  });
+
+  test('should emit [Loading, Empty] when there is NO element with given id',
+      () {
+    final detailsBloc = DetailsBloc(
+      InMemoryDetailsRepository(items: {1: 'Hello'}),
+    );
+
+    detailsBloc.loadItem(2);
+
+    withBloc(detailsBloc).expectStates(const [
+      Loading(),
+      Empty(),
+    ]);
+  });
+
+  test(
+      'should emit [Loading, Failure] when loading elements fails with Exception',
+      () {
     final exception = Exception('Oh no!');
-    final error = Error();
+    final detailsBloc = DetailsBloc(
+      FailingDetailsRepository<String, int>(exception),
+    );
 
-    void failingRepository(Object error) =>
-        detailsBloc = DetailsBloc(FailingDetailsRepository(error));
+    detailsBloc.loadItem(1);
 
-    void loadingElement() => detailsBloc.loadItem(0);
+    withBloc(detailsBloc).expectStates([
+      const Loading(),
+      Failure(exception),
+    ]);
+  });
 
-    test('should emit [$Loading, $Failure] when fetching element fails', () {
-      given(() => failingRepository(exception));
-      when(loadingElement);
-      then(() {
-        withBloc(detailsBloc).expectStates(
-          [const Loading(), Failure(exception)],
-        );
-      });
-    });
+  test('should emit [Loading, Failure] when loading elements fails with Error',
+      () {
+    final error = ArgumentError('Wrong arg');
+    final detailsBloc = DetailsBloc(
+      FailingDetailsRepository<String, int>(error),
+    );
 
-    test('should emit [$Loading, $Failure] when an error is thrown', () {
-      given(() => failingRepository(error));
-      when(loadingElement);
-      then(() {
-        withBloc(detailsBloc).expectStates(
-          [const Loading(), Failure(error)],
-        );
-      });
-    });
+    detailsBloc.loadItem(1);
 
-    tearDown(() {
-      detailsBloc.close();
-    });
+    withBloc(detailsBloc).expectStates([
+      const Loading(),
+      Failure(error),
+    ]);
   });
 }

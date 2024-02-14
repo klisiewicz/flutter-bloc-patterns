@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_patterns/paged_filter_list.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/page.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_events.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
@@ -29,8 +28,8 @@ class PagedListFilterBloc<T, F>
 
   Page? _page;
 
-  List<T> get _currentItems => (state is Success<PagedList<T>>)
-      ? (state as Success<PagedList<T>>).data.items
+  List<T> get _currentItems => (state is Data<PagedList<T>>)
+      ? (state as Data<PagedList<T>>).value.items
       : [];
 
   PagedListFilterBloc(PagedListFilterRepository<T, F> repository)
@@ -94,7 +93,7 @@ class PagedListFilterBloc<T, F>
     emit(
       page.isFirst
           ? Empty<PagedList<T>>()
-          : Success<PagedList<T>>(
+          : Data<PagedList<T>>(
               PagedList(_currentItems, hasReachedMax: true),
             ),
     );
@@ -107,7 +106,7 @@ class PagedListFilterBloc<T, F>
   ) {
     final allItems = _currentItems + pageItems;
     emit(
-      Success<PagedList<T>>(
+      Data<PagedList<T>>(
         PagedList(allItems, hasReachedMax: page.size > pageItems.length),
       ),
     );

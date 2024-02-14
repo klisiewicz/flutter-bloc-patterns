@@ -1,147 +1,86 @@
 import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:flutter_bloc_patterns/src/list/paged/paged_list_filter_bloc.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/paged_list_filter_repository.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../util/bdd.dart';
 import '../../util/bloc_state_assertion.dart';
 import 'paged_list_filter_repository_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 void main() {
-  const filter = 1;
-  const pageSize = 3;
+  test('should emit [Loading, Empty] when first page contains no items',
+      () async {
+    final pagedListFilterBloc = PagedListFilterBloc<String, String>(
+      InMemoryPagedListFilterRepository(['Hello', 'Word']),
+    );
 
-  late PagedListFilterBloc<int, int> bloc;
-  late PagedListFilterRepository<int, int> repository;
+    pagedListFilterBloc.loadFirstPage(pageSize: 2, filter: 'Hi');
 
-  void loadingFirstPage({
-    required int filter,
-  }) {
-    bloc.loadFirstPage(pageSize: pageSize, filter: filter);
-  }
-
-  void loadingNextPage() => bloc.loadNextPage();
-
-  group('repository without items', () {
-    setUp(() {
-      repository = InMemoryPagedListFilterRepository<int, int>([]);
-      bloc = PagedListFilterBloc<int, int>(repository);
-    });
-
-    test(
-        'should emit [Loading, Empty] '
-        'when first page contains no items', () {
-      when(() => loadingFirstPage(filter: filter));
-      then(() {
-        withBloc(bloc).expectStates(
-          const [Loading(), Empty()],
-        );
-      });
-    });
-
-    tearDown(() {
-      bloc.close();
-    });
+    await withBloc(pagedListFilterBloc).expectStates(const [
+      Loading(),
+      Empty(),
+    ]);
   });
 
-  group('repository with items', () {
-    const items = [1, 1, 0, 1, 2, 3, 1, 1, 0];
-    final firstPage = List<int>.generate(3, (i) => filter);
-    final secondPage = List<int>.generate(2, (i) => filter);
+  test('should emit [Loading, Data, Data] with when loading two pages', () {
+    final pagedListFilterBloc = PagedListFilterBloc<String, String>(
+      InMemoryPagedListFilterRepository(
+        ['Hello', 'Word', 'Hi', 'Hello', 'Word', 'Hello'],
+      ),
+    );
 
-    setUp(() {
-      repository = InMemoryPagedListFilterRepository<int, int>(items);
-      bloc = PagedListFilterBloc<int, int>(repository);
-    });
+    pagedListFilterBloc.loadFirstPage(pageSize: 2, filter: 'Hello');
+    pagedListFilterBloc.loadNextPage();
 
-    test(
-        'should emit [Loading, Success] with items matching the filter '
-        'when loading first page', () {
-      when(() => loadingFirstPage(filter: filter));
-
-      then(() {
-        withBloc(bloc).expectStates([
-          const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
-        ]);
-      });
-    });
-
-    test(
-        'should emit [Loading, Success, Success] with '
-        'first, '
-        'first and second page items matching filter '
-        'when loading two pages', () {
-      when(() {
-        loadingFirstPage(filter: filter);
-        loadingNextPage();
-      });
-
-      then(() {
-        withBloc(bloc).expectStates([
-          const Loading(),
-          Success(PagedList(firstPage, hasReachedMax: false)),
-          Success(PagedList(firstPage + secondPage, hasReachedMax: true)),
-        ]);
-      });
-    });
-
-    tearDown(() {
-      bloc.close();
-    });
+    withBloc(pagedListFilterBloc).expectStates([
+      const Loading(),
+      Data(PagedList(const ['Hello', 'Hello'], hasReachedMax: false)),
+      Data(
+        PagedList(const ['Hello', 'Hello', 'Hello'], hasReachedMax: true),
+      ),
+    ]);
   });
 
-  group('failing repository', () {
-    group('repository failing with error', () {
-      final error = AssertionError();
+  test('should emit [Loading, Data, Data, Data] with when loading three pages',
+      () {
+    final pagedListFilterBloc = PagedListFilterBloc<String, String>(
+      InMemoryPagedListFilterRepository(
+        ['Hello', 'Word', 'Hi', 'Hello', 'Word', 'Hello', 'Hi', 'Hello'],
+      ),
+    );
 
-      setUp(() {
-        repository = FailingPagedListFilterRepository(error);
-        bloc = PagedListFilterBloc<int, int>(repository);
-      });
+    pagedListFilterBloc.loadFirstPage(pageSize: 2, filter: 'Hello');
+    pagedListFilterBloc.loadNextPage();
+    pagedListFilterBloc.loadNextPage();
 
-      test(
-          'should emit [Loading, Failure] '
-          'when error occurs', () {
-        when(() => loadingFirstPage(filter: 1));
+    withBloc(pagedListFilterBloc).expectStates([
+      const Loading(),
+      Data(PagedList(const ['Hello', 'Hello'], hasReachedMax: false)),
+      Data(
+        PagedList(
+          const ['Hello', 'Hello', 'Hello', 'Hello'],
+          hasReachedMax: false,
+        ),
+      ),
+      Data(
+        PagedList(
+          const ['Hello', 'Hello', 'Hello', 'Hello'],
+          hasReachedMax: true,
+        ),
+      ),
+    ]);
+  });
 
-        then(() {
-          withBloc(bloc).expectStates([
-            const Loading(),
-            Failure(error),
-          ]);
-        });
-      });
+  test('should emit [Loading, Failure] when loading page fails', () async {
+    final exception = Exception('What have I done...');
+    final pagedListFilterBloc = PagedListFilterBloc<String, String>(
+      FailingPagedListFilterRepository(exception),
+    );
 
-      tearDown(() {
-        bloc.close();
-      });
-    });
-
-    group('repository unable to find page', () {
-      const pageNotFound = PageNotFoundException(0);
-
-      setUp(() {
-        repository = FailingPagedListFilterRepository(pageNotFound);
-        bloc = PagedListFilterBloc<int, int>(repository);
-      });
-
-      test(
-          'should emit [$Loading, $Empty] '
-          'when first page was not found', () {
-        when(() => loadingFirstPage(filter: filter));
-        then(() {
-          withBloc(bloc).expectStates(
-            const [Loading(), Empty()],
-          );
-        });
-      });
-
-      tearDown(() {
-        bloc.close();
-      });
-    });
+    pagedListFilterBloc.loadFirstPage(pageSize: 2, filter: 'Hi');
+    await withBloc(pagedListFilterBloc).expectStates([
+      const Loading(),
+      Failure(exception),
+    ]);
   });
 }

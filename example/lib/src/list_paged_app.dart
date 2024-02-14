@@ -18,37 +18,29 @@ class PagedListSampleApp extends StatelessWidget {
       title: 'Paged List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        create: (_) => PagedListBloc<Post>(PagedPostRepository()),
+        create: (_) {
+          return PagedListBloc<Post>(PagedPostRepository())
+            ..loadFirstPage(pageSize: 20);
+        },
         child: _PostsPage(),
       ),
     );
   }
 }
 
-class _PostsPage extends StatefulWidget {
-  @override
-  _PostsPageState createState() => _PostsPageState();
-}
-
-class _PostsPageState extends State<_PostsPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PagedListBloc<Post>>().loadFirstPage(pageSize: 20);
-  }
-
+class _PostsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
       body: ViewStateBuilder<PagedList<Post>, PagedListBloc<Post>>(
-        onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, page) => PostsListPaged(
+        loading: (context) => const LoadingIndicator(),
+        data: (context, page) => PostsListPaged(
           page,
           onLoadNextPage: context.read<PagedListBloc<Post>>().loadNextPage,
         ),
-        onEmpty: (context) => const PostsListEmpty(),
-        onError: (context, error) => ErrorMessage(error: error),
+        empty: (context) => const PostsListEmpty(),
+        error: (context, error) => ErrorMessage(error: error),
       ),
     );
   }

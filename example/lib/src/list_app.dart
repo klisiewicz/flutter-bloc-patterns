@@ -20,51 +20,33 @@ class ListSampleApp extends StatelessWidget {
       title: 'List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        create: (_) => ListBloc<Post>(PostListRepository()),
+        create: (_) => ListBloc<Post>(
+          PostListRepository(),
+        )..loadItems(),
         child: PostsPage(),
       ),
     );
   }
 }
 
-class PostsPage extends StatefulWidget {
-  @override
-  _PostsPageState createState() => _PostsPageState();
-}
-
-class _PostsPageState extends State<PostsPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PostsBloc>().loadItems();
-  }
-
+class PostsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Posts')),
-      body: const PostsViewStateBuilder(),
+      body: ViewStateBuilder<List<Post>, PostsBloc>(
+        loading: (context) => const LoadingIndicator(),
+        data: (context, posts) => PostsList(
+          posts,
+          onRefresh: context.read<PostsBloc>().refreshItems,
+        ),
+        refreshing: (context, posts) => PostsList(
+          posts,
+          onRefresh: context.read<PostsBloc>().refreshItems,
+        ),
+        empty: (context) => const PostsListEmpty(),
+        error: (context, error) => ErrorMessage(error: error),
+      ),
     );
-  }
-}
-
-class PostsViewStateBuilder extends StatelessWidget {
-  const PostsViewStateBuilder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ViewStateBuilder<List<Post>, PostsBloc>(
-      onLoading: (context) => const LoadingIndicator(),
-      onSuccess: (context, posts) =>
-          PostsList(posts, onRefresh: () => _refreshPosts(context)),
-      onRefreshing: (context, posts) =>
-          PostsList(posts, onRefresh: () => _refreshPosts(context)),
-      onEmpty: (context) => const PostsListEmpty(),
-      onError: (context, error) => ErrorMessage(error: error),
-    );
-  }
-
-  void _refreshPosts(BuildContext context) {
-    context.read<PostsBloc>().refreshItems();
   }
 }

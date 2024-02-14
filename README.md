@@ -8,40 +8,52 @@ A set of most common BLoC use cases build on top [flutter_bloc](https://github.c
 ## Key contepts
 
 ##### BLoC
+
 BLoC, aka **B**usiness **Lo**gic **C**omponent, is a state management system for Flutter. It's main goal is to separate business logic from the presentation layer. The BLoC handles user actions or any other events and generates new state for the view to render.
 
 ##### Repository
+
 A `Repository` to handles data operations. It knows where to get the data from and what API calls to make when data is updated. A `Repository` can utilize a single data source as well as it can be a mediator between different data sources, such as database, web services and caches.
 
 ##### ViewStateBuilder
+
 `ViewStateBuilder` is responsible for building the UI based on the view state. It's a wrapper over the `BlocBuilder` widget so it accepts a `bloc` object and a set of handy callbacks, which corresponds to each possible state:
 
-* `onReady` - informs the presentation layer that view is in it's initial state, and no action has taken place yet,
-* `onLoading` - informs the presentation layer that the data is being loaded, so it can display a loading indicator,
-* `onRefreshing` - informs the presentation layer that the data is being refreshed, so it can display a refresh indicator or/and the current state of list items,
-* `onSuccess` - informs the presentation layer that the loading is completed and a `nonnull` and not empty data was retrieved,
-* `onEmpty` - informs the presentation layer that the loading is completed, but `null` or empty data was retrieved,
-* `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
+* `initial` - informs the presentation layer that view is in it's initial state, and no action has taken place yet,
+* `loading` - informs the presentation layer that the data is being loaded, so it can display a loading indicator,
+* `refreshing` - informs the presentation layer that the data is being refreshed, so it can display a refresh indicator or/and the current state of list items,
+* `data` - informs the presentation layer that the loading is completed and a `nonnull` and not empty data was retrieved,
+* `empty` - informs the presentation layer that the loading is completed, but `null` or empty data was retrieved,
+* `error` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
 
 ##### ViewStateListener
+
 `ViewStateListener` is responsible for performing an action based on the view state. It should be used for functionality that needs to occur only in response to a state change such as navigation, showing a `SnackBar` etc. `ViewStateListener` is a wrapper over the `BlocListener` widget so it accepts a `bloc` object as well as a `child` widget and a set of handy callbacks corresponding to a given state:
 
 * `onLoading` - informs the presentation layer that the data is being loaded,
 * `onRefreshing` - informs the presentation layer that the data is being refreshed,
-* `onSuccess` - informs the presentation layer that the loading is completed and a `nonnull` and not empty data was retrieved,
+* `onData` - informs the presentation layer that the loading is completed and a `nonnull` and not empty data was retrieved,
 * `onEmpty` - informs the presentation layer that the loading is completed, but `null` or empty data was retrieved,
 * `onError` - informs the presentation layer that the loading or refreshing has ended with an error. It also provides an error that has occurred.
 
 ## Features
 
 ### ListBloc
-The most basic use case. Allows to fetch, refresh and display a list of items without filtering and pagination. Thus, `ListBloc` should be used only with a reasonable amount of data. `ListBloc` provides the methods for loading and refreshing data: `loaditems()` and `refreshitems()`. The former is most suitable for initial data fetch or for retry action when the first fetch fails. The latter is designed for being called after the initial fetch succeeds. It can be performed when the list has already been loaded. To display the current view state `ListBloc` cooperates with `BlocBuilder` as well as `ViewStateBuilder`.
+
+The most basic use case. Allows to fetch, refresh and display a list of items without filtering and pagination. Thus, `ListBloc` should be used only with a reasonable amount of data.
+
+`ListBloc` provides the methods for loading and refreshing data:
+
+* `loaditems()` - most suitable for initial data fetch or for retry action when the first fetch fails,
+* `refreshitems()` - designed for being called after the initial fetch succeeds.
+
+To display the current view state `ListBloc` cooperates with `BlocBuilder` as well as `ViewStateBuilder`.
 
 ##### ListRepository
 
 A `ListRepository` implementation should provide only one method:
 
-`Future<List<T>> getAll();` - this method is responsible for providing all the data to the `ListBloc`.
+* `Future<List<T>> getAll();` - this method is responsible for providing all the data to the `ListBloc`.
 
 Where:
 * `T` is the item type returned by this repository.
@@ -51,14 +63,15 @@ Where:
 [List BLoC Sample App](example/lib/src/list_app.dart)
 
 ### FilterListBloc
+
 An extension to the `ListBloc` that allows filtering.
 
 ##### FilterRepository
 
 `FilterListRepository` provides two methods:
 
-`Future<List<T>> getAll();` - this method is called when a `null` filter is provided and should return all items,
-`Future<List<T>> getBy(F filter);` - this method is called with `nonnull` filter and should return only items that match it.
+* `Future<List<T>> getAll();` - this method is called when a `null` filter is provided and should return all items,
+* `Future<List<T>> getBy(F filter);` - this method is called with `nonnull` filter and should return only items that match it.
 
 Where:
 * `T` is the item type returned by this repository,
@@ -69,18 +82,22 @@ Where:
 [Filter List BLoC Sample App](example/lib/src/list_filter_app.dart)
 
 ### PagedListBloc
-A list BLoC with pagination but without filtering. It works best with [Infinite Widgets](https://github.com/jaumard/infinite_widgets) but a custom presentation layer can provided as well.
+
+A list BLoC with pagination but without filtering. It works best with [Infinite Widgets](https://github.com/jaumard/infinite_widgets) but a custom presentation layer can be provided as well.
 
 #### Page
+
 Contains information about the current page, this is `number` and `size`.
 
 #### PagedList
+
 List of items with information if there are more items or not.
 
 #### PagedListRepository
+
 `PagedListRepository` comes with only one method:
 
-`Future<List<T>> getAll(Page page);` - this method retrieves items meeting the pagination restriction provided by the `page` object.
+* `Future<List<T>> getAll(Page page);` - this method retrieves items meeting the pagination restriction provided by the `page` object.
 When items are exceeded it should return an empty list or throw `PageNotFoundException`. `PagedListBloc` will handle both cases in the same way.
 
 Where:
@@ -91,19 +108,22 @@ Where:
 [Paged List BLoC Sample App](example/lib/src/list_paged_app.dart)
 
 ### PagedListFilterBloc
-A list BLoC with pagination and filtering. It works best with [Infinite Widgets](https://github.com/jaumard/infinite_widgets) but a custom presentation layer can provided as well.
+
+A list BLoC with pagination and filtering. It works best with [Infinite Widgets](https://github.com/jaumard/infinite_widgets) but a custom presentation layer can be provided as well.
 
 #### Page
+
 Contains information about the current page, this is `number` and `size`.
 
 #### PagedList
+
 List of items with information if there are more items or not.
 
 #### PagedListFilterRepository
 `PagedListFilterRepository` provides only two methods:
 
-`Future<List<T>> getAll(Page page);` - retrieves items meeting the pagination restriction provided by the `page` object.
-`Future<List<T>> getBy(Page page, F filter);` - retrieves items meeting pagination as well as the filter restrictions provided by the `page` and `filter` objects.
+* `Future<List<T>> getAll(Page page);` - retrieves items meeting the pagination restriction provided by the `page` object.
+* `Future<List<T>> getBy(Page page, F filter);` - retrieves items meeting pagination as well as the filter restrictions provided by the `page` and `filter` objects.
 
 When items are exceeded it should return an empty list or throw `PageNotFoundException`. `PagedListFilterBloc` will handle both cases in the same way.
 
@@ -120,9 +140,10 @@ Where:
 A BLoC that allows to fetch a single item with given identifier.
 
 #### DetailsRepository
+
 `DetailsRepository` comes with only one method:
 
-`Future<T> getById(I id);` - this method retrieves an item with given id. When there's no item matching the id the `null` should be returned or `itemNotFoundException` should be thrown. In both cases the `DetailsBloc` will emit `Empty` state.
+* `Future<T> getById(I id);` - this method retrieves an item with given id. When there's no item matching the id the `null` should be returned. In this cases the `DetailsBloc` will emit `Empty` state.
 
 Where:
 * `T` is the item type returned by this repository,
@@ -155,8 +176,12 @@ Or whatever works for you. A sample implementation using `connectivity_plus` may
 class ConnectivityPlusRepository implements ConnectionRepository {
   @override
   Stream<Connection> observe() {
-    return connectivity.onConnectivityChanged.map(
-      (ConnectivityResult result) => result != ConnectivityResult.none
+    // Required due to https://github.com/fluttercommunity/plus_plugins/issues/2527
+    return MergeStream([
+      Stream.fromFuture(_connectivity.checkConnectivity()),
+      _connectivity.onConnectivityChanged,
+    ]).map(
+          (ConnectivityResult result) => result != ConnectivityResult.none
           ? Connection.online
           : Connection.offline,
     );
@@ -170,8 +195,8 @@ class ConnectivityPlusRepository implements ConnectionRepository {
 
 It's a wrapper over the `BlocBuilder` widget so it accepts a `bloc` object and provides `WidgetBuilder` functions for possible states:
 
-* `onOnline` - a builder for the the `Connection.online` state,
-* `onOffline` - a builder for the the `Connection.offline` state,
+* `online` - a builder for the the `Connection.online` state,
+* `offline` - a builder for the the `Connection.offline` state,
 
 #### ConnectionListener
 
@@ -190,7 +215,7 @@ It should be used for functionality that needs to occur only once in response to
 
 ## Dart version
 
-- Dart 2: >= 2.12.0
+- Dart 3: >= 3.0.0
 
 ## Author
 - [Karol Lisiewicz](https://github.com/klisiewicz)

@@ -17,6 +17,7 @@ class RefreshView extends StatefulWidget {
   final String? semanticsLabel;
   final String? semanticsValue;
   final double strokeWidth;
+  final double edgeOffset;
   final RefreshIndicatorTriggerMode triggerMode;
 
   const RefreshView({
@@ -30,6 +31,7 @@ class RefreshView extends StatefulWidget {
     this.semanticsLabel,
     this.semanticsValue,
     this.strokeWidth = RefreshProgressIndicator.defaultStrokeWidth,
+    this.edgeOffset = 0.0,
     this.triggerMode = RefreshIndicatorTriggerMode.onEdge,
   });
 
@@ -53,6 +55,7 @@ class _RefreshViewState extends State<RefreshView> {
       semanticsLabel: widget.semanticsLabel,
       semanticsValue: widget.semanticsValue,
       strokeWidth: widget.strokeWidth,
+      edgeOffset: widget.edgeOffset,
       triggerMode: widget.triggerMode,
       onRefresh: _refresh,
       child: widget.child,

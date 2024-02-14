@@ -2,189 +2,104 @@ import 'package:flutter_bloc_patterns/src/list/filter/filter_list_bloc.dart';
 import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../util/bdd.dart';
 import '../../util/bloc_state_assertion.dart';
 import 'filter_list_repository_mock.dart';
 
 void main() {
-  const someData = [1, 2, 3];
-  const notMatchingFilter = 0;
-  const matchingFilter = 1;
-  const matchingItems = [1];
+  test('should emit [Loading, Data] with all items when no filter is set',
+      () async {
+    final filterListBloc = FilterListBloc<String, String>(
+      InMemoryFilterRepository(['Hello', 'Word']),
+    );
 
-  late FilterListBloc<int, int> bloc;
+    filterListBloc.loadItems();
 
-  void loadingItems({int? filter}) => bloc.loadItems(filter: filter);
-
-  void refreshingItems({int? filter}) => bloc.refreshItems(filter: filter);
-
-  group('empty repository', () {
-    setUp(() {
-      bloc = FilterListBloc(InMemoryFilterRepository());
-    });
-
-    test(
-        'should emit [Loading, Empty] state '
-        'when no filter is set', () async {
-      when(loadingItems);
-      then(() {
-        withBloc(bloc).expectStates(
-          const [Loading(), Empty()],
-        );
-      });
-    });
-
-    test(
-        'should emit[Loading, Empty] '
-        'when filter that matches no items is set', () async {
-      when(() => loadingItems(filter: notMatchingFilter));
-      then(() {
-        withBloc(bloc).expectStates(
-          const [Loading(), Empty()],
-        );
-      });
-    });
-
-    tearDown(() {
-      bloc.close();
-    });
+    await withBloc(filterListBloc).expectStates(const [
+      Loading(),
+      Data(['Hello', 'Word']),
+    ]);
   });
 
-  group('repository with items', () {
-    setUp(() {
-      bloc = FilterListBloc(
-        InMemoryFilterRepository(someData),
-      );
-    });
+  test('should emit [Loading, Data] with items matching the filter', () async {
+    final filterListBloc = FilterListBloc<String, String>(
+      InMemoryFilterRepository(['Hello', 'Word']),
+    );
 
-    test(
-        'should emit [Loading, Success] with all items '
-        'when no filter is set', () async {
-      when(loadingItems);
-      then(() {
-        withBloc(bloc).expectStates(
-          const [Loading(), Success(someData)],
-        );
-      });
-    });
+    filterListBloc.loadItems(filter: 'Hello');
 
-    test('should emit [$Loading, $Success] with items matching the filter',
-        () async {
-      when(() => loadingItems(filter: matchingFilter));
-      then(() {
-        withBloc(bloc).expectStates(
-          const [Loading(), Success(matchingItems)],
-        );
-      });
-    });
-
-    test(
-        'should emit [Loading, Empty] '
-        'when no items matches the filter', () async {
-      when(() => loadingItems(filter: notMatchingFilter));
-      await then(() {
-        withBloc(bloc).expectStates(
-          const [Loading(), Empty()],
-        );
-      });
-    });
-
-    test(
-        'should emit [Loading, Empty, Refreshing, Success] '
-        'when refreshing with matching filter', () async {
-      when(() => loadingItems(filter: notMatchingFilter));
-      await then(() async {
-        await withBloc(bloc).expectStates(
-          const [Loading(), Empty()],
-        );
-      });
-
-      when(() => refreshingItems(filter: matchingFilter));
-      await then(() async {
-        await withBloc(bloc).expectStates(const [
-          Refreshing<List<int>>([]),
-          Success<List<int>>(matchingItems),
-        ]);
-      });
-    });
-
-    test('should include loaded items when refreshing', () async {
-      when(() => loadingItems(filter: matchingFilter));
-      await then(() async {
-        await withBloc(bloc).expectStates(const [
-          Loading(),
-          Success(matchingItems),
-        ]);
-      });
-
-      when(() => refreshingItems(filter: notMatchingFilter));
-      await then(() async {
-        await withBloc(bloc).expectStates(const [
-          Refreshing(matchingItems),
-          Empty(),
-        ]);
-      });
-    });
-
-    tearDown(() {
-      bloc.close();
-    });
+    await withBloc(filterListBloc).expectStates(const [
+      Loading(),
+      Data(['Hello']),
+    ]);
   });
 
-  group('failing repository with exception', () {
-    final exception = Exception('Oh no, I failed!');
+  test('should emit [Loading, Empty] when no items matches the filter',
+      () async {
+    final filterListBloc = FilterListBloc<String, String>(
+      InMemoryFilterRepository(['Hello', 'Word']),
+    );
 
-    setUp(() {
-      bloc = FilterListBloc(FailingFilterRepository(exception));
-    });
+    filterListBloc.loadItems(filter: 'Hi');
 
-    test(
-        'should emit [Loading, Failure] '
-        'when no filter is set', () async {
-      when(loadingItems);
-      then(() {
-        withBloc(bloc).expectStates(
-          [const Loading(), Failure(exception)],
-        );
-      });
-    });
-
-    test(
-        'should emit [Loading, Failure] '
-        'when filter is set', () async {
-      when(() => loadingItems(filter: notMatchingFilter));
-      then(() {
-        withBloc(bloc).expectStates(
-          [const Loading(), Failure(exception)],
-        );
-      });
-    });
-
-    tearDown(() {
-      bloc.close();
-    });
+    await withBloc(filterListBloc).expectStates(const [
+      Loading(),
+      Empty(),
+    ]);
   });
 
-  group('failing repository with error', () {
-    final error = Error();
+  test(
+      'should emit [Loading, Empty, Refreshing, Data] when refreshing with matching filter',
+      () async {
+    final filterListBloc = FilterListBloc(
+      InMemoryFilterRepository<String, String>(['Hello', 'Word']),
+    );
 
-    setUp(() {
-      bloc = FilterListBloc(FailingFilterRepository(error));
-    });
+    filterListBloc.loadItems(filter: 'Hi');
 
-    test(
-        'should emit [Loading, Failure] '
-        'when error occurs', () async {
-      when(() => loadingItems());
-      then(() {
-        withBloc(bloc).expectStates(
-          [const Loading(), Failure(error)],
-        );
-      });
-    });
+    await withBloc(filterListBloc).expectStates(const [
+      Loading(),
+      Empty(),
+    ]);
 
-    tearDown(() {
-      bloc.close();
-    });
+    filterListBloc.refreshItems(filter: 'Hello');
+
+    await withBloc(filterListBloc).expectStates(const [
+      Refreshing(<String>[]),
+      Data(['Hello']),
+    ]);
+  });
+
+  test('should include loaded items when refreshing', () async {
+    final filterListBloc = FilterListBloc(
+      InMemoryFilterRepository<String, String>(['Hello', 'Word']),
+    );
+
+    filterListBloc.loadItems(filter: 'Hello');
+
+    await withBloc(filterListBloc).expectStates(const [
+      Loading(),
+      Data(['Hello']),
+    ]);
+
+    filterListBloc.refreshItems(filter: 'Hi');
+
+    await withBloc(filterListBloc).expectStates(const [
+      Refreshing(['Hello']),
+      Empty(),
+    ]);
+  });
+
+  test('should emit [Loading, Failure] when loading fails', () async {
+    final exception = Exception('Holy crap!');
+    final filterListBloc = FilterListBloc(
+      FailingFilterRepository<String, String>(exception),
+    );
+
+    filterListBloc.loadItems();
+
+    await withBloc(filterListBloc).expectStates([
+      const Loading(),
+      Failure(exception),
+    ]);
   });
 }

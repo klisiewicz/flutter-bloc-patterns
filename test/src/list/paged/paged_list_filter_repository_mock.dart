@@ -1,6 +1,4 @@
-import 'package:flutter_bloc_patterns/page.dart';
 import 'package:flutter_bloc_patterns/paged_filter_list.dart';
-import 'package:flutter_bloc_patterns/src/list/paged/paged_list_filter_repository.dart';
 
 import 'paged_list_repository_mock.dart';
 

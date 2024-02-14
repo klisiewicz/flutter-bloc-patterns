@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_patterns/src/view/view_state.dart';
 import 'package:flutter_bloc_patterns/view.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -8,7 +9,9 @@ import 'package:mocktail/mocktail.dart';
 import '../util/view_test_util.dart';
 import 'view_state_fakes.dart';
 
-class MockTestBloc extends MockBloc<int, ViewState> {}
+class TestMockBloc extends MockBloc<int, TestState> {}
+
+typedef TestState = ViewState<int>;
 
 class LoadingMock extends Mock {
   void call(BuildContext context);
@@ -34,43 +37,42 @@ const _someData = 1;
 final _someException = Exception('Damn, I have failed...');
 
 void main() {
-  late Bloc<int, ViewState> bloc;
-  late LoadingCallback loadingCallback;
-  late SuccessCallback<int> successCallback;
-  late RefreshingCallback<int> refreshCallback;
-  late EmptyCallback emptyCallback;
-  late ErrorCallback errorCallback;
+  late Bloc<int, TestState> bloc;
+  late LoadingCallback onLoading;
+  late DataCallback<int> onData;
+  late RefreshingCallback<int> onRefreshing;
+  late EmptyCallback onEmpty;
+  late ErrorCallback onError;
 
   setUpAll(() {
     registerBuildContextFallbackValue();
   });
 
   setUp(() {
-    bloc = MockTestBloc();
-    loadingCallback = LoadingMock().call;
-    successCallback = SuccessMock().call;
-    refreshCallback = RefreshMock().call;
-    emptyCallback = EmptyMock().call;
-    errorCallback = ErrorMock().call;
+    bloc = TestMockBloc();
+    onLoading = LoadingMock().call;
+    onData = SuccessMock().call;
+    onRefreshing = RefreshMock().call;
+    onEmpty = EmptyMock().call;
+    onError = ErrorMock().call;
   });
 
   Widget makeTestableViewStateListener() {
     return makeTestableWidget(
-      child: ViewStateListener<int, Bloc<int, ViewState>>(
+      child: ViewStateListener<int, Bloc<int, TestState>>(
         bloc: bloc,
-        onLoading: loadingCallback,
-        onRefreshing: refreshCallback,
-        onSuccess: successCallback,
-        onEmpty: emptyCallback,
-        onError: errorCallback,
+        onLoading: onLoading,
+        onRefreshing: onRefreshing,
+        onData: onData,
+        onEmpty: onEmpty,
+        onError: onError,
         child: const SizedBox(),
       ),
     );
   }
 
-  testWidgets('should invoke loading callback when loading',
-      (WidgetTester tester) async {
-    whenListen(
+  testWidgets('should invoke onLoading callback when loading', (tester) async {
+    whenListen<TestState>(
       bloc,
       Stream.value(const Loading()),
       initialState: const Initial(),
@@ -78,79 +80,76 @@ void main() {
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verify(() => loadingCallback.call(any<BuildContext>()));
-    verifyNever(() => successCallback.call(any<BuildContext>(), any<int>()));
-    verifyNever(() => refreshCallback.call(any<BuildContext>(), any<int>()));
-    verifyNever(() => emptyCallback.call(any<BuildContext>()));
-    verifyNever(() => errorCallback.call(any<BuildContext>(), any<Object>()));
+    verify(() => onLoading.call(any<BuildContext>()));
+    verifyNever(() => onData.call(any<BuildContext>(), any<int>()));
+    verifyNever(() => onRefreshing.call(any<BuildContext>(), any<int>()));
+    verifyNever(() => onEmpty.call(any<BuildContext>()));
+    verifyNever(() => onError.call(any<BuildContext>(), any<Object>()));
   });
 
-  testWidgets('should invoke success callback when loaded',
-      (WidgetTester tester) async {
-    whenListen(
+  testWidgets('should invoke onData callback when loaded', (tester) async {
+    whenListen<TestState>(
       bloc,
-      Stream.value(const Success(_someData)),
-      initialState: const Initial(),
+      Stream.value(const Data(_someData)),
+      initialState: const Loading(),
     );
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(() => loadingCallback.call(any()));
-    verify(() => successCallback.call(any(), _someData));
-    verifyNever(() => refreshCallback.call(any(), any()));
-    verifyNever(() => emptyCallback.call(any()));
-    verifyNever(() => errorCallback.call(any(), any()));
+    verifyNever(() => onLoading.call(any<BuildContext>()));
+    verify(() => onData.call(any<BuildContext>(), _someData));
+    verifyNever(() => onRefreshing.call(any<BuildContext>(), any<int>()));
+    verifyNever(() => onEmpty.call(any<BuildContext>()));
+    verifyNever(() => onError.call(any<BuildContext>(), any<Object>()));
   });
 
-  testWidgets('should invoke refresh callback when refreshing',
-      (WidgetTester tester) async {
-    whenListen(
+  testWidgets('should invoke onRefreshing callback when refreshing',
+      (tester) async {
+    whenListen<TestState>(
       bloc,
       Stream.value(const Refreshing(_someData)),
-      initialState: const Initial(),
+      initialState: const Data(_someData),
     );
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(() => loadingCallback.call(any()));
-    verifyNever(() => successCallback.call(any(), any()));
-    verify(() => refreshCallback.call(any(), _someData));
-    verifyNever(() => emptyCallback.call(any()));
-    verifyNever(() => errorCallback.call(any(), any()));
+    verifyNever(() => onLoading.call(any<BuildContext>()));
+    verifyNever(() => onData.call(any<BuildContext>(), any<int>()));
+    verify(() => onRefreshing.call(any<BuildContext>(), _someData));
+    verifyNever(() => onEmpty.call(any<BuildContext>()));
+    verifyNever(() => onError.call(any<BuildContext>(), any<Object>()));
   });
 
-  testWidgets('should invoke empty callback when empty',
-      (WidgetTester tester) async {
-    whenListen(
+  testWidgets('should invoke onEmpty callback when empty', (tester) async {
+    whenListen<TestState>(
       bloc,
       Stream.value(const Empty()),
-      initialState: const Initial(),
+      initialState: const Loading(),
     );
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(() => loadingCallback.call(any()));
-    verifyNever(() => successCallback.call(any(), any()));
-    verifyNever(() => refreshCallback.call(any(), any()));
-    verify(() => emptyCallback.call(any()));
-    verifyNever(() => errorCallback.call(any(), any()));
+    verifyNever(() => onLoading.call(any<BuildContext>()));
+    verifyNever(() => onData.call(any<BuildContext>(), any<int>()));
+    verifyNever(() => onRefreshing.call(any<BuildContext>(), _someData));
+    verify(() => onEmpty.call(any<BuildContext>()));
+    verifyNever(() => onError.call(any<BuildContext>(), any<Object>()));
   });
 
-  testWidgets('should invoke error callback when error',
-      (WidgetTester tester) async {
-    whenListen(
+  testWidgets('should invoke onError callback when error', (tester) async {
+    whenListen<TestState>(
       bloc,
       Stream.value(Failure(_someException)),
-      initialState: const Initial(),
+      initialState: const Loading(),
     );
 
     await tester.pumpWidget(makeTestableViewStateListener());
 
-    verifyNever(() => loadingCallback.call(any()));
-    verifyNever(() => successCallback.call(any(), any()));
-    verifyNever(() => refreshCallback.call(any(), any()));
-    verifyNever(() => emptyCallback.call(any()));
-    verify(() => errorCallback.call(any(), _someException));
+    verifyNever(() => onLoading.call(any<BuildContext>()));
+    verifyNever(() => onData.call(any<BuildContext>(), any<int>()));
+    verifyNever(() => onRefreshing.call(any<BuildContext>(), any<int>()));
+    verifyNever(() => onEmpty.call(any<BuildContext>()));
+    verify(() => onError.call(any<BuildContext>(), _someException));
   });
 
   tearDown(() {

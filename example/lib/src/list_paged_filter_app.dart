@@ -21,39 +21,29 @@ class PagedFilterListSampleApp extends StatelessWidget {
       title: 'Paged Filter List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        create: (_) => PhotosBloc(PagedFilterPhotoRepository()),
+        create: (_) {
+          return PhotosBloc(PagedFilterPhotoRepository())
+            ..loadFirstPage(pageSize: 12, filter: const Album(id: 1));
+        },
         child: _PhotosPage(),
       ),
     );
   }
 }
 
-class _PhotosPage extends StatefulWidget {
-  @override
-  _PhotosPageState createState() => _PhotosPageState();
-}
-
-class _PhotosPageState extends State<_PhotosPage> {
-  final _myAlbum = const Album(id: 1);
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<PhotosBloc>().loadFirstPage(pageSize: 12, filter: _myAlbum);
-  }
-
+class _PhotosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Photos')),
       body: ViewStateBuilder<PagedList<Photo>, PhotosBloc>(
-        onLoading: (context) => const LoadingIndicator(),
-        onSuccess: (context, page) => PhotosListPaged(
+        loading: (context) => const LoadingIndicator(),
+        data: (context, page) => PhotosListPaged(
           page,
           onLoadNextPage: context.read<PhotosBloc>().loadNextPage,
         ),
-        onEmpty: (context) => const PhotosListEmpty(),
-        onError: (context, error) => ErrorMessage(error: error),
+        empty: (context) => const PhotosListEmpty(),
+        error: (context, error) => ErrorMessage(error: error),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_patterns/src/tools/connection/connection_listener.dart';
+import 'package:flutter_bloc_patterns/connection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -40,48 +40,56 @@ void main() {
   }
 
   testWidgets(
-    'should NOT invoke any callbacks '
-    'when ConnectionBloc does not change state ',
-    (WidgetTester tester) async {
-      whenListen(connection, noChanges, initialState: online);
+    'should NOT invoke any callbacks when ConnectionBloc does not change state ',
+    (tester) async {
+      whenListen<Connection>(connection, noChanges, initialState: online);
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyNotCalled();
       onOffline.verifyNotCalled();
     },
   );
 
   testWidgets(
-    'should invoke onOffline callback '
-    'when ConnectionBloc emits [$offline] state',
-    (WidgetTester tester) async {
-      whenListen(connection, Stream.value(offline), initialState: online);
+    'should invoke onOffline callback when ConnectionBloc moves from $online to $offline state',
+    (tester) async {
+      whenListen<Connection>(
+        connection,
+        Stream.value(offline),
+        initialState: online,
+      );
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyNotCalled();
       onOffline.verifyCalled();
     },
   );
 
   testWidgets(
-    'should NOT invoke any callbacks '
-    'when ConnectionBloc emits [$online] state ',
-    (WidgetTester tester) async {
-      whenListen(connection, Stream.value(online), initialState: online);
+    'should NOT invoke any callbacks when ConnectionBloc moves from $online to $online state ',
+    (tester) async {
+      whenListen<Connection>(
+        connection,
+        Stream.value(online),
+        initialState: online,
+      );
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyNotCalled();
       onOffline.verifyNotCalled();
     },
   );
 
   testWidgets(
-    'should invoke onOffline and onOnline callbacks '
-    'when ConnectionBloc emits [$offline, $online] states',
-    (WidgetTester tester) async {
-      whenListen(
+    'should invoke onOffline and onOnline callbacks when ConnectionBloc emits $online, $offline, $online states',
+    (tester) async {
+      whenListen<Connection>(
         connection,
         Stream.fromIterable([offline, online]),
         initialState: online,
       );
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyCalled();
       onOffline.verifyCalled();
     },

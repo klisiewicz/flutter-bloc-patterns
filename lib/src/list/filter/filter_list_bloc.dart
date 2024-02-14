@@ -23,11 +23,6 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState<List<T>>> {
 
   F? get filter => _filter;
 
-  bool get _isRefreshPossible => state is Success<List<T>> || state is Empty;
-
-  List<T> get _currentItems =>
-      (state is Success<List<T>>) ? (state as Success<List<T>>).data : [];
-
   FilterListBloc(FilterListRepository<T, F> repository)
       : _repository = repository,
         super(Initial<List<T>>()) {
@@ -63,8 +58,8 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState<List<T>>> {
     RefreshList<F> event,
     Emitter<ViewState> emit,
   ) async {
-    if (_isRefreshPossible) {
-      emit(Refreshing<List<T>>(_currentItems));
+    if (state.canRefresh) {
+      emit(Refreshing<List<T>>(state.currentItems));
       await _loadItems(event, emit);
     }
   }
@@ -76,7 +71,7 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState<List<T>>> {
     try {
       final items = await _getItems(event.filter);
       if (items.isNotEmpty) {
-        emit(Success<List<T>>(UnmodifiableListView(items)));
+        emit(Data<List<T>>(UnmodifiableListView(items)));
       } else {
         emit(Empty<List<T>>());
       }
@@ -93,5 +88,23 @@ class FilterListBloc<T, F> extends Bloc<ListEvent<F>, ViewState<List<T>>> {
     } else {
       return _repository.getAll();
     }
+  }
+}
+
+extension<T> on ViewState<List<T>> {
+  List<T> get currentItems {
+    return switch (this) {
+      Refreshing<List<T>>(value: final items) => items,
+      Data<List<T>>(value: final items) => items,
+      _ => <T>[],
+    };
+  }
+
+  bool get canRefresh {
+    return switch (this) {
+      Data<List<T>>() => true,
+      Empty<List<T>>() => true,
+      _ => false,
+    };
   }
 }

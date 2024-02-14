@@ -7,7 +7,6 @@ import 'package:example/src/user/model/user.dart';
 import 'package:flutter_bloc_patterns/base_list.dart';
 import 'package:flutter_bloc_patterns/details.dart';
 import 'package:flutter_bloc_patterns/filter_list.dart';
-import 'package:flutter_bloc_patterns/page.dart';
 import 'package:flutter_bloc_patterns/paged_list.dart';
 import 'package:http/http.dart' as http;
 

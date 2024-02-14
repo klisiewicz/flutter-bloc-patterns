@@ -7,59 +7,58 @@ import '../../view/view_state_matchers.dart';
 import '../filter/filter_list_repository_mock.dart';
 
 void main() {
-  late ListBloc<int> bloc;
-
-  setUp(() {});
-
   testWidgets(
-      'should display onReady widget '
-      'when no action has been performed by the bloc',
-      (WidgetTester tester) async {
-    bloc = ListBloc(InMemoryFilterRepository());
-    await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
+      'should display initial widget when items has NOT been loaded yet',
+      (tester) async {
+    final listBloc = ListBloc(
+      InMemoryFilterRepository(['Hello']),
+    );
+    await tester.pumpViewStateBuilder(listBloc);
+    verifyInitialWidgetIsDisplayed();
   });
 
   testWidgets(
-      'should display ready, loading and success widgets '
-      'when loading list succeeds', (WidgetTester tester) async {
-    bloc = ListBloc(InMemoryFilterRepository([1, 2, 3]));
-    await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
-    bloc.loadItems();
+      'should display loading and data widgets when loading items succeeds',
+      (tester) async {
+    final listBloc = ListBloc(InMemoryFilterRepository(['Hello']));
+    await tester.pumpViewStateBuilder(listBloc);
+
+    listBloc.loadItems();
     await tester.pump();
     verifyLoadingWidgetIsDisplayed();
+
     await tester.asyncPump();
-    verifySuccessWidgetIsDisplayed();
+    verifyDataWidgetIsDisplayed();
   });
 
-  testWidgets(
-      'should display ready, loading and empty widgets '
-      'when list is empty', (WidgetTester tester) async {
-    bloc = ListBloc(InMemoryFilterRepository());
-    await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
-    bloc.loadItems();
+  testWidgets('should display loading and empty widgets when list is empty',
+      (tester) async {
+    final listBloc = ListBloc(
+      InMemoryFilterRepository(<String>[]),
+    );
+    await tester.pumpViewStateBuilder(listBloc);
+
+    listBloc.loadItems();
     await tester.pump();
     verifyLoadingWidgetIsDisplayed();
+
     await tester.asyncPump();
     verifyEmptyWidgetIsDisplayed();
   });
 
   testWidgets(
-      'should display ready, loading and error widgets '
-      'when loading list fails', (WidgetTester tester) async {
-    bloc = ListBloc(FailingFilterRepository(Exception()));
-    await tester.pumpViewStateBuilder(bloc);
-    verifyReadyWidgetIsDisplayed();
-    bloc.loadItems();
+      'should display loading and error widgets when loading items fails',
+      (tester) async {
+    final listBloc = ListBloc(
+      FailingFilterRepository<String, String>(Exception()),
+    );
+    await tester.pumpViewStateBuilder(listBloc);
+
+    listBloc.loadItems();
     await tester.pump();
     verifyLoadingWidgetIsDisplayed();
+
     await tester.asyncPump();
     verifyErrorWidgetIsDisplayed();
-  });
-
-  tearDown(() {
-    bloc.close();
   });
 }
