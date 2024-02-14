@@ -15,20 +15,22 @@ void main() {
   });
 
   testWidgets(
-      'should display online widget '
-      'when ConnectionBloc is in $online state ', (WidgetTester tester) async {
+      'should display online widget when ConnectionBloc is in $online state ', (WidgetTester tester) async {
     whenListen(connection, noChanges, initialState: online);
+
     await tester.pumpConnectionBuilder(connection);
+
     verifyOnlineWidgetIsDisplayed();
   });
 
   testWidgets(
-      'should display online and then offline widgets '
-      'when ConnectionBloc emits [$online, $offline] states',
+      'should display online and then offline widgets when ConnectionBloc emits [$online, $offline] states',
       (WidgetTester tester) async {
     whenListen(connection, Stream.value(offline), initialState: online);
     await tester.pumpConnectionBuilder(connection);
+
     verifyOnlineWidgetIsDisplayed();
+
     await tester.pump();
     verifyOfflineWidgetIsDisplayed();
   });
