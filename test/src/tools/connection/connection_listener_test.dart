@@ -44,6 +44,7 @@ void main() {
     (tester) async {
       whenListen<Connection>(connection, noChanges, initialState: online);
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyNotCalled();
       onOffline.verifyNotCalled();
     },
@@ -58,6 +59,7 @@ void main() {
         initialState: online,
       );
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyNotCalled();
       onOffline.verifyCalled();
     },
@@ -72,6 +74,7 @@ void main() {
         initialState: online,
       );
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyNotCalled();
       onOffline.verifyNotCalled();
     },
@@ -86,6 +89,7 @@ void main() {
         initialState: online,
       );
       await tester.pumpWidget(makeTestableConnectionListener());
+
       onOnline.verifyCalled();
       onOffline.verifyCalled();
     },

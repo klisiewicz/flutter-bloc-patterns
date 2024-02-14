@@ -23,7 +23,8 @@ void main() {
       () async {
     when(connectionRepository.observe).thenAnswerStreamValues([]);
     connection = ConnectionBloc(connectionRepository);
-    expect(connection.state, equals(Connection.online));
+
+    withBloc(connection).expectState(Connection.online);
     await withBloc(connection).expectStates([]);
   });
 
@@ -33,6 +34,7 @@ void main() {
     final connections = [offline, online, offline];
     when(connectionRepository.observe).thenAnswerStreamValues(connections);
     connection = ConnectionBloc(connectionRepository);
+
     await withBloc(connection).expectStates(connections);
   });
 
@@ -42,6 +44,7 @@ void main() {
     when(connectionRepository.observe)
         .thenAnswerStreamValues([offline, offline, online]);
     connection = ConnectionBloc(connectionRepository);
+
     await withBloc(connection).expectStates([offline, online]);
   });
 
@@ -52,6 +55,7 @@ void main() {
         .thenAnswerStreamDelayedValues(connections, delay: emitDelay);
     connection = ConnectionBloc(connectionRepository);
     connection.closeAfter(const Duration(milliseconds: 110));
+
     await withBloc(connection).expectStates(connections.take(2));
   });
 }

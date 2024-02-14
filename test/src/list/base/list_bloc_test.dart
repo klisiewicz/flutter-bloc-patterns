@@ -11,7 +11,6 @@ void main() {
       InMemoryFilterRepository<String, String>(),
     );
 
-    expect(listBloc.state, equals(const Initial<List<String>>()));
     withBloc(listBloc).expectState(const Initial<List<String>>());
   });
 

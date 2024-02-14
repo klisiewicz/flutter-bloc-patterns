@@ -12,7 +12,6 @@ void main() {
       InMemoryDetailsRepository<String, int>(items: {}),
     );
 
-    expect(detailsBloc.state, const Initial<String>());
     withBloc(detailsBloc).expectState(const Initial());
   });
 
