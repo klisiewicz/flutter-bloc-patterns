@@ -18,25 +18,17 @@ class PagedListSampleApp extends StatelessWidget {
       title: 'Paged List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        create: (_) => PagedListBloc<Post>(PagedPostRepository()),
+        create: (_) {
+          return PagedListBloc<Post>(PagedPostRepository())
+            ..loadFirstPage(pageSize: 20);
+        },
         child: _PostsPage(),
       ),
     );
   }
 }
 
-class _PostsPage extends StatefulWidget {
-  @override
-  _PostsPageState createState() => _PostsPageState();
-}
-
-class _PostsPageState extends State<_PostsPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PagedListBloc<Post>>().loadFirstPage(pageSize: 20);
-  }
-
+class _PostsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,4 +44,5 @@ class _PostsPageState extends State<_PostsPage> {
       ),
     );
   }
+
 }

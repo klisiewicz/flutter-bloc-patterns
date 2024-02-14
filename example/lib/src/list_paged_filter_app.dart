@@ -21,27 +21,17 @@ class PagedFilterListSampleApp extends StatelessWidget {
       title: 'Paged Filter List Sample App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: BlocProvider(
-        create: (_) => PhotosBloc(PagedFilterPhotoRepository()),
+        create: (_) {
+          return PhotosBloc(PagedFilterPhotoRepository())
+            ..loadFirstPage(pageSize: 12, filter: const Album(id: 1));
+        },
         child: _PhotosPage(),
       ),
     );
   }
 }
 
-class _PhotosPage extends StatefulWidget {
-  @override
-  _PhotosPageState createState() => _PhotosPageState();
-}
-
-class _PhotosPageState extends State<_PhotosPage> {
-  final _myAlbum = const Album(id: 1);
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<PhotosBloc>().loadFirstPage(pageSize: 12, filter: _myAlbum);
-  }
-
+class _PhotosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,4 +47,5 @@ class _PhotosPageState extends State<_PhotosPage> {
       ),
     );
   }
+
 }
