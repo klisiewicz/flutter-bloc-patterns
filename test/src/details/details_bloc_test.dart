@@ -9,13 +9,14 @@ import 'details_repository_mock.dart';
 void main() {
   test('should be initialized in Initial state', () {
     final detailsBloc = DetailsBloc(
-      InMemoryDetailsRepository(items: <String, int>{}),
+      InMemoryDetailsRepository<String, int>(items: {}),
     );
 
+    expect(detailsBloc.state, const Initial<String>());
     withBloc(detailsBloc).expectState(const Initial());
   });
 
-  test('should emit [$Loading, $Data] when there is an element with given id',
+  test('should emit [Loading, Data] when there is an element with given id',
       () {
     final detailsBloc = DetailsBloc(
       InMemoryDetailsRepository(items: {1: 'Hello'}),
@@ -23,10 +24,13 @@ void main() {
 
     detailsBloc.loadItem(1);
 
-    withBloc(detailsBloc).expectStates(const [Loading(), Data('Hello')]);
+    withBloc(detailsBloc).expectStates(const [
+      Loading(),
+      Data('Hello'),
+    ]);
   });
 
-  test('should emit [$Loading, $Empty] when there is NO element with given id',
+  test('should emit [Loading, Empty] when there is NO element with given id',
       () {
     final detailsBloc = DetailsBloc(
       InMemoryDetailsRepository(items: {1: 'Hello'}),
@@ -34,11 +38,14 @@ void main() {
 
     detailsBloc.loadItem(2);
 
-    withBloc(detailsBloc).expectStates(const [Loading(), Empty()]);
+    withBloc(detailsBloc).expectStates(const [
+      Loading(),
+      Empty(),
+    ]);
   });
 
   test(
-      'should emit [$Loading, $Failure] when loading elements fails with $Exception',
+      'should emit [Loading, Failure] when loading elements fails with Exception',
       () {
     final exception = Exception('Oh no!');
     final detailsBloc = DetailsBloc(
@@ -47,11 +54,13 @@ void main() {
 
     detailsBloc.loadItem(1);
 
-    withBloc(detailsBloc).expectStates([const Loading(), Failure(exception)]);
+    withBloc(detailsBloc).expectStates([
+      const Loading(),
+      Failure(exception),
+    ]);
   });
 
-  test(
-      'should emit [$Loading, $Failure] when loading elements fails with $Error',
+  test('should emit [Loading, Failure] when loading elements fails with Error',
       () {
     final error = ArgumentError('Wrong arg');
     final detailsBloc = DetailsBloc(
@@ -60,6 +69,9 @@ void main() {
 
     detailsBloc.loadItem(1);
 
-    withBloc(detailsBloc).expectStates([const Loading(), Failure(error)]);
+    withBloc(detailsBloc).expectStates([
+      const Loading(),
+      Failure(error),
+    ]);
   });
 }
